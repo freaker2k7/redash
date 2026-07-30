@@ -1,7 +1,4 @@
-from abc import ABC, abstractmethod
-
-
-class AIBase(ABC):
+class AIBase:
     def apply_ai_query(self, query_text: str, apply_ai_query: bool = False) -> str:
         """
         Apply AI query transformation to the given query text if apply_ai_query is True.

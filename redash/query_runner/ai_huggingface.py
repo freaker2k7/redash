@@ -3,11 +3,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 from redash.query_runner.ai_base import AIBase
 
-
 models = {}
 
-class AIHuggingFace(AIBase):
 
+class AIHuggingFace(AIBase):
     def __init__(self, query_runner, model_name: str = "defog/sqlcoder-7b-2", max_new_tokens=300):
         global models
 
@@ -76,9 +75,7 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
                 num_return_sequences=1,
                 eos_token_id=self.eos_token_id,
                 pad_token_id=self.eos_token_id,
-            )[
-                0
-            ]["generated_text"]
+            )[0]["generated_text"]
             .split(";")[0]
             .split("```")[0]
             .strip()
