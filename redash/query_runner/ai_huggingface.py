@@ -5,37 +5,46 @@ from redash.query_runner.ai_base import AIBase
 
 models = {}
 
+if torch.cuda.is_available():
+    device = "cuda"
+elif torch.backends.mps.is_available():
+    device = "mps"
+else:
+    device = "cpu"
+
 
 class AIHuggingFace(AIBase):
     def __init__(self, query_runner, model_name: str = "defog/sqlcoder-7b-2", max_new_tokens=300):
+        self.query_runner = query_runner
+        self.model_name = model_name
+        self.max_new_tokens = max_new_tokens
+
+    def load_model(self):
         global models
 
-        self.query_runner = query_runner
-
-        if not models.get(model_name):
-            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        if not models.get(self.model_name):
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_name,
+                self.model_name,
                 trust_remote_code=True,
                 torch_dtype=torch.float16,
-                device_map="auto",
                 use_cache=True,
-            )
+            ).to(device)
 
             self.pipe = pipeline(
                 "text-generation",
                 model=self.model,
                 tokenizer=self.tokenizer,
-                max_new_tokens=max_new_tokens,
+                max_new_tokens=self.max_new_tokens,
                 do_sample=False,
                 return_full_text=False,  # added return_full_text parameter to prevent splitting issues with prompt
                 num_beams=5,  # do beam search with 5 beams for high quality results
             )
 
-            models[model_name] = (self.model, self.tokenizer, self.pipe)
+            models[self.model_name] = (self.model, self.tokenizer, self.pipe)
         else:
-            self.model, self.tokenizer, self.pipe = models[model_name]
+            self.model, self.tokenizer, self.pipe = models[self.model_name]
 
         # make sure the model stops generating at triple ticks
         # eos_token_id = tokenizer.convert_tokens_to_ids(["```"])[0]
@@ -69,6 +78,9 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
         Transform the query text using AI. This is a placeholder method and should be implemented
         with actual AI logic in subclasses.
         """
+
+        self.load_model()
+
         query = (
             self.pipe(
                 self.generate_prompt(query_text),
