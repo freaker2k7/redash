@@ -1,9 +1,9 @@
-import debug from "debug";
-import moment from "moment";
+import { Auth } from "@/services/auth";
 import { axios } from "@/services/axios";
 import { QueryResultError } from "@/services/query";
-import { Auth } from "@/services/auth";
-import { isString, uniqBy, each, isNumber, includes, extend, forOwn, get } from "lodash";
+import debug from "debug";
+import { each, extend, forOwn, get, includes, isNumber, isString, uniqBy } from "lodash";
+import moment from "moment";
 
 const logger = debug("redash:services:QueryResult");
 const filterTypes = ["filter", "multi-filter", "multiFilter"];
@@ -481,7 +481,7 @@ class QueryResult {
     return queryResult;
   }
 
-  static get(dataSourceId, query, parameters, applyAutoLimit, maxAge, queryId) {
+  static get(dataSourceId, query, parameters, applyAutoLimit, applyAiQuery, maxAge, queryId) {
     const queryResult = new QueryResult();
 
     const params = {
@@ -489,6 +489,7 @@ class QueryResult {
       parameters,
       query,
       apply_auto_limit: applyAutoLimit,
+      apply_ai_query: applyAiQuery,
       max_age: maxAge,
     };
 
