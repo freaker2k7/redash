@@ -76,8 +76,7 @@ def run_query(
         abort(400, message=str(e))
 
     if should_apply_ai_query:
-        # TODO: Add ai.generate_query to the data source
-        query.text = data_source.ai.generate_query(query.text, parameters)
+        query.text = data_source.query_runner.ai.apply_ai_query(query.text, True)
 
     query_text = data_source.query_runner.apply_auto_limit(query.text, should_apply_auto_limit)
 
