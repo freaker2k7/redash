@@ -5,9 +5,7 @@ from rq.timeouts import JobTimeoutException
 
 from redash import models, redis_connection, settings, statsd_client
 from redash.models.parameterized_query import (
-    InvalidParameterError,
-    QueryDetachedFromDataSourceError,
-)
+    InvalidParameterError, QueryDetachedFromDataSourceError)
 from redash.monitor import rq_job_ids
 from redash.query_runner import NotSupported
 from redash.tasks.failure_report import track_failure
@@ -84,8 +82,7 @@ def _apply_auto_limit(query_text, query):
 def _apply_ai_query(query_text, query):
 	should_apply_ai_query = query.options.get("apply_ai_query", False)
 	if should_apply_ai_query and query.data_source.query_runner.supports_ai_:
-        # TODO: Check this logic
-		return query.data_source.query_runner.apply_ai_query(query_text, should_apply_ai_query)
+		return query.data_source.query_runner.ai.apply_ai_query(query_text, should_apply_ai_query)
 	return query_text
 
 def refresh_queries():

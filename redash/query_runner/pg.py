@@ -12,6 +12,8 @@ from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATE, TYPE_DATETIME,
                                  TYPE_FLOAT, TYPE_INTEGER, TYPE_STRING,
                                  BaseSQLQueryRunner, InterruptException,
                                  JobTimeoutException, register)
+from redash.query_runner.ai_base import AIBase
+from redash.query_runner.ai_huggingface import AIHuggingFace
 
 logger = logging.getLogger(__name__)
 
@@ -141,6 +143,10 @@ def _parse_dsn(configuration):
 
 class PostgreSQL(BaseSQLQueryRunner):
     noop_query = "SELECT 1"
+
+    def __init__(self, configuration):
+        super(PostgreSQL, self).__init__(configuration)
+        self.ai = AIHuggingFace(self)
 
     @classmethod
     def configuration_schema(cls):
