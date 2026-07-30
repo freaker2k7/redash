@@ -163,6 +163,7 @@ dev = [
     "pytest-cov==4.1.0",
     "watchdog==3.0.0",
     "ruff==0.0.289",
+    "setuptools<=80.10.2",
 ]
 
 [tool.uv]
