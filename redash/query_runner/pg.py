@@ -8,18 +8,10 @@ from uuid import uuid4
 import psycopg2
 from psycopg2.extras import Range
 
-from redash.query_runner import (
-    TYPE_BOOLEAN,
-    TYPE_DATE,
-    TYPE_DATETIME,
-    TYPE_FLOAT,
-    TYPE_INTEGER,
-    TYPE_STRING,
-    BaseSQLQueryRunner,
-    InterruptException,
-    JobTimeoutException,
-    register,
-)
+from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATE, TYPE_DATETIME,
+                                 TYPE_FLOAT, TYPE_INTEGER, TYPE_STRING,
+                                 BaseSQLQueryRunner, InterruptException,
+                                 JobTimeoutException, register)
 
 logger = logging.getLogger(__name__)
 
@@ -204,6 +196,10 @@ class PostgreSQL(BaseSQLQueryRunner):
 
             return "".join(items)
         return None
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_definitions(self, schema, query):
         results, error = self.run_query(query, None)

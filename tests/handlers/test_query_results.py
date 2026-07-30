@@ -94,6 +94,21 @@ class TestQueryResultListAPI(BaseTestCase):
         self.assertNotIn("query_result", rv.json)
         self.assertIn("job", rv.json)
 
+    def test_add_ai_query_change_query_sql(self):
+        ds = self.factory.create_data_source(group=self.factory.org.default_group, type="pg")
+        query = self.factory.create_query(query_text="SELECT 2", data_source=ds)
+        self.factory.create_query_result(data_source=ds, query_hash=query.query_hash)
+
+        rv = self.make_request(
+            "post",
+            "/api/query_results",
+            data={"data_source_id": ds.id, "query": query.query_text, "apply_ai_query": True},
+        )
+
+        self.assertEqual(rv.status_code, 200)
+        self.assertNotIn("query_result", rv.json)
+        self.assertIn("job", rv.json)
+
     def test_add_limit_no_change_for_nonsql(self):
         ds = self.factory.create_data_source(group=self.factory.org.default_group, type="prometheus")
         query = self.factory.create_query(query_text="SELECT 5", data_source=ds)

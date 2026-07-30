@@ -255,6 +255,10 @@ class BaseQueryRunner:
         }
 
     @property
+    def supports_ai_query(self):
+        return False
+
+    @property
     def supports_auto_limit(self):
         return False
 

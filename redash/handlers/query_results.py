@@ -56,7 +56,7 @@ error_messages = {
 }
 
 
-def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, max_age=0):
+def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, should_apply_ai_query=False, max_age=0):
     if not data_source:
         return error_messages["no_data_source"]
 
@@ -72,6 +72,10 @@ def run_query(query, parameters, data_source, query_id, should_apply_auto_limit,
         query.apply(parameters)
     except (InvalidParameterError, QueryDetachedFromDataSourceError) as e:
         abort(400, message=str(e))
+
+    if should_apply_ai_query:
+        # TODO: Add ai.generate_query to the data source
+        query.text = data_source.ai.generate_query(query.text, parameters)
 
     query_text = data_source.query_runner.apply_auto_limit(query.text, should_apply_auto_limit)
 
@@ -168,6 +172,7 @@ class QueryResultListResource(BaseResource):
 
         parameterized_query = ParameterizedQuery(query, org=self.current_org)
         should_apply_auto_limit = params.get("apply_auto_limit", False)
+        should_apply_ai_query = params.get("apply_ai_query", False)
 
         data_source_id = params.get("data_source_id")
         if data_source_id:
@@ -184,6 +189,7 @@ class QueryResultListResource(BaseResource):
             data_source,
             query_id,
             should_apply_auto_limit,
+            should_apply_ai_query,
             max_age,
         )
 
@@ -266,6 +272,11 @@ class QueryResultResource(BaseResource):
         else:
             should_apply_auto_limit = query.options.get("apply_auto_limit", False)
 
+        if "apply_ai_query" in params:
+            should_apply_ai_query = params.get("apply_ai_query", False)
+        else:
+            should_apply_ai_query = query.options.get("apply_ai_query", False)
+
         if has_access(query, self.current_user, allow_executing_with_view_only_permissions):
             return run_query(
                 query.parameterized,
@@ -273,6 +284,7 @@ class QueryResultResource(BaseResource):
                 query.data_source,
                 query_id,
                 should_apply_auto_limit,
+                should_apply_ai_query,
                 max_age,
             )
         else:

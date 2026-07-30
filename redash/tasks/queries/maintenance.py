@@ -81,6 +81,13 @@ def _apply_auto_limit(query_text, query):
     return query.data_source.query_runner.apply_auto_limit(query_text, should_apply_auto_limit)
 
 
+def _apply_ai_query(query_text, query):
+	should_apply_ai_query = query.options.get("apply_ai_query", False)
+	if should_apply_ai_query and query.data_source.query_runner.supports_ai_:
+        # TODO: Check this logic
+		return query.data_source.query_runner.apply_ai_query(query_text, should_apply_ai_query)
+	return query_text
+
 def refresh_queries():
     started_at = time.time()
     logger.info("Refreshing queries...")
@@ -92,6 +99,7 @@ def refresh_queries():
         try:
             query_text = _apply_default_parameters(query)
             query_text = _apply_auto_limit(query_text, query)
+            query_text = _apply_ai_query(query_text, query)
             enqueue_query(
                 query_text,
                 query.data_source,

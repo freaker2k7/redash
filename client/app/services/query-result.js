@@ -456,11 +456,17 @@ class QueryResult {
     return `${queryName.replace(/ /g, "_") + moment(this.getUpdatedAt()).format("_YYYY_MM_DD")}.${fileType}`;
   }
 
-  static getByQueryId(id, parameters, applyAutoLimit, maxAge) {
+  static getByQueryId(id, parameters, applyAutoLimit, applyAiQuery, maxAge) {
     const queryResult = new QueryResult();
 
     axios
-      .post(`api/queries/${id}/results`, { id, parameters, apply_auto_limit: applyAutoLimit, max_age: maxAge })
+      .post(`api/queries/${id}/results`, {
+        id,
+        parameters,
+        apply_auto_limit: applyAutoLimit,
+        apply_ai_query: applyAiQuery,
+        max_age: maxAge,
+      })
       .then((response) => {
         queryResult.update(response);
 
