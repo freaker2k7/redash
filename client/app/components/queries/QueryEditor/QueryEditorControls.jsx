@@ -139,7 +139,7 @@ export default function EditorControl({
 				onClick={prepareButtonProps.onClick}
 				data-test="PrepareButton"
 			>
-				<span className="zmdi zmdi-pause" />
+				<span className="zmdi zmdi-alert-polygon" />
 				{prepareButtonProps.text}
 			</Button>
 		</ButtonTooltip>
