@@ -134,12 +134,12 @@ export default function EditorControl({
         <ButtonTooltip title={prepareButtonProps.title} shortcut={prepareButtonProps.shortcut}>
 			<Button
 				className="query-editor-controls-button m-l-5"
-				type="secondary"
+				type="secondary ant-alert-warning"
 				disabled={prepareButtonProps.disabled}
 				onClick={prepareButtonProps.onClick}
 				data-test="PrepareButton"
 			>
-				<span className="zmdi zmdi-play" />
+				<span className="zmdi zmdi-pause" />
 				{prepareButtonProps.text}
 			</Button>
 		</ButtonTooltip>
