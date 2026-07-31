@@ -69,7 +69,7 @@ Generate a {sql_type} query to answer [QUESTION]{query_text}[/QUESTION]
 
 ### Instructions
 - If the whole message is already a valid {sql_type} query, return it as is.
-- If you cannot answer the question with the available database schema, return '{getattr(self.query_runner, "noop_query", "SELECT 1")}' as the query.
+- If you cannot answer the question with the available database schema, return 'NO ANSWER'.
 
 ### Database Schema
 The query will run on a database with the following schema:

@@ -38,7 +38,75 @@ export default function useQueryExecute(query) {
   }, []);
 
   const prepareQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
-    return executeQuery(maxAge, queryExecutor); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    let newQueryResult;
+    if (queryExecutor) {
+      newQueryResult = queryExecutor();
+    } else {
+      newQueryResult = query.getQueryResult(maxAge);
+    }
+
+    recordEvent("prepare", "query", query.id);
+    notifications.getPermissions();
+
+    queryResultInExecution.current = newQueryResult;
+
+    setExecutionState({
+      updatedAt: newQueryResult.getUpdatedAt(),
+      executionStatus: newQueryResult.getStatus(),
+      isExecuting: true,
+      cancelCallback: () => {
+        recordEvent("cancel_prepare", "query", query.id);
+        setExecutionState({ isCancelling: true });
+        newQueryResult.cancelExecution();
+      },
+    });
+
+    const onStatusChange = (status) => {
+      if (queryResultInExecution.current === newQueryResult) {
+        setExecutionState({ updatedAt: newQueryResult.getUpdatedAt(), executionStatus: status });
+      }
+    };
+
+    newQueryResult
+      .toPromise(onStatusChange)
+      .then((queryResult) => {
+        if (queryResultInExecution.current === newQueryResult) {
+          // TODO: this should probably belong in the QueryEditor page.
+          if (queryResult && queryResult.query_result.query === query.query) {
+            query.latest_query_data_id = queryResult.getId();
+            query.queryResult = queryResult;
+          }
+
+          if (executionState.loadedInitialResults) {
+            notifications.showNotification("Redash", `${query.name} updated.`);
+          }
+
+          setExecutionState({
+            queryResult,
+            loadedInitialResults: true,
+            error: null,
+            isExecuting: false,
+            isCancelling: false,
+            executionStatus: null,
+          });
+        }
+      })
+      .catch((queryResult) => {
+        if (queryResultInExecution.current === newQueryResult) {
+          if (executionState.loadedInitialResults) {
+            notifications.showNotification("Redash", `${query.name} failed to run: ${queryResult.getError()}`);
+          }
+
+          setExecutionState({
+            queryResult,
+            loadedInitialResults: true,
+            error: queryResult.getError(),
+            isExecuting: false,
+            isCancelling: false,
+            executionStatus: ExecutionStatus.FAILED,
+          });
+        }
+      });
   });
 
   const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {

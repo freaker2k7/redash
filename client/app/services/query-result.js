@@ -1,9 +1,9 @@
-import debug from "debug";
-import moment from "moment";
+import { Auth } from "@/services/auth";
 import { axios } from "@/services/axios";
 import { QueryResultError } from "@/services/query";
-import { Auth } from "@/services/auth";
-import { isString, uniqBy, each, isNumber, includes, extend, forOwn, get } from "lodash";
+import debug from "debug";
+import { each, extend, forOwn, get, includes, isNumber, isString, uniqBy } from "lodash";
+import moment from "moment";
 
 const logger = debug("redash:services:QueryResult");
 const filterTypes = ["filter", "multi-filter", "multiFilter"];
@@ -466,6 +466,34 @@ class QueryResult {
 
         if ("job" in response) {
           queryResult.refreshStatus(id, parameters);
+        }
+      })
+      .catch((error) => {
+        handleErrorResponse(queryResult, error);
+      });
+
+    return queryResult;
+  }
+
+  static prepare(dataSourceId, query, maxAge, queryId) {
+    const queryResult = new QueryResult();
+
+    const params = {
+      data_source_id: dataSourceId,
+      query,
+      max_age: maxAge,
+    };
+
+    if (queryId !== undefined) {
+      params.query_id = queryId;
+    }
+
+    QueryResultResource.post(params)
+      .then((response) => {
+        queryResult.update(response);
+
+        if ("job" in response) {
+          queryResult.refreshStatus(query, parameters);
         }
       })
       .catch((error) => {

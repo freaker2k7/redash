@@ -133,6 +133,18 @@ export class Query {
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
+  getPreparedQuery(maxAge, selectedQueryText) {
+    const queryText = selectedQueryText || this.query;
+    if (!queryText) {
+      return new QueryResultError("Can't execute empty query.");
+    }
+
+    const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
+    const prepare = () =>
+      QueryResult.prepare(this.data_source_id, queryText, maxAge, this.id);
+    return this.prepareQueryResultExecution(prepare, maxAge);
+  }
+
   getQueryResultByText(maxAge, selectedQueryText) {
     const queryText = selectedQueryText || this.query;
     if (!queryText) {
@@ -380,7 +392,7 @@ const mapResults = (data) => ({ ...data, results: map(data.results, getQuery) })
 
 const QueryService = {
   query: (params) => axios.get("api/queries", { params }).then(mapResults),
-  prepare: (params) => axios.post("api/queries/prepare", { params }).then(getQuery),
+  prepare: (data) => axios.post("api/queries/prepare", data).then(getQuery),
   get: (data) => axios.get(`api/queries/${data.id}`, data).then(getQuery),
   save: (data) => axios.post(saveOrCreateUrl(data), data).then(getQuery),
   delete: (data) => axios.delete(`api/queries/${data.id}`),
