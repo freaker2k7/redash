@@ -147,7 +147,15 @@ export class Query {
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
     const execute = () =>
-      QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), this.getAiQuery(), maxAge, this.id);
+      QueryResult.get(
+        this.data_source_id,
+        queryText,
+        parameters,
+        this.getAutoLimit(),
+        this.getAiQuery(),
+        maxAge,
+        this.id
+      );
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
