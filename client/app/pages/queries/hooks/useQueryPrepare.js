@@ -42,7 +42,7 @@ export default function useQueryPrepare(query) {
     if (queryExecutor) {
       newQueryResult = queryExecutor();
     } else {
-      newQueryResult = query.getQueryResult(maxAge);
+      newQueryResult = query.getPreparedQuery(maxAge);
     }
 
     recordEvent("prepare", "query", query.id);

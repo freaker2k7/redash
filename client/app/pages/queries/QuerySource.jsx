@@ -177,7 +177,7 @@ function QuerySource(props) {
 
   const doPrepareQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
-      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting))) {
+      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))) {
         return;
       }
       if (isDirty || !isEmpty(selectedText)) {
@@ -188,12 +188,12 @@ function QuerySource(props) {
         prepareQuery();
       }
     },
-    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, prepareQuery]
+    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, prepareQuery, isPrepareQueryExecuting]
   );
 
   const doExecuteQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
-      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting))) {
+      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))) {
         return;
       }
       if (isDirty || !isEmpty(selectedText)) {
@@ -204,7 +204,7 @@ function QuerySource(props) {
         executeQuery();
       }
     },
-    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, executeQuery]
+    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, executeQuery, isPrepareQueryExecuting]
   );
 
   const [isQuerySaving, setIsQuerySaving] = useState(false);
