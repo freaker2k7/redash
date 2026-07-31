@@ -194,5 +194,5 @@ export default function useQueryExecute(query) {
     }
   }, [executeQuery]);
 
-  return { ...executionState, ...{ executeQuery } };
+  return { ...executionState, executeQuery, prepareQuery };
 }
