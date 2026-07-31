@@ -20,7 +20,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
-from redash.query_runner.ai_huggingface import AIHuggingFace
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 
@@ -153,7 +153,7 @@ class PostgreSQL(BaseSQLQueryRunner):
 
     def __init__(self, configuration):
         super(PostgreSQL, self).__init__(configuration)
-        self.ai = AIHuggingFace(self)
+        self.ai = AI(self)
 
     @classmethod
     def configuration_schema(cls):

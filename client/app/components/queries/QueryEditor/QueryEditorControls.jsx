@@ -39,6 +39,7 @@ export default function EditorControl({
   formatButtonProps,
   saveButtonProps,
   executeButtonProps,
+  prepareButtonProps,
   aiQueryToggleProps,
   autocompleteToggleProps,
   autoLimitCheckboxProps,
@@ -46,7 +47,7 @@ export default function EditorControl({
 }) {
   useEffect(() => {
     const buttons = filter(
-      [addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps],
+		[addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps, prepareButtonProps],
       (b) => b.shortcut && isFunction(b.onClick)
     );
     if (buttons.length > 0) {
@@ -56,7 +57,7 @@ export default function EditorControl({
         KeyboardShortcuts.unbind(shortcuts);
       };
     }
-  }, [addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps]);
+  }, [addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps, prepareButtonProps]);
 
   return (
     <div className="query-editor-controls">
@@ -127,8 +128,23 @@ export default function EditorControl({
           </Button>
         </ButtonTooltip>
       )}
-      {executeButtonProps !== false && (
-        <ButtonTooltip title={executeButtonProps.title} shortcut={executeButtonProps.shortcut}>
+      {executeButtonProps !== false &&
+			  (aiQueryToggleProps !== false && aiQueryToggleProps.available && aiQueryToggleProps.enabled &&
+	  (
+        <ButtonTooltip title={prepareButtonProps.title} shortcut={prepareButtonProps.shortcut}>
+			<Button
+				className="query-editor-controls-button m-l-5"
+				type="secondary"
+				disabled={prepareButtonProps.disabled}
+				onClick={prepareButtonProps.onClick}
+				data-test="PrepareButton"
+			>
+				<span className="zmdi zmdi-play" />
+				{prepareButtonProps.text}
+			</Button>
+		</ButtonTooltip>
+      ) || (
+		<ButtonTooltip title={executeButtonProps.title} shortcut={executeButtonProps.shortcut}>
           <Button
             className="query-editor-controls-button m-l-5"
             type="primary"
@@ -140,7 +156,7 @@ export default function EditorControl({
             {executeButtonProps.text}
           </Button>
         </ButtonTooltip>
-      )}
+	  ))}
     </div>
   );
 }
@@ -162,6 +178,7 @@ EditorControl.propTypes = {
   formatButtonProps: ButtonPropsPropType,
   saveButtonProps: ButtonPropsPropType,
   executeButtonProps: ButtonPropsPropType,
+  prepareButtonProps: ButtonPropsPropType,
   autocompleteToggleProps: PropTypes.oneOfType([
     PropTypes.bool, // `false` to hide
     PropTypes.shape({
@@ -195,6 +212,7 @@ EditorControl.defaultProps = {
   formatButtonProps: false,
   saveButtonProps: false,
   executeButtonProps: false,
+  prepareButtonProps: false,
   autocompleteToggleProps: false,
   autoLimitCheckboxProps: false,
   dataSourceSelectorProps: false,

@@ -1,9 +1,9 @@
-import { useReducer, useEffect, useRef } from "react";
-import location from "@/services/location";
-import recordEvent from "@/services/recordEvent";
-import { ExecutionStatus } from "@/services/query-result";
-import notifications from "@/services/notifications";
 import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
+import location from "@/services/location";
+import notifications from "@/services/notifications";
+import { ExecutionStatus } from "@/services/query-result";
+import recordEvent from "@/services/recordEvent";
+import { useEffect, useReducer, useRef } from "react";
 
 function getMaxAge() {
   const { maxAge } = location.search;
@@ -36,6 +36,10 @@ export default function useQueryExecute(query) {
       queryResultInExecution.current = null;
     };
   }, []);
+
+  const prepareQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
+    return executeQuery(maxAge, queryExecutor); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  });
 
   const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
     let newQueryResult;

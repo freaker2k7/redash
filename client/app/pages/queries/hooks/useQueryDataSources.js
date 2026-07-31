@@ -18,7 +18,7 @@ export default function useQueryDataSources(query) {
     let cancelDataSourceLoading = false;
     DataSource.query().then((data) => {
       if (!cancelDataSourceLoading) {
-        setDataSourcesLoaded(true); // Memo: comes from db ...
+        setDataSourcesLoaded(true);
         setAllDataSources(data);
       }
     });

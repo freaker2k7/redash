@@ -464,14 +464,6 @@ class TestQueryAll(BaseTestCase):
         query.update_query_hash()
         self.assertNotEqual(origin_hash, query.query_hash)
 
-    def test_update_query_hash_basesql_with_ai_query(self):
-        ds = self.factory.create_data_source(group=self.factory.org.default_group, type="pg")
-        query = self.factory.create_query(query_text="SELECT 2", data_source=ds)
-        query.options = {"apply_ai_query": True}
-        origin_hash = query.query_hash
-        query.update_query_hash()
-        self.assertNotEqual(origin_hash, query.query_hash)
-
     def test_update_query_hash_basesql_no_options(self):
         ds = self.factory.create_data_source(group=self.factory.org.default_group, type="pg")
         query = self.factory.create_query(query_text="SELECT 2", data_source=ds)

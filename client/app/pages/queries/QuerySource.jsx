@@ -69,6 +69,7 @@ function QuerySource(props) {
     isExecuting: isQueryExecuting,
     executionStatus,
     executeQuery,
+	prepareQuery,
     error: executionError,
     cancelCallback: cancelExecution,
     isCancelling: isExecutionCancelling,
@@ -160,6 +161,22 @@ function QuerySource(props) {
   }, []);
 
   const [selectedText, setSelectedText] = useState(null);
+
+  const doPrepareQuery = useCallback(
+    (skipParametersDirtyFlag = false) => {
+      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting))) {
+        return;
+      }
+      if (isDirty || !isEmpty(selectedText)) {
+        prepareQuery(null, () => {
+          return query.getQueryResultByText(0, selectedText);
+        });
+      } else {
+        prepareQuery();
+      }
+    },
+    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, prepareQuery]
+  );
 
   const doExecuteQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
@@ -298,6 +315,14 @@ function QuerySource(props) {
                           loading: isQuerySaving,
                         }
                       }
+                      prepareButtonProps={{
+                        disabled: !queryFlags.canExecute || isQueryExecuting || areParametersDirty,
+                        shortcut: "mod+shift+enter, alt+shift+enter, ctrl+shift+enter, shift+shift+enter",
+                        onClick: doPrepareQuery,
+                        text: (
+                          <span className="hidden-xs">{selectedText === null ? "Prepare" : "Prepare Selected"}</span>
+                        ),
+                      }}
                       executeButtonProps={{
                         disabled: !queryFlags.canExecute || isQueryExecuting || areParametersDirty,
                         shortcut: "mod+enter, alt+enter, ctrl+enter, shift+enter",

@@ -1,28 +1,33 @@
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-
 from redash.query_runner.ai_base import AIBase
 
+device = "cpu"
 models = {}
-
-if torch.cuda.is_available():
-    device = "cuda"
-elif torch.backends.mps.is_available():
-    device = "mps"
-else:
-    device = "cpu"
 
 
 class AIHuggingFace(AIBase):
-    def __init__(self, query_runner, model_name: str = "defog/sqlcoder-7b-2", max_new_tokens=300):
+    def __init__(self, query_runner, model_name: str = "defog/sqlcoder-7b-2", max_new_tokens=300, token=None):
         self.query_runner = query_runner
         self.model_name = model_name
         self.max_new_tokens = max_new_tokens
+        self.token = token
+        self.model = None
+        self.tokenizer = None
+        self.pipe = None
 
     def load_model(self):
-        global models
+        global device, models
 
         if not models.get(self.model_name):
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+
+            if torch.cuda.is_available():
+                device = "cuda"
+            elif torch.backends.mps.is_available():
+                device = "mps"
+            else:
+                device = "cpu"
+
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
             self.model = AutoModelForCausalLM.from_pretrained(
@@ -30,6 +35,7 @@ class AIHuggingFace(AIBase):
                 trust_remote_code=True,
                 torch_dtype=torch.float16,
                 use_cache=True,
+                token=self.token, # TODO: Check if this is correct !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             ).to(device)
 
             self.pipe = pipeline(
@@ -73,7 +79,7 @@ The query will run on a database with the following schema:
 Given the database schema, here is the {sql_type} query that answers [QUESTION]{query_text}[/QUESTION]
 [{sql_type}]"""
 
-    def transform_query_with_ai(self, query_text: str) -> str:
+    def apply_ai_query(self, query_text: str) -> str:
         """
         Transform the query text using AI. This is a placeholder method and should be implemented
         with actual AI logic in subclasses.

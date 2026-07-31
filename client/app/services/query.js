@@ -1,30 +1,30 @@
-import moment from "moment";
-import debug from "debug";
-import Mustache from "mustache";
 import { axios } from "@/services/axios";
-import {
-  zipObject,
-  isEmpty,
-  isArray,
-  map,
-  filter,
-  includes,
-  union,
-  uniq,
-  has,
-  identity,
-  extend,
-  each,
-  some,
-  clone,
-  find,
-} from "lodash";
 import location from "@/services/location";
+import debug from "debug";
+import {
+	clone,
+	each,
+	extend,
+	filter,
+	find,
+	has,
+	identity,
+	includes,
+	isArray,
+	isEmpty,
+	map,
+	some,
+	union,
+	uniq,
+	zipObject,
+} from "lodash";
+import moment from "moment";
+import Mustache from "mustache";
 
-import { Parameter, createParameter } from "./parameters";
-import { currentUser } from "./auth";
-import QueryResult from "./query-result";
 import localOptions from "@/lib/localOptions";
+import { currentUser } from "./auth";
+import { Parameter, createParameter } from "./parameters";
+import QueryResult from "./query-result";
 
 Mustache.escape = identity; // do not html-escape values
 
@@ -129,13 +129,7 @@ export class Query {
 
   getQueryResult(maxAge) {
     const execute = () =>
-      QueryResult.getByQueryId(
-        this.id,
-        this.getParameters().getExecutionValues(),
-        this.getAutoLimit(),
-        this.getAiQuery(),
-        maxAge
-      );
+      QueryResult.getByQueryId(this.id, this.getParameters().getExecutionValues(), this.getAutoLimit(), maxAge);
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
@@ -147,15 +141,7 @@ export class Query {
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
     const execute = () =>
-      QueryResult.get(
-        this.data_source_id,
-        queryText,
-        parameters,
-        this.getAutoLimit(),
-        this.getAiQuery(),
-        maxAge,
-        this.id
-      );
+      QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), maxAge, this.id);
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
@@ -394,6 +380,7 @@ const mapResults = (data) => ({ ...data, results: map(data.results, getQuery) })
 
 const QueryService = {
   query: (params) => axios.get("api/queries", { params }).then(mapResults),
+  prepare: (params) => axios.post("api/queries/prepare", { params }).then(getQuery),
   get: (data) => axios.get(`api/queries/${data.id}`, data).then(getQuery),
   save: (data) => axios.post(saveOrCreateUrl(data), data).then(getQuery),
   delete: (data) => axios.delete(`api/queries/${data.id}`),
@@ -416,10 +403,7 @@ QueryService.newQuery = function newQuery() {
     name: "New Query",
     schedule: null,
     user: currentUser,
-    options: {
-      apply_auto_limit: localOptions.get("applyAutoLimit", true),
-      apply_ai_query: localOptions.get("applyAiQuery", false),
-    },
+    options: { apply_auto_limit: localOptions.get("applyAutoLimit", true) },
     tags: [],
     can_edit: true,
   });

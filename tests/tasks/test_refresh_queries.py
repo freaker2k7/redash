@@ -43,28 +43,6 @@ class TestRefreshQuery(BaseTestCase):
                 any_order=True,
             )
 
-    def test_enqueues_outdated_queries_for_aiquery(self):
-        """
-        refresh_queries() launches an execution task for each query returned
-        from Query.outdated_queries().
-        """
-        query = self.factory.create_query(
-            query_text="Create a simple 'select 1' query.",
-            data_source=self.factory.create_data_source(),
-            options={"apply_auto_limit": True},
-        )
-        oq = staticmethod(lambda: [query])
-        with patch(ENQUEUE_QUERY) as add_job_mock, patch.object(Query, "outdated_queries", oq):
-            refresh_queries()
-            self.assertEqual(add_job_mock.call_count, 1)
-            add_job_mock.assert_called_with(
-                "Create a simple 'select 1' query. LIMIT 1000",
-                query.data_source,
-                query.user_id,
-                scheduled_query=query,
-                metadata={"query_id": query.id, "Username": query.user.get_actual_user()},
-            )
-
     def test_enqueues_outdated_queries_for_non_sqlquery(self):
         """
         refresh_queries() launches an execution task for each query returned

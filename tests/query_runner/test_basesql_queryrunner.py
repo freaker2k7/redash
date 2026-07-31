@@ -42,7 +42,7 @@ class TestBaseSQLQueryRunner(unittest.TestCase):
 
     def test_check_ai_query(self):
         origin_query_text = "Create a simple 'select 1' query"
-        query_text = self.query_runner.apply_ai_query(origin_query_text, True)
+        query_text = self.query_runner.ai.apply_ai_query(origin_query_text)
         self.assertEqual("SELECT 1", query_text)
 
     def test_apply_auto_limit_origin_no_limit_1(self):
