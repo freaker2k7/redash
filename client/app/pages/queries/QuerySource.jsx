@@ -69,7 +69,6 @@ function QuerySource(props) {
     isExecuting: isQueryExecuting,
     executionStatus,
     executeQuery,
-	prepareQuery,
     error: executionError,
     cancelCallback: cancelExecution,
     isCancelling: isExecutionCancelling,
@@ -77,7 +76,20 @@ function QuerySource(props) {
     loadedInitialResults,
   } = useQueryExecute(query);
 
+  const {
+    queryResult: prepareQueryResult,
+    isExecuting: isPrepareQueryExecuting,
+    executionStatus: prepareQueryStatus,
+	prepareQuery,
+    error: prepareQueryError,
+    cancelCallback: cancelPrepareQuery,
+    isCancelling: isPrepareQueryCancelling,
+    updatedAt: prepareQueryUpdatedAt,
+    loadedInitialResults: prepareQueryLoadedInitialResults,
+  } = useQueryPrepare(query);
+
   const queryResultData = useQueryResultData(queryResult);
+  const prepareQueryResultData = useQueryResultData(prepareQueryResult);
 
   const editorRef = useRef(null);
   const [autocompleteAvailable, autocompleteEnabled, toggleAutocomplete] = useAutocompleteFlags(schema);
@@ -386,14 +398,14 @@ function QuerySource(props) {
                     />
                   </div>
                 )}
-                {(executionError || isQueryExecuting) && (
+                {(executionError || isQueryExecuting || isPrepareQueryExecuting || prepareQueryError) && (
                   <div className="query-alerts">
                     <QueryExecutionStatus
-                      status={executionStatus}
-                      updatedAt={updatedAt}
-                      error={executionError}
-                      isCancelling={isExecutionCancelling}
-                      onCancel={cancelExecution}
+                      status={executionStatus || prepareQueryStatus}
+                      updatedAt={updatedAt || prepareQueryUpdatedAt}
+                      error={executionError || prepareQueryError}
+                      isCancelling={isExecutionCancelling || isPrepareQueryCancelling}
+                      onCancel={cancelExecution || cancelPrepareQuery}
                     />
                   </div>
                 )}
@@ -409,11 +421,11 @@ function QuerySource(props) {
                       ))}
                     </div>
                   )}
-                  {loadedInitialResults && !(queryFlags.isNew && !queryResult) && (
+                  {loadedInitialResults && prepareQueryLoadedInitialResults && !(queryFlags.isNew && !queryResult) && (
                     <QueryVisualizationTabs
                       queryResult={queryResult}
                       visualizations={query.visualizations}
-                      showNewVisualizationButton={queryFlags.canEdit && queryResultData.status === ExecutionStatus.DONE}
+                      showNewVisualizationButton={queryFlags.canEdit && queryResultData.status === ExecutionStatus.DONE && prepareQueryResultData.status === ExecutionStatus.DONE}
                       canDeleteVisualizations={queryFlags.canEdit}
                       selectedTab={selectedVisualization}
                       onChangeTab={setSelectedVisualization}

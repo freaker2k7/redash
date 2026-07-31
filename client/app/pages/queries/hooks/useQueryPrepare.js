@@ -1,7 +1,7 @@
 import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
 import location from "@/services/location";
 import notifications from "@/services/notifications";
-import { ExecutionStatus } from "@/services/query-result";
+import { PreparationStatus } from "@/services/query-result";
 import recordEvent from "@/services/recordEvent";
 import { useEffect, useReducer, useRef } from "react";
 
@@ -18,26 +18,26 @@ const reducer = (prevState, updatedProperty) => ({
 // This is currently specific to a Query page, we can refactor
 // it slightly to make it suitable for dashboard widgets instead of the other solution it
 // has in there.
-export default function useQueryExecute(query) {
-  const [executionState, setExecutionState] = useReducer(reducer, {
+export default function useQueryPrepare(query) {
+  const [preparationState, setPreparationState] = useReducer(reducer, {
     queryResult: null,
-    isExecuting: false,
+    isPreparing: false,
     loadedInitialResults: false,
-    executionStatus: null,
+    preparationStatus: null,
     isCancelling: false,
     cancelCallback: null,
     error: null,
   });
 
-  const queryResultInExecution = useRef(null);
+  const queryResultInPreparation = useRef(null);
   // Clear executing queryResult when component is unmounted to avoid errors
   useEffect(() => {
     return () => {
-      queryResultInExecution.current = null;
+      queryResultInPreparation.current = null;
     };
   }, []);
 
-  const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
+  const prepareQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
     let newQueryResult;
     if (queryExecutor) {
       newQueryResult = queryExecutor();
@@ -45,65 +45,65 @@ export default function useQueryExecute(query) {
       newQueryResult = query.getQueryResult(maxAge);
     }
 
-    recordEvent("execute", "query", query.id);
+    recordEvent("prepare", "query", query.id);
     notifications.getPermissions();
 
-    queryResultInExecution.current = newQueryResult;
+    queryResultInPreparation.current = newQueryResult;
 
-    setExecutionState({
+    setPreparationState({
       updatedAt: newQueryResult.getUpdatedAt(),
-      executionStatus: newQueryResult.getStatus(),
-      isExecuting: true,
+      preparationStatus: newQueryResult.getStatus(),
+      isPreparing: true,
       cancelCallback: () => {
-        recordEvent("cancel_execute", "query", query.id);
-        setExecutionState({ isCancelling: true });
-        newQueryResult.cancelExecution();
+        recordEvent("cancel_prepare", "query", query.id);
+        setPreparationState({ isCancelling: true });
+        newQueryResult.cancelPreparation();
       },
     });
 
     const onStatusChange = (status) => {
-      if (queryResultInExecution.current === newQueryResult) {
-        setExecutionState({ updatedAt: newQueryResult.getUpdatedAt(), executionStatus: status });
+      if (queryResultInPreparation.current === newQueryResult) {
+        setPreparationState({ updatedAt: newQueryResult.getUpdatedAt(), preparationStatus: status });
       }
     };
 
     newQueryResult
       .toPromise(onStatusChange)
       .then((queryResult) => {
-        if (queryResultInExecution.current === newQueryResult) {
+        if (queryResultInPreparation.current === newQueryResult) {
           // TODO: this should probably belong in the QueryEditor page.
           if (queryResult && queryResult.query_result.query === query.query) {
             query.latest_query_data_id = queryResult.getId();
             query.queryResult = queryResult;
           }
 
-          if (executionState.loadedInitialResults) {
+          if (preparationState.loadedInitialResults) {
             notifications.showNotification("Redash", `${query.name} updated.`);
           }
 
-          setExecutionState({
+          setPreparationState({
             queryResult,
             loadedInitialResults: true,
             error: null,
-            isExecuting: false,
+            isPreparing: false,
             isCancelling: false,
-            executionStatus: null,
+            preparationStatus: null,
           });
         }
       })
       .catch((queryResult) => {
-        if (queryResultInExecution.current === newQueryResult) {
-          if (executionState.loadedInitialResults) {
+        if (queryResultInPreparation.current === newQueryResult) {
+          if (preparationState.loadedInitialResults) {
             notifications.showNotification("Redash", `${query.name} failed to run: ${queryResult.getError()}`);
           }
 
-          setExecutionState({
+          setPreparationState({
             queryResult,
             loadedInitialResults: true,
             error: queryResult.getError(),
-            isExecuting: false,
+            isPreparing: false,
             isCancelling: false,
-            executionStatus: ExecutionStatus.FAILED,
+            preparationStatus: PreparationStatus.FAILED,
           });
         }
       });
@@ -116,11 +116,11 @@ export default function useQueryExecute(query) {
     // TODO: this belongs on the query page?
     // loadedInitialResults can be removed if so
     if (queryRef.current.hasResult() || queryRef.current.paramsRequired()) {
-      executeQuery(getMaxAge());
+      prepareQuery(getMaxAge());
     } else {
-      setExecutionState({ loadedInitialResults: true });
+      setPreparationState({ loadedInitialResults: true });
     }
-  }, [executeQuery]);
+  }, [prepareQuery]);
 
-  return { ...executionState, executeQuery };
+  return { ...preparationState, prepareQuery };
 }

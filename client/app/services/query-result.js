@@ -57,6 +57,14 @@ export const ExecutionStatus = {
   LOADING_RESULT: "loading-result",
 };
 
+export const PreparationStatus = {
+  WAITING: "waiting",
+  PROCESSING: "processing",
+  DONE: "done",
+  FAILED: "failed",
+  LOADING_RESULT: "loading-result",
+};
+
 const statuses = {
   1: ExecutionStatus.WAITING,
   2: ExecutionStatus.PROCESSING,
