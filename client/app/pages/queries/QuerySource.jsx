@@ -169,7 +169,7 @@ function QuerySource(props) {
       }
       if (isDirty || !isEmpty(selectedText)) {
         prepareQuery(null, () => {
-          return query.getQueryResultByText(0, selectedText);
+          return query.prepare(0, selectedText);
         });
       } else {
         prepareQuery();
