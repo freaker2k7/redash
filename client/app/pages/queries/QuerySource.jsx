@@ -39,6 +39,7 @@ import useQueryDataSources from "./hooks/useQueryDataSources";
 import useQueryExecute from "./hooks/useQueryExecute";
 import useQueryFlags from "./hooks/useQueryFlags";
 import useQueryParameters from "./hooks/useQueryParameters";
+import useQueryPrepare from "./hooks/useQueryPrepare";
 import useUnsavedChangesAlert from "./hooks/useUnsavedChangesAlert";
 import useUpdateQuery from "./hooks/useUpdateQuery";
 import useUpdateQueryDescription from "./hooks/useUpdateQueryDescription";
