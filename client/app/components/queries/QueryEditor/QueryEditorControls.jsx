@@ -133,8 +133,8 @@ export default function EditorControl({
 	  (
         <ButtonTooltip title={prepareButtonProps.title} shortcut={prepareButtonProps.shortcut}>
 			<Button
-				className="query-editor-controls-button m-l-5"
-				type="secondary ant-alert-warning"
+				className="query-editor-controls-button m-l-5 prepare-button"
+				type="secondary"
 				disabled={prepareButtonProps.disabled}
 				onClick={prepareButtonProps.onClick}
 				data-test="PrepareButton"
