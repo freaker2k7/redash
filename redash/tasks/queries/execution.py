@@ -179,6 +179,7 @@ class QueryExecutor:
         self.metadata = metadata
         self.data_source = self._load_data_source()
         self.query_id = metadata.get("query_id")
+        self.should_apply_ai_query = metadata.get("ai_query")
         self.user = _resolve_user(user_id, is_api_key, metadata.get("query_id"))
         self.query_model = (
             models.Query.query.get(self.query_id)
@@ -239,6 +240,13 @@ class QueryExecutor:
                 self.query_model.schedule_failures = 0
                 self.query_model.skip_updated_at = True
                 models.db.session.add(self.query_model)
+
+
+            logger.info("?? should_apply_ai_query=%s ; query=%s", self.should_apply_ai_query, self.query)
+
+            if self.should_apply_ai_query:
+                self.query = query_runner.ai.apply_ai_query(self.query, True)
+                logger.info("?? >> query after applying AI query=%s", self.query)
 
             query_result = models.QueryResult.store_result(
                 self.data_source.org_id,

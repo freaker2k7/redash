@@ -1,4 +1,3 @@
-import logging
 import unicodedata
 from urllib.parse import quote
 
@@ -36,8 +35,6 @@ from redash.utils import (
     json_dumps,
     to_filename,
 )
-
-logger = logging.getLogger(__name__)
 
 
 def error_response(message, http_status=400):
@@ -78,18 +75,6 @@ def run_query(
     except (InvalidParameterError, QueryDetachedFromDataSourceError) as e:
         abort(400, message=str(e))
 
-    logger.info(
-        "Running query %s on data source %s with parameters: %s ; should_apply_ai_query=%s ; text=%s",
-        query_id,
-        data_source.name,
-        parameters,
-        str(should_apply_ai_query),
-        query.text,
-    )
-
-    if should_apply_ai_query:
-        query.text = data_source.query_runner.ai.apply_ai_query(query.text, True)
-
     query_text = data_source.query_runner.apply_auto_limit(query.text, should_apply_auto_limit)
 
     if query.missing_params:
@@ -111,6 +96,7 @@ def run_query(
             "query": query_text,
             "query_id": query_id,
             "parameters": parameters,
+            "ai_query": should_apply_ai_query,
         },
     )
 
