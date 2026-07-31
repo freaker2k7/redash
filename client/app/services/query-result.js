@@ -45,6 +45,7 @@ function getColumnFriendlyName(column) {
 
 const createOrSaveUrl = (data) => (data.id ? `api/query_results/${data.id}` : "api/query_results");
 const QueryResultResource = {
+  prepare: (data) => axios.post(`api/queries/prepare`, data),
   get: ({ id }) => axios.get(`api/query_results/${id}`),
   post: (data) => axios.post(createOrSaveUrl(data), data),
 };
@@ -483,12 +484,10 @@ class QueryResult {
     return queryResult;
   }
 
-  static prepare(dataSourceId, query, maxAge, queryId) {
-    const queryResult = new QueryResult();
-
+  static prepare(query, dataSourceId, queryText, maxAge, queryId) {
     const params = {
       data_source_id: dataSourceId,
-      query,
+      query: queryText,
       max_age: maxAge,
     };
 
@@ -496,19 +495,19 @@ class QueryResult {
       params.query_id = queryId;
     }
 
-    QueryResultResource.post(params)
+    QueryResultResource.prepare(params)
       .then((response) => {
-        queryResult.update(response);
+        query.update(response);
 
         if ("job" in response) {
-          queryResult.refreshStatus(query, parameters);
+          query.refreshStatus(query, params);
         }
       })
       .catch((error) => {
-        handleErrorResponse(queryResult, error);
+        handleErrorResponse(query, error);
       });
 
-    return queryResult;
+    return query;
   }
 
   static get(dataSourceId, query, parameters, applyAutoLimit, maxAge, queryId) {

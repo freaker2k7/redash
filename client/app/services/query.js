@@ -141,7 +141,7 @@ export class Query {
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
     const prepare = () =>
-      QueryResult.prepare(this.data_source_id, queryText, maxAge, this.id);
+	QueryResult.prepare(this, this.data_source_id, queryText, maxAge, this.id);
     return this.prepareQueryResultExecution(prepare, maxAge);
   }
 
