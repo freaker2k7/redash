@@ -1,5 +1,6 @@
 from . import HuggingFaceModelBase
 
+
 class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
     def __init__(self, query_runner, max_new_tokens=512, token=None):
         super().__init__(query_runner, "Qwen/Qwen3-Coder-Next", token, max_new_tokens)
@@ -51,7 +52,7 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
 [{sql_type}]"""
 
     def generate_prompt(self, model, query_text: str) -> str:
-        text = model['tokenizer'].apply_chat_template(
+        text = model["tokenizer"].apply_chat_template(
             messages=[
                 {
                     "role": "system",
@@ -65,10 +66,10 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
             tokenize=False,
             add_generation_prompt=True,
         )
-        model_inputs = model['tokenizer']([text], return_tensors="pt").to(model['model'].device)
+        model_inputs = model["tokenizer"]([text], return_tensors="pt").to(model["model"].device)
 
         # conduct text completion
-        generated_ids = model['model'].generate(**model_inputs, max_new_tokens=self.max_new_tokens)
-        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
+        generated_ids = model["model"].generate(**model_inputs, max_new_tokens=self.max_new_tokens)
+        output_ids = generated_ids[0][len(model_inputs.input_ids[0]) :].tolist()
 
-        return model['tokenizer'].decode(output_ids, skip_special_tokens=True)
+        return model["tokenizer"].decode(output_ids, skip_special_tokens=True)

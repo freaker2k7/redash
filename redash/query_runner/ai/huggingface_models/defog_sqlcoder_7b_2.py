@@ -1,5 +1,6 @@
 from . import HuggingFaceModelBase
 
+
 class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
     def __init__(self, query_runner, max_new_tokens=300, token=None):
         super().__init__(query_runner, "defog/sqlcoder-7b-2", token, max_new_tokens)
@@ -67,9 +68,15 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
 [{sql_type}]"""
 
     def generate(self, model, query_text: str) -> str:
-        return model.pipe(
+        return (
+            model.pipe(
                 self.template(query_text),
                 num_return_sequences=1,
                 eos_token_id=model["eos_token_id"],
                 pad_token_id=model["eos_token_id"],
-            )[0]["generated_text"].split(";")[0].split("```")[0].strip() + ";"
+            )[0]["generated_text"]
+            .split(";")[0]
+            .split("```")[0]
+            .strip()
+            + ";"
+        )
