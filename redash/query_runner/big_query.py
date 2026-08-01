@@ -17,6 +17,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
+from redash.query_runner.ai import AI
 from redash.utils import json_loads
 
 logger = logging.getLogger(__name__)
@@ -102,8 +103,8 @@ class BigQuery(BaseSQLQueryRunner):
     noop_query = "SELECT 1"
 
     def __init__(self, configuration):
-        super().__init__(configuration)
-        self.should_annotate_query = configuration.get("useQueryAnnotation", False)
+        super(BigQuery, self).__init__(configuration)
+        self.ai = AI(self)
 
     @classmethod
     def enabled(cls):
@@ -155,6 +156,10 @@ class BigQuery(BaseSQLQueryRunner):
             ],
             "secret": ["jsonKeyFile"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def annotate_query(self, query, metadata):
         # Remove "Job ID" before annotating the query to avoid cache misses

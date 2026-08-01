@@ -14,6 +14,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
+from redash.query_runner.ai import AI
 from redash.settings import parse_boolean
 
 logger = logging.getLogger(__name__)
@@ -66,6 +67,10 @@ class Trino(BaseQueryRunner):
     noop_query = "SELECT 1"
     should_annotate_query = ANNOTATE_QUERY
 
+    def __init__(self, configuration):
+        super(Trino, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -116,6 +121,10 @@ class Trino(BaseQueryRunner):
     @classmethod
     def type(cls):
         return "trino"
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def get_schema(self, get_stats=False):
         if self.configuration.get("catalog"):

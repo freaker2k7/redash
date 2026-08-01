@@ -2,6 +2,7 @@ import datetime
 import importlib.util
 import logging
 
+from redash.query_runner.ai import AI
 from redash.query_runner import (
     TYPE_BOOLEAN,
     TYPE_DATETIME,
@@ -37,6 +38,10 @@ class Ignite(BaseSQLQueryRunner):
     should_annotate_query = False
     noop_query = "SELECT 1"
 
+    def __init__(self, configuration):
+        super(Ignite, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -67,6 +72,10 @@ class Ignite(BaseSQLQueryRunner):
     @classmethod
     def enabled(cls):
         return ignite_available or gridgain_available
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_tables(self, schema):
         query = """

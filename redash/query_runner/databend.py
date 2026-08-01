@@ -16,10 +16,15 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 
 class Databend(BaseQueryRunner):
     noop_query = "SELECT 1"
+
+    def __init__(self, configuration):
+        super(Databend, self).__init__(configuration)
+        self.ai = AI(self)
 
     @classmethod
     def configuration_schema(cls):
@@ -66,6 +71,10 @@ class Databend(BaseQueryRunner):
             return TYPE_DATE
         else:
             return TYPE_STRING
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def run_query(self, query, user):
         host = self.configuration.get("host") or "localhost"

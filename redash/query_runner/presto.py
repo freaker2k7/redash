@@ -1,5 +1,6 @@
 import logging
 
+from redash.query_runner.ai import AI
 from redash.query_runner import (
     TYPE_BOOLEAN,
     TYPE_DATE,
@@ -42,6 +43,10 @@ PRESTO_TYPES_MAPPING = {
 class Presto(BaseQueryRunner):
     noop_query = "SHOW TABLES"
 
+    def __init__(self, configuration):
+        super(Presto, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -74,6 +79,10 @@ class Presto(BaseQueryRunner):
     @classmethod
     def type(cls):
         return "presto"
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def get_schema(self, get_stats=False):
         schema = {}

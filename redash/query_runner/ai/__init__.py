@@ -1,5 +1,5 @@
-from redash.query_runner.ai_base import AIBase
-from redash.query_runner.ai_huggingface_local import AIHuggingFaceLocal
+from redash.query_runner.ai.base import AIBase
+from redash.query_runner.ai.huggingface_local import AIHuggingFaceLocal
 from redash.settings.organization import settings as org_settings
 
 

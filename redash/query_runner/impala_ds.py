@@ -1,5 +1,6 @@
 import logging
 
+from redash.query_runner.ai import AI
 from redash.query_runner import (
     TYPE_BOOLEAN,
     TYPE_DATETIME,
@@ -44,6 +45,10 @@ types_map = {
 class Impala(BaseSQLQueryRunner):
     noop_query = "show schemas"
 
+    def __init__(self, configuration):
+        super(Impala, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -69,6 +74,10 @@ class Impala(BaseSQLQueryRunner):
             "required": ["host"],
             "secret": ["ldap_password"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     @classmethod
     def type(cls):

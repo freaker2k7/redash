@@ -1,6 +1,6 @@
 import time
 
-from redash.query_runner.ai_base import AIBase
+from redash.query_runner.ai.base import AIBase
 
 device = "cpu"
 models = {}

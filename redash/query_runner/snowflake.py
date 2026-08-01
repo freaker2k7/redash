@@ -9,6 +9,7 @@ except ImportError:
 
 from base64 import b64decode
 
+from redash.query_runner.ai import AI
 from redash import __version__
 from redash.query_runner import (
     TYPE_BOOLEAN,
@@ -37,6 +38,10 @@ TYPES_MAP = {
 
 class Snowflake(BaseSQLQueryRunner):
     noop_query = "SELECT 1"
+
+    def __init__(self, configuration):
+        super(Snowflake, self).__init__(configuration)
+        self.ai = AI(self)
 
     @classmethod
     def configuration_schema(cls):
@@ -86,6 +91,10 @@ class Snowflake(BaseSQLQueryRunner):
         if t == TYPE_INTEGER and scale > 0:
             return TYPE_FLOAT
         return t
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_connection(self):
         region = self.configuration.get("region")

@@ -8,6 +8,7 @@ from redash.query_runner import (
     BaseSQLQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 
 def _get_type(value):
@@ -87,6 +88,10 @@ class Rockset(BaseSQLQueryRunner):
     def type(cls):
         return "rockset"
 
+    @property
+    def supports_ai_query(self):
+        return True
+
     def __init__(self, configuration):
         super(Rockset, self).__init__(configuration)
         self.api = RocksetAPI(
@@ -94,6 +99,7 @@ class Rockset(BaseSQLQueryRunner):
             self.configuration.get("api_server", "https://api.usw2a1.rockset.com"),
             self.configuration.get("vi_id"),
         )
+        self.ai = AI(self)
 
     def _get_tables(self, schema):
         for workspace in self.api.list_workspaces():

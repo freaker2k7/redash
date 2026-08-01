@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 
+from redash.query_runner.ai import AI
 from redash import __version__, statsd_client
 from redash.query_runner import (
     TYPE_BOOLEAN,
@@ -46,6 +47,10 @@ class Databricks(BaseSQLQueryRunner):
     noop_query = "SELECT 1"
     should_annotate_query = False
 
+    def __init__(self, configuration):
+        super(Databricks, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def type(cls):
         return "databricks"
@@ -68,6 +73,10 @@ class Databricks(BaseSQLQueryRunner):
             "secret": ["http_password"],
             "required": ["host", "http_path", "http_password"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_cursor(self):
         user_agent = "Redash/{} (Databricks)".format(__version__.split("-")[0])

@@ -206,12 +206,14 @@ class QueryExecutor:
         query_runner = self.data_source.query_runner
 
         if self.is_ai_query:
+            logger.info(">>> Applying AI query transformation for query=%s", self.query)
             self.query = query_runner.ai.apply_ai_query(self.query)
+            logger.info("<<< Transformed query=%s", self.query)
             # save the modified query to the scheduled query model if it exists
             if self.query_model:
                 self.query_model.query_text = self.query
-                models.db.session.add(self.query_model)
-                models.db.session.commit()
+                # models.db.session.add(self.query_model)
+                # models.db.session.commit()
 
         annotated_query = self._annotate_query(query_runner)
 

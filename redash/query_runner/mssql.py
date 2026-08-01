@@ -8,6 +8,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,10 @@ class SqlServer(BaseSQLQueryRunner):
     limit_query = " TOP 1000"
     limit_keywords = ["TOP"]
     limit_after_select = True
+
+    def __init__(self, configuration):
+        super(SqlServer, self).__init__(configuration)
+        self.ai = AI(self)
 
     @classmethod
     def configuration_schema(cls):
@@ -74,6 +79,10 @@ class SqlServer(BaseSQLQueryRunner):
     @classmethod
     def type(cls):
         return "mssql"
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_tables(self, schema):
         query = """

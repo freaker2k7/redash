@@ -19,6 +19,7 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 
@@ -61,11 +62,16 @@ class Pinot(BaseQueryRunner):
     def enabled(cls):
         return enabled
 
+    @property
+    def supports_ai_query(self):
+        return True
+
     def __init__(self, configuration):
         super(Pinot, self).__init__(configuration)
         self.controller_uri = self.configuration.get("controllerURI")
         self.username = self.configuration.get("username") or None
         self.password = self.configuration.get("password") or None
+        self.ai = AI(self)
 
     def run_query(self, query, user):
         logger.debug("Running query %s with username: %s", query, self.username)

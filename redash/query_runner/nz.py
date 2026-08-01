@@ -11,6 +11,7 @@ from redash.query_runner import (
     BaseSQLQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +94,11 @@ class Netezza(BaseSQLQueryRunner):
     def __init__(self, configuration):
         super().__init__(configuration)
         self._conn = None
+        self.ai = AI(self)
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     @property
     def connection(self):

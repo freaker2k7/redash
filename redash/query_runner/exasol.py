@@ -9,6 +9,7 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 
 def _exasol_type_mapper(val, data_type):
@@ -64,6 +65,10 @@ except ImportError:
 class Exasol(BaseQueryRunner):
     noop_query = "SELECT 1 FROM DUAL"
 
+    def __init__(self, configuration):
+        super(Exasol, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -79,6 +84,10 @@ class Exasol(BaseQueryRunner):
             "order": ["host", "port", "user", "password", "encrypted"],
             "secret": ["password"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
 
     def _get_connection(self):
         exahost = "%s:%s" % (
