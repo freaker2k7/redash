@@ -2,21 +2,21 @@ import { axios } from "@/services/axios";
 import location from "@/services/location";
 import debug from "debug";
 import {
-	clone,
-	each,
-	extend,
-	filter,
-	find,
-	has,
-	identity,
-	includes,
-	isArray,
-	isEmpty,
-	map,
-	some,
-	union,
-	uniq,
-	zipObject,
+  clone,
+  each,
+  extend,
+  filter,
+  find,
+  has,
+  identity,
+  includes,
+  isArray,
+  isEmpty,
+  map,
+  some,
+  union,
+  uniq,
+  zipObject,
 } from "lodash";
 import moment from "moment";
 import Mustache from "mustache";
@@ -129,7 +129,13 @@ export class Query {
 
   getQueryResult(maxAge) {
     const execute = () =>
-      QueryResult.getByQueryId(this.id, this.getParameters().getExecutionValues(), this.getAutoLimit(), this.getAiQuery(), maxAge);
+      QueryResult.getByQueryId(
+        this.id,
+        this.getParameters().getExecutionValues(),
+        this.getAutoLimit(),
+        this.getAiQuery(),
+        maxAge
+      );
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
@@ -141,7 +147,15 @@ export class Query {
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
     const execute = () =>
-		QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), this.getAiQuery(), maxAge, this.id);
+      QueryResult.get(
+        this.data_source_id,
+        queryText,
+        parameters,
+        this.getAutoLimit(),
+        this.getAiQuery(),
+        maxAge,
+        this.id
+      );
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
