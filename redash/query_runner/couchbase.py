@@ -103,9 +103,6 @@ class Couchbase(BaseQueryRunner):
             "secret": ["password"],
         }
 
-    def __init__(self, configuration):
-        super(Couchbase, self).__init__(configuration)
-
     @classmethod
     def enabled(cls):
         return True

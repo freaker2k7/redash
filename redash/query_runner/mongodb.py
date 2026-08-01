@@ -146,10 +146,6 @@ def _sorted_fields(fields):
 class MongoDB(BaseQueryRunner):
     should_annotate_query = False
 
-    def __init__(self, configuration):
-        super(MongoDB, self).__init__(configuration)
-        self.ai = AI(self)
-
     @classmethod
     def configuration_schema(cls):
         return {
@@ -201,6 +197,8 @@ class MongoDB(BaseQueryRunner):
 
         self.flatten = self.configuration.get("flatten", "False").upper() in ["TRUE", "YES", "ON", "1", "Y", "T"]
         logger.debug("flatten: {}".format(self.flatten))
+
+        self.ai = AI(self)
 
     @classmethod
     def custom_json_encoder(cls, dec, o):

@@ -7,7 +7,7 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
 
     def load(self):
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+        from transformers import AutoModelForCausalLM, AutoTokenizer
 
         if torch.cuda.is_available():
             device = "cuda"
