@@ -1,5 +1,7 @@
 import requests
 
+from redash.query_runner.ai import AI
+
 try:
     import google.auth
     from apiclient.discovery import build
@@ -14,6 +16,10 @@ from .big_query import BigQuery
 
 
 class BigQueryGCE(BigQuery):
+    def __init__(self, configuration):
+        super(BigQueryGCE, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def type(cls):
         return "bigquery_gce"

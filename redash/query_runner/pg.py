@@ -317,6 +317,10 @@ class PostgreSQL(BaseSQLQueryRunner):
 
 
 class Redshift(PostgreSQL):
+    def __init__(self, configuration):
+        super(Redshift, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def type(cls):
         return "redshift"
