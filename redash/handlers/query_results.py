@@ -56,7 +56,7 @@ error_messages = {
 }
 
 
-def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, max_age=0):
+def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, should_apply_ai_query=False, max_age=0):
     if not data_source:
         return error_messages["no_data_source"]
 
@@ -108,6 +108,7 @@ def run_query(query, parameters, data_source, query_id, should_apply_auto_limit,
             metadata={
                 "Username": current_user.get_actual_user(),
                 "query_id": query_id,
+                "apply_ai_query": should_apply_ai_query,
             },
         )
         return serialize_job(job)

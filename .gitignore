@@ -31,3 +31,4 @@ client/cypress/videos
 
 .pnpm-store
 __pycache__
+.python-version
