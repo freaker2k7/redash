@@ -1,5 +1,3 @@
-import time
-
 import sqlparse
 from flask import jsonify, request, url_for
 from flask_login import login_required
@@ -183,49 +181,6 @@ def require_access_to_dropdown_queries(user, query_def):
             )
 
         require_access(dict(groups), user, view_only)
-
-
-class PrepareQueryResource(BaseQueryListResource):
-    @require_permission("view_query")
-    def post(self):
-        """
-        Prepare a query using AI.
-
-        :<json number data_source_id: The ID of the data source this query will run on
-        :<json string query: Query text
-
-        Responds with the prepared :ref:`query <query-response-label>` object.
-        """
-        query_def = request.get_json(force=True)
-        query_text = query_def.get("query", "")
-        data_source_id = query_def.get("data_source_id")
-
-        # TODO: Add support for max_age parameter in the future with RQ
-        # max_age = query_def.get("max_age", 0)
-
-        if not query_text:
-            abort(400, message="Query text is required.")
-
-        if not data_source_id:
-            abort(400, message="Data source ID is required.")
-
-        data_source = models.DataSource.get_by_id_and_org(data_source_id, self.current_org)
-
-        ai_query_text = data_source.query_runner.ai.apply_ai_query(query_text)
-
-        if not ai_query_text or ai_query_text.strip() == "NO ANSWER":
-            abort(400, message="AI query generation failed. Please try again.")
-
-        query = models.Query(
-            query_text=ai_query_text,
-            name=f"AI Prepared Query - {time.time()}",
-            data_source=data_source,
-            user=self.current_user,
-            org=self.current_org,
-            is_draft=True,
-        )
-
-        return QuerySerializer(query, with_visualizations=True).serialize()
 
 
 class QueryListResource(BaseQueryListResource):

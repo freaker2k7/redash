@@ -2,21 +2,21 @@ import { axios } from "@/services/axios";
 import location from "@/services/location";
 import debug from "debug";
 import {
-  clone,
-  each,
-  extend,
-  filter,
-  find,
-  has,
-  identity,
-  includes,
-  isArray,
-  isEmpty,
-  map,
-  some,
-  union,
-  uniq,
-  zipObject,
+	clone,
+	each,
+	extend,
+	filter,
+	find,
+	has,
+	identity,
+	includes,
+	isArray,
+	isEmpty,
+	map,
+	some,
+	union,
+	uniq,
+	zipObject,
 } from "lodash";
 import moment from "moment";
 import Mustache from "mustache";
@@ -129,19 +129,8 @@ export class Query {
 
   getQueryResult(maxAge) {
     const execute = () =>
-      QueryResult.getByQueryId(this.id, this.getParameters().getExecutionValues(), this.getAutoLimit(), maxAge);
+      QueryResult.getByQueryId(this.id, this.getParameters().getExecutionValues(), this.getAutoLimit(), this.getAiQuery(), maxAge);
     return this.prepareQueryResultExecution(execute, maxAge);
-  }
-
-  getPreparedQuery(maxAge, selectedQueryText) {
-    const queryText = selectedQueryText || this.query;
-    if (!queryText) {
-      return new QueryResultError("Can't execute empty query.");
-    }
-
-    const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
-    const prepare = () => QueryResult.prepare(this, this.data_source_id, queryText, maxAge, this.id);
-    return this.prepareQueryResultExecution(prepare, maxAge);
   }
 
   getQueryResultByText(maxAge, selectedQueryText) {
@@ -152,7 +141,7 @@ export class Query {
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
     const execute = () =>
-      QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), maxAge, this.id);
+		QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), this.getAiQuery(), maxAge, this.id);
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
@@ -391,7 +380,6 @@ const mapResults = (data) => ({ ...data, results: map(data.results, getQuery) })
 
 const QueryService = {
   query: (params) => axios.get("api/queries", { params }).then(mapResults),
-  prepare: (data) => axios.post("api/queries/prepare", data).then(getQuery),
   get: (data) => axios.get(`api/queries/${data.id}`, data).then(getQuery),
   save: (data) => axios.post(saveOrCreateUrl(data), data).then(getQuery),
   delete: (data) => axios.delete(`api/queries/${data.id}`),

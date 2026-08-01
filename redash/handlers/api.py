@@ -58,7 +58,6 @@ from redash.handlers.permissions import (
 )
 from redash.handlers.queries import (
     MyQueriesResource,
-    PrepareQueryResource,
     QueryArchiveResource,
     QueryFavoriteListResource,
     QueryForkResource,
@@ -206,7 +205,6 @@ api.add_org_resource(QueryRecentResource, "/api/queries/recent", endpoint="recen
 api.add_org_resource(QueryArchiveResource, "/api/queries/archive", endpoint="queries_archive")
 api.add_org_resource(QueryListResource, "/api/queries", endpoint="queries")
 api.add_org_resource(MyQueriesResource, "/api/queries/my", endpoint="my_queries")
-api.add_org_resource(PrepareQueryResource, "/api/queries/prepare", endpoint="prepare_query")
 api.add_org_resource(QueryRefreshResource, "/api/queries/<query_id>/refresh", endpoint="query_refresh")
 api.add_org_resource(QueryResource, "/api/queries/<query_id>", endpoint="query")
 api.add_org_resource(QueryForkResource, "/api/queries/<query_id>/fork", endpoint="query_fork")

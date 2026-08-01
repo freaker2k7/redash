@@ -9,7 +9,7 @@ from rq.timeouts import JobTimeoutException
 from sshtunnel import open_tunnel
 
 from redash import settings, utils
-from redash.query_runner.ai_base import AIBase
+from redash.query_runner.ai import AI
 from redash.utils.requests_session import (
     UnacceptableAddressException,
     requests_or_advocate,
@@ -272,7 +272,7 @@ class BaseQueryRunner:
 
 
 class BaseSQLQueryRunner(BaseQueryRunner):
-    ai: AIBase = AIBase()
+    ai = AI()
 
     def get_schema(self, get_stats=False):
         schema_dict = {}

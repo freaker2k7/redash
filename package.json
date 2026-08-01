@@ -21,9 +21,9 @@
     "prettier": "npx prettier --write 'client/app/**/*.{js,jsx,ts,tsx}' 'client/cypress/**/*.{js,jsx,ts,tsx}'",
     "type-check": "npx tsc --noEmit --project client/tsconfig.json",
     "type-check:watch": "pnpm run type-check --watch",
-    "jest": "TZ=Africa/Khartoum jest",
+    "jest": "TZ=Africa/Khartoum npx jest",
     "test": "run-s type-check jest",
-    "test:watch": "jest --watch",
+    "test:watch": "npx jest --watch",
     "cypress": "node client/cypress/cypress.js",
     "postinstall": "pnpm run build:viz"
   },

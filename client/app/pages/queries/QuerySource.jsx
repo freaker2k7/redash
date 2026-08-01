@@ -39,7 +39,6 @@ import useQueryDataSources from "./hooks/useQueryDataSources";
 import useQueryExecute from "./hooks/useQueryExecute";
 import useQueryFlags from "./hooks/useQueryFlags";
 import useQueryParameters from "./hooks/useQueryParameters";
-import useQueryPrepare from "./hooks/useQueryPrepare";
 import useUnsavedChangesAlert from "./hooks/useUnsavedChangesAlert";
 import useUpdateQuery from "./hooks/useUpdateQuery";
 import useUpdateQueryDescription from "./hooks/useUpdateQueryDescription";
@@ -77,20 +76,7 @@ function QuerySource(props) {
     loadedInitialResults,
   } = useQueryExecute(query);
 
-  const {
-    queryResult: prepareQueryResult,
-    isExecuting: isPrepareQueryExecuting,
-    executionStatus: prepareQueryStatus,
-    prepareQuery,
-    error: prepareQueryError,
-    cancelCallback: cancelPrepareQuery,
-    isCancelling: isPrepareQueryCancelling,
-    updatedAt: prepareQueryUpdatedAt,
-    loadedInitialResults: prepareQueryLoadedInitialResults,
-  } = useQueryPrepare(query);
-
   const queryResultData = useQueryResultData(queryResult);
-  const prepareQueryResultData = useQueryResultData(prepareQueryResult);
 
   const editorRef = useRef(null);
   const [autocompleteAvailable, autocompleteEnabled, toggleAutocomplete] = useAutocompleteFlags(schema);
@@ -175,40 +161,9 @@ function QuerySource(props) {
 
   const [selectedText, setSelectedText] = useState(null);
 
-  const doPrepareQuery = useCallback(
-    (skipParametersDirtyFlag = false) => {
-      if (
-        !queryFlags.canExecute ||
-        (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))
-      ) {
-        return;
-      }
-      if (isDirty || !isEmpty(selectedText)) {
-        prepareQuery(null, () => {
-          return query.getPreparedQuery(0, selectedText);
-        });
-      } else {
-        prepareQuery();
-      }
-    },
-    [
-      query,
-      queryFlags.canExecute,
-      areParametersDirty,
-      isQueryExecuting,
-      isDirty,
-      selectedText,
-      prepareQuery,
-      isPrepareQueryExecuting,
-    ]
-  );
-
   const doExecuteQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
-      if (
-        !queryFlags.canExecute ||
-        (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))
-      ) {
+      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting))) {
         return;
       }
       if (isDirty || !isEmpty(selectedText)) {
@@ -219,16 +174,7 @@ function QuerySource(props) {
         executeQuery();
       }
     },
-    [
-      query,
-      queryFlags.canExecute,
-      areParametersDirty,
-      isQueryExecuting,
-      isDirty,
-      selectedText,
-      executeQuery,
-      isPrepareQueryExecuting,
-    ]
+    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, executeQuery]
   );
 
   const [isQuerySaving, setIsQuerySaving] = useState(false);
@@ -352,14 +298,6 @@ function QuerySource(props) {
                           loading: isQuerySaving,
                         }
                       }
-                      prepareButtonProps={{
-                        disabled: !queryFlags.canExecute || isQueryExecuting || areParametersDirty,
-                        shortcut: "mod+shift+enter, alt+shift+enter, ctrl+shift+enter, shift+shift+enter",
-                        onClick: doPrepareQuery,
-                        text: (
-                          <span className="hidden-xs">{selectedText === null ? "Prepare" : "Prepare Selected"}</span>
-                        ),
-                      }}
                       executeButtonProps={{
                         disabled: !queryFlags.canExecute || isQueryExecuting || areParametersDirty,
                         shortcut: "mod+enter, alt+enter, ctrl+enter, shift+enter",
@@ -423,14 +361,14 @@ function QuerySource(props) {
                     />
                   </div>
                 )}
-                {(executionError || isQueryExecuting || isPrepareQueryExecuting || prepareQueryError) && (
+                {(executionError || isQueryExecuting) && (
                   <div className="query-alerts">
                     <QueryExecutionStatus
-                      status={executionStatus || prepareQueryStatus}
-                      updatedAt={updatedAt || prepareQueryUpdatedAt}
-                      error={executionError || prepareQueryError}
-                      isCancelling={isExecutionCancelling || isPrepareQueryCancelling}
-                      onCancel={cancelExecution || cancelPrepareQuery}
+                      status={executionStatus}
+                      updatedAt={updatedAt}
+                      error={executionError}
+                      isCancelling={isExecutionCancelling}
+                      onCancel={cancelExecution}
                     />
                   </div>
                 )}
@@ -446,15 +384,11 @@ function QuerySource(props) {
                       ))}
                     </div>
                   )}
-                  {loadedInitialResults && prepareQueryLoadedInitialResults && !(queryFlags.isNew && !queryResult) && (
+                  {loadedInitialResults && !(queryFlags.isNew && !queryResult) && (
                     <QueryVisualizationTabs
                       queryResult={queryResult}
                       visualizations={query.visualizations}
-                      showNewVisualizationButton={
-                        queryFlags.canEdit &&
-                        queryResultData.status === ExecutionStatus.DONE &&
-                        prepareQueryResultData.status === ExecutionStatus.DONE
-                      }
+                      showNewVisualizationButton={queryFlags.canEdit && queryResultData.status === ExecutionStatus.DONE}
                       canDeleteVisualizations={queryFlags.canEdit}
                       selectedTab={selectedVisualization}
                       onChangeTab={setSelectedVisualization}

@@ -172,7 +172,7 @@ def _get_size_iterative(dict_obj):
 
 
 class QueryExecutor:
-    def __init__(self, query, data_source_id, user_id, is_api_key, metadata, is_scheduled_query):
+    def __init__(self, query, data_source_id, user_id, is_api_key, metadata, is_scheduled_query, is_ai_query=False):
         self.job = get_current_job()
         self.query = query
         self.data_source_id = data_source_id
@@ -190,6 +190,7 @@ class QueryExecutor:
         models.db.session.close()
         self.query_hash = gen_query_hash(self.query)
         self.is_scheduled_query = is_scheduled_query
+        self.is_ai_query = is_ai_query
         if self.is_scheduled_query:
             # Load existing tracker or create a new one if the job was created before code update:
             models.scheduled_queries_executions.update(self.query_model.id)
@@ -202,6 +203,10 @@ class QueryExecutor:
         self._log_progress("executing_query")
 
         query_runner = self.data_source.query_runner
+
+        if self.is_ai_query:
+            self.query = query_runner.ai.apply_ai_query(self.query)
+
         annotated_query = self._annotate_query(query_runner)
 
         try:
@@ -297,6 +302,7 @@ def execute_query(
     user_id=None,
     scheduled_query_id=None,
     is_api_key=False,
+    ai_query=False,
 ):
     try:
         return QueryExecutor(
@@ -306,6 +312,7 @@ def execute_query(
             is_api_key,
             metadata,
             scheduled_query_id is not None,
+            ai_query
         ).run()
     except QueryExecutionError as e:
         models.db.session.rollback()

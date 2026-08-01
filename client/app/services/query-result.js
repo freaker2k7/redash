@@ -45,20 +45,11 @@ function getColumnFriendlyName(column) {
 
 const createOrSaveUrl = (data) => (data.id ? `api/query_results/${data.id}` : "api/query_results");
 const QueryResultResource = {
-  prepare: (data) => axios.post(`api/queries/prepare`, data),
   get: ({ id }) => axios.get(`api/query_results/${id}`),
   post: (data) => axios.post(createOrSaveUrl(data), data),
 };
 
 export const ExecutionStatus = {
-  WAITING: "waiting",
-  PROCESSING: "processing",
-  DONE: "done",
-  FAILED: "failed",
-  LOADING_RESULT: "loading-result",
-};
-
-export const PreparationStatus = {
   WAITING: "waiting",
   PROCESSING: "processing",
   DONE: "done",
@@ -465,11 +456,11 @@ class QueryResult {
     return `${queryName.replace(/ /g, "_") + moment(this.getUpdatedAt()).format("_YYYY_MM_DD")}.${fileType}`;
   }
 
-  static getByQueryId(id, parameters, applyAutoLimit, maxAge) {
+  static getByQueryId(id, parameters, applyAutoLimit, applyAiQuery, maxAge) {
     const queryResult = new QueryResult();
 
     axios
-      .post(`api/queries/${id}/results`, { id, parameters, apply_auto_limit: applyAutoLimit, max_age: maxAge })
+      .post(`api/queries/${id}/results`, { id, parameters, apply_auto_limit: applyAutoLimit, apply_ai_query: applyAiQuery, max_age: maxAge })
       .then((response) => {
         queryResult.update(response);
 
@@ -484,33 +475,7 @@ class QueryResult {
     return queryResult;
   }
 
-  static prepare(query, dataSourceId, queryText, maxAge, queryId) {
-    const params = {
-      data_source_id: dataSourceId,
-      query: queryText,
-      max_age: maxAge,
-    };
-
-    if (queryId !== undefined) {
-      params.query_id = queryId;
-    }
-
-    QueryResultResource.prepare(params)
-      .then((response) => {
-        query.update(response);
-
-        if ("job" in response) {
-          query.refreshStatus(query, params);
-        }
-      })
-      .catch((error) => {
-        handleErrorResponse(query, error);
-      });
-
-    return query;
-  }
-
-  static get(dataSourceId, query, parameters, applyAutoLimit, maxAge, queryId) {
+  static get(dataSourceId, query, parameters, applyAutoLimit, applyAiQuery, maxAge, queryId) {
     const queryResult = new QueryResult();
 
     const params = {
@@ -518,6 +483,7 @@ class QueryResult {
       parameters,
       query,
       apply_auto_limit: applyAutoLimit,
+      apply_ai_query: applyAiQuery,
       max_age: maxAge,
     };
 
