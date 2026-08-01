@@ -20,9 +20,9 @@ class AIHuggingFaceLocal(AIBase):
     def load_model(self):
         global device, models
 
-        if not models.get(self.model_name, {}).get('loaded'):
+        if not models.get(self.model_name, {}).get("loaded"):
             if not models.get(self.model_name):
-                models[self.model_name] = {'loading': True}
+                models[self.model_name] = {"loading": True}
 
                 import torch
                 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
@@ -41,7 +41,7 @@ class AIHuggingFaceLocal(AIBase):
                     trust_remote_code=True,
                     torch_dtype=torch.float16,
                     use_cache=True,
-                    token=self.token, # TODO: Check if this is correct !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    token=self.token,  # TODO: Check if this is correct !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 ).to(device)
                 self.token = None  # Prevent token from being stored in memory after initialization
 
@@ -60,14 +60,14 @@ class AIHuggingFaceLocal(AIBase):
                 eos_token_id = tokenizer.eos_token_id
 
                 models[self.model_name] = {
-                    'model': model,
-                    'tokenizer': tokenizer,
-                    'pipe': pipe,
-                    'eos_token_id': eos_token_id,
-                    'loaded': True
+                    "model": model,
+                    "tokenizer": tokenizer,
+                    "pipe": pipe,
+                    "eos_token_id": eos_token_id,
+                    "loaded": True,
                 }
             else:
-                while models[self.model_name].get('loading'):
+                while models[self.model_name].get("loading"):
                     time.sleep(1)
 
     # TODO: This should be templates per query_runner + model !!!!!!!!!!!!
@@ -103,11 +103,12 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
         self.load_model()
 
         query = (
-            models[self.model_name].pipe(
+            models[self.model_name]
+            .pipe(
                 self.generate_prompt(query_text),
                 num_return_sequences=1,
-                eos_token_id=models[self.model_name]['eos_token_id'],
-                pad_token_id=models[self.model_name]['eos_token_id'],
+                eos_token_id=models[self.model_name]["eos_token_id"],
+                pad_token_id=models[self.model_name]["eos_token_id"],
             )[0]["generated_text"]
             .split(";")[0]
             .split("```")[0]

@@ -2,6 +2,7 @@ from redash.query_runner.ai_base import AIBase
 from redash.query_runner.ai_huggingface_local import AIHuggingFaceLocal
 from redash.settings.organization import settings as org_settings
 
+
 class AI(AIBase):
     """
     AI class that serves as a wrapper for different AI implementations.
@@ -25,7 +26,7 @@ class AI(AIBase):
             if self.instance_types.get(self.type):
                 token = org_settings.get("ai_token")
                 self.instance = self.instance_types[self.type](query_runner, token=token)
-                token = None # Prevent token from being stored in memory after initialization
+                token = None  # Prevent token from being stored in memory after initialization
             else:
                 raise NotImplementedError(f"AI type '{self.type}' is not implemented.")
         else:

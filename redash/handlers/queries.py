@@ -468,7 +468,14 @@ class QueryRefreshResource(BaseResource):
         should_apply_auto_limit = query.options.get("apply_auto_limit", False)
         should_apply_ai_query = query.options.get("apply_ai_query", False)
 
-        return run_query(parameterized_query, parameter_values, query.data_source, query.id, should_apply_auto_limit, should_apply_ai_query)
+        return run_query(
+            parameterized_query,
+            parameter_values,
+            query.data_source,
+            query.id,
+            should_apply_auto_limit,
+            should_apply_ai_query,
+        )
 
 
 class QueryTagsResource(BaseResource):
