@@ -9,7 +9,6 @@ except ImportError:
 
 from base64 import b64decode
 
-from redash.query_runner.ai import AI
 from redash import __version__
 from redash.query_runner import (
     TYPE_BOOLEAN,
@@ -21,6 +20,7 @@ from redash.query_runner import (
     BaseSQLQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 TYPES_MAP = {
     0: TYPE_INTEGER,

@@ -2,7 +2,6 @@ import datetime
 import logging
 import os
 
-from redash.query_runner.ai import AI
 from redash import __version__, statsd_client
 from redash.query_runner import (
     TYPE_BOOLEAN,
@@ -16,6 +15,7 @@ from redash.query_runner import (
     register,
     split_sql_statements,
 )
+from redash.query_runner.ai import AI
 from redash.settings import cast_int_or_default
 
 try:

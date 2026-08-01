@@ -1,6 +1,5 @@
 import logging
 
-from redash.query_runner.ai import AI
 from redash.query_runner import (
     TYPE_BOOLEAN,
     TYPE_DATE,
@@ -12,6 +11,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 
