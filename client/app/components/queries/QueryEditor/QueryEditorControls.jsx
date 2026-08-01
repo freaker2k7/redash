@@ -47,7 +47,7 @@ export default function EditorControl({
 }) {
   useEffect(() => {
     const buttons = filter(
-		[addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps, prepareButtonProps],
+      [addParameterButtonProps, formatButtonProps, saveButtonProps, executeButtonProps, prepareButtonProps],
       (b) => b.shortcut && isFunction(b.onClick)
     );
     if (buttons.length > 0) {
@@ -129,34 +129,33 @@ export default function EditorControl({
         </ButtonTooltip>
       )}
       {executeButtonProps !== false &&
-			  (aiQueryToggleProps !== false && aiQueryToggleProps.available && aiQueryToggleProps.enabled &&
-	  (
-        <ButtonTooltip title={prepareButtonProps.title} shortcut={prepareButtonProps.shortcut}>
-			<Button
-				className="query-editor-controls-button m-l-5 prepare-button"
-				type="secondary"
-				disabled={prepareButtonProps.disabled}
-				onClick={prepareButtonProps.onClick}
-				data-test="PrepareButton"
-			>
-				<span className="zmdi zmdi-alert-polygon" />
-				{prepareButtonProps.text}
-			</Button>
-		</ButtonTooltip>
-      ) || (
-		<ButtonTooltip title={executeButtonProps.title} shortcut={executeButtonProps.shortcut}>
-          <Button
-            className="query-editor-controls-button m-l-5"
-            type="primary"
-            disabled={executeButtonProps.disabled}
-            onClick={executeButtonProps.onClick}
-            data-test="ExecuteButton"
-          >
-            <span className="zmdi zmdi-play" />
-            {executeButtonProps.text}
-          </Button>
-        </ButtonTooltip>
-	  ))}
+        ((aiQueryToggleProps !== false && aiQueryToggleProps.available && aiQueryToggleProps.enabled && (
+          <ButtonTooltip title={prepareButtonProps.title} shortcut={prepareButtonProps.shortcut}>
+            <Button
+              className="query-editor-controls-button m-l-5 prepare-button"
+              type="secondary"
+              disabled={prepareButtonProps.disabled}
+              onClick={prepareButtonProps.onClick}
+              data-test="PrepareButton"
+            >
+              <span className="zmdi zmdi-alert-polygon" />
+              {prepareButtonProps.text}
+            </Button>
+          </ButtonTooltip>
+        )) || (
+          <ButtonTooltip title={executeButtonProps.title} shortcut={executeButtonProps.shortcut}>
+            <Button
+              className="query-editor-controls-button m-l-5"
+              type="primary"
+              disabled={executeButtonProps.disabled}
+              onClick={executeButtonProps.onClick}
+              data-test="ExecuteButton"
+            >
+              <span className="zmdi zmdi-play" />
+              {executeButtonProps.text}
+            </Button>
+          </ButtonTooltip>
+        ))}
     </div>
   );
 }

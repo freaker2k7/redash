@@ -2,21 +2,21 @@ import { axios } from "@/services/axios";
 import location from "@/services/location";
 import debug from "debug";
 import {
-	clone,
-	each,
-	extend,
-	filter,
-	find,
-	has,
-	identity,
-	includes,
-	isArray,
-	isEmpty,
-	map,
-	some,
-	union,
-	uniq,
-	zipObject,
+  clone,
+  each,
+  extend,
+  filter,
+  find,
+  has,
+  identity,
+  includes,
+  isArray,
+  isEmpty,
+  map,
+  some,
+  union,
+  uniq,
+  zipObject,
 } from "lodash";
 import moment from "moment";
 import Mustache from "mustache";
@@ -140,8 +140,7 @@ export class Query {
     }
 
     const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
-    const prepare = () =>
-	QueryResult.prepare(this, this.data_source_id, queryText, maxAge, this.id);
+    const prepare = () => QueryResult.prepare(this, this.data_source_id, queryText, maxAge, this.id);
     return this.prepareQueryResultExecution(prepare, maxAge);
   }
 

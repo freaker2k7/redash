@@ -81,7 +81,7 @@ function QuerySource(props) {
     queryResult: prepareQueryResult,
     isExecuting: isPrepareQueryExecuting,
     executionStatus: prepareQueryStatus,
-	prepareQuery,
+    prepareQuery,
     error: prepareQueryError,
     cancelCallback: cancelPrepareQuery,
     isCancelling: isPrepareQueryCancelling,
@@ -177,7 +177,10 @@ function QuerySource(props) {
 
   const doPrepareQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
-      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))) {
+      if (
+        !queryFlags.canExecute ||
+        (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))
+      ) {
         return;
       }
       if (isDirty || !isEmpty(selectedText)) {
@@ -188,12 +191,24 @@ function QuerySource(props) {
         prepareQuery();
       }
     },
-    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, prepareQuery, isPrepareQueryExecuting]
+    [
+      query,
+      queryFlags.canExecute,
+      areParametersDirty,
+      isQueryExecuting,
+      isDirty,
+      selectedText,
+      prepareQuery,
+      isPrepareQueryExecuting,
+    ]
   );
 
   const doExecuteQuery = useCallback(
     (skipParametersDirtyFlag = false) => {
-      if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))) {
+      if (
+        !queryFlags.canExecute ||
+        (!skipParametersDirtyFlag && (areParametersDirty || isQueryExecuting || isPrepareQueryExecuting))
+      ) {
         return;
       }
       if (isDirty || !isEmpty(selectedText)) {
@@ -204,7 +219,16 @@ function QuerySource(props) {
         executeQuery();
       }
     },
-    [query, queryFlags.canExecute, areParametersDirty, isQueryExecuting, isDirty, selectedText, executeQuery, isPrepareQueryExecuting]
+    [
+      query,
+      queryFlags.canExecute,
+      areParametersDirty,
+      isQueryExecuting,
+      isDirty,
+      selectedText,
+      executeQuery,
+      isPrepareQueryExecuting,
+    ]
   );
 
   const [isQuerySaving, setIsQuerySaving] = useState(false);
@@ -426,7 +450,11 @@ function QuerySource(props) {
                     <QueryVisualizationTabs
                       queryResult={queryResult}
                       visualizations={query.visualizations}
-                      showNewVisualizationButton={queryFlags.canEdit && queryResultData.status === ExecutionStatus.DONE && prepareQueryResultData.status === ExecutionStatus.DONE}
+                      showNewVisualizationButton={
+                        queryFlags.canEdit &&
+                        queryResultData.status === ExecutionStatus.DONE &&
+                        prepareQueryResultData.status === ExecutionStatus.DONE
+                      }
                       canDeleteVisualizations={queryFlags.canEdit}
                       selectedTab={selectedVisualization}
                       onChangeTab={setSelectedVisualization}
