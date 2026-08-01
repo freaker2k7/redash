@@ -169,6 +169,7 @@ class QueryResultListResource(BaseResource):
 
         parameterized_query = ParameterizedQuery(query, org=self.current_org)
         should_apply_auto_limit = params.get("apply_auto_limit", False)
+        apply_ai_query = params.get("apply_ai_query", False)
 
         data_source_id = params.get("data_source_id")
         if data_source_id:
@@ -185,6 +186,7 @@ class QueryResultListResource(BaseResource):
             data_source,
             query_id,
             should_apply_auto_limit,
+            apply_ai_query,
             max_age,
         )
 
@@ -267,6 +269,11 @@ class QueryResultResource(BaseResource):
         else:
             should_apply_auto_limit = query.options.get("apply_auto_limit", False)
 
+        if "apply_ai_query" in params:
+            should_apply_ai_query = params.get("apply_ai_query", False)
+        else:
+            should_apply_ai_query = query.options.get("apply_ai_query", False)
+
         if has_access(query, self.current_user, allow_executing_with_view_only_permissions):
             return run_query(
                 query.parameterized,
@@ -274,6 +281,7 @@ class QueryResultResource(BaseResource):
                 query.data_source,
                 query_id,
                 should_apply_auto_limit,
+                should_apply_ai_query,
                 max_age,
             )
         else:

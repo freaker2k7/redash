@@ -6,7 +6,7 @@ device = "cpu"
 models = {}
 
 
-class AIHuggingFace(AIBase):
+class AIHuggingFaceLocal(AIBase):
     def __init__(self, query_runner, model_name: str = "defog/sqlcoder-7b-2", max_new_tokens=300, token=None):
         self.query_runner = query_runner
         self.model_name = model_name
