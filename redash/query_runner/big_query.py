@@ -161,6 +161,10 @@ class BigQuery(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def annotate_query(self, query, metadata):
         # Remove "Job ID" before annotating the query to avoid cache misses
         metadata = {k: v for k, v in metadata.items() if k != "Job ID"}

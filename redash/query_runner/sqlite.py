@@ -30,6 +30,10 @@ class Sqlite(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def __init__(self, configuration):
         super(Sqlite, self).__init__(configuration)
 

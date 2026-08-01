@@ -89,6 +89,10 @@ class Exasol(BaseQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_connection(self):
         exahost = "%s:%s" % (
             self.configuration.get("host", None),

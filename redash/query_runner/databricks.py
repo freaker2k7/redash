@@ -78,6 +78,10 @@ class Databricks(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_cursor(self):
         user_agent = "Redash/{} (Databricks)".format(__version__.split("-")[0])
         connection_string = _build_odbc_connection_string(

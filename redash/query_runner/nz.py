@@ -92,13 +92,17 @@ class Netezza(BaseSQLQueryRunner):
         return "nz"
 
     def __init__(self, configuration):
-        super().__init__(configuration)
+        super(Netezza, self).__init__(configuration)
         self._conn = None
         self.ai = AI(self)
 
     @property
     def supports_ai_query(self):
         return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     @property
     def connection(self):

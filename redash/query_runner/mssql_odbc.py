@@ -91,6 +91,10 @@ class SQLServerODBC(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_tables(self, schema):
         query = """
         SELECT table_schema, table_name, column_name

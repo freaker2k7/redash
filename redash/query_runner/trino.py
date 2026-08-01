@@ -126,6 +126,10 @@ class Trino(BaseQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def get_schema(self, get_stats=False):
         if self.configuration.get("catalog"):
             catalogs = [self.configuration.get("catalog")]

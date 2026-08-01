@@ -13,6 +13,7 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 try:
     from influxdb_client import InfluxDBClient
@@ -42,6 +43,26 @@ class InfluxDBv2(BaseQueryRunner):
     """
 
     should_annotate_query = False
+
+    def __init__(self, configuration: Dict):
+        super(InfluxDBv2, self).__init__(configuration)
+        self.ai = AI(self)
+
+    @property
+    def supports_ai_query(self) -> bool:
+        """
+        Determines, if this query runner supports AI queries.
+        :return: True, if this query runner supports AI queries; otherwise False.
+        """
+        return True
+
+    @property
+    def supports_ai_query_type(self) -> str:
+        """
+        Determines the type of AI queries this query runner supports.
+        :return: The type of AI queries this query runner supports.
+        """
+        return "nosql"
 
     def _get_influx_kwargs(self) -> Dict:
         """

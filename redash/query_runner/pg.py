@@ -214,6 +214,10 @@ class PostgreSQL(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_definitions(self, schema, query):
         results, error = self.run_query(query, None)
 

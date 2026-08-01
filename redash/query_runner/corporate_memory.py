@@ -9,6 +9,7 @@ import logging
 from os import environ
 
 from redash.query_runner import BaseQueryRunner
+from redash.query_runner.ai import AI
 
 from . import register
 
@@ -72,6 +73,7 @@ class CorporateMemoryQueryRunner(BaseQueryRunner):
         FEATURE?: allow to use a context graph per data source
         """
         self.configuration = configuration
+        self.ai = AI(self)
 
     def _setup_environment(self):
         """provide environment for cmempy
@@ -145,6 +147,14 @@ class CorporateMemoryQueryRunner(BaseQueryRunner):
     @classmethod
     def type(cls):
         return "corporate_memory"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sparql"
 
     def run_query(self, query, user):
         """send a sparql query to corporate memory"""

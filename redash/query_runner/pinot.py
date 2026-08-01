@@ -66,6 +66,10 @@ class Pinot(BaseQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def __init__(self, configuration):
         super(Pinot, self).__init__(configuration)
         self.controller_uri = self.configuration.get("controllerURI")

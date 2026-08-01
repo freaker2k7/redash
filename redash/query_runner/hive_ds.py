@@ -80,6 +80,10 @@ class Hive(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_tables(self, schema):
         schemas_query = "show schemas"
 

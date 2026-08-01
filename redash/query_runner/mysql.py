@@ -133,6 +133,10 @@ class Mysql(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _connection(self):
         params = dict(
             host=self.configuration.get("host", ""),

@@ -174,6 +174,10 @@ class Athena(BaseQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_iam_credentials(self, user=None):
         if ASSUME_ROLE:
             role_session_name = "redash" if user is None else user.email

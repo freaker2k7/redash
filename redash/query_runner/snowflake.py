@@ -96,6 +96,10 @@ class Snowflake(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_connection(self):
         region = self.configuration.get("region")
         account = self.configuration["account"]

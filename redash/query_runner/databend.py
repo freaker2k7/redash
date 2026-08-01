@@ -76,6 +76,10 @@ class Databend(BaseQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def run_query(self, query, user):
         host = self.configuration.get("host") or "localhost"
         port = self.configuration.get("port") or "8000"

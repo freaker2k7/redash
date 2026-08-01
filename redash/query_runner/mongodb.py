@@ -13,6 +13,7 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 from redash.utils import json_loads, parse_human_time
 
 logger = logging.getLogger(__name__)
@@ -145,6 +146,10 @@ def _sorted_fields(fields):
 class MongoDB(BaseQueryRunner):
     should_annotate_query = False
 
+    def __init__(self, configuration):
+        super(MongoDB, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -206,6 +211,14 @@ class MongoDB(BaseQueryRunner):
         elif isinstance(o, Decimal128):
             return o.to_decimal()
         return None
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def _get_db(self):
         kwargs = {}

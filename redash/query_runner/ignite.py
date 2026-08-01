@@ -77,6 +77,10 @@ class Ignite(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_tables(self, schema):
         query = """
         SELECT schema_name, table_name, column_name, type

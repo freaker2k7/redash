@@ -10,6 +10,7 @@ from redash.query_runner import (
     BaseQueryRunner,
     register,
 )
+from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
 try:
@@ -78,6 +79,10 @@ class Couchbase(BaseQueryRunner):
     should_annotate_query = False
     noop_query = "Select 1"
 
+    def __init__(self, configuration):
+        super(Couchbase, self).__init__(configuration)
+        self.ai = AI(self)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -104,6 +109,14 @@ class Couchbase(BaseQueryRunner):
     @classmethod
     def enabled(cls):
         return True
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def test_connection(self):
         self.call_service(self.noop_query, "")

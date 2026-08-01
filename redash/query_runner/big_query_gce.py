@@ -59,7 +59,7 @@ class BigQueryGCE(BigQuery):
         }
 
     def _get_project_id(self):
-        google.auth.default()[1]
+        return google.auth.default()[1]
 
     def _get_bigquery_service(self):
         creds = google.auth.default(scopes=["https://www.googleapis.com/auth/bigquery"])[0]

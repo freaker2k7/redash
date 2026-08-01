@@ -62,6 +62,10 @@ class ClickHouse(BaseSQLQueryRunner):
         return True
 
     @property
+    def supports_ai_query_type(self):
+        return "sql"
+
+    @property
     def _url(self):
         return urlparse(self.configuration["url"])
 

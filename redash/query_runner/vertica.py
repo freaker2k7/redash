@@ -81,6 +81,10 @@ class Vertica(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def _get_tables(self, schema):
         query = """
         Select table_schema, table_name, column_name from columns where is_system_table=false

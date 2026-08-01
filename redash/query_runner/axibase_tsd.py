@@ -13,6 +13,7 @@ from redash.query_runner import (
     JobTimeoutException,
     register,
 )
+from redash.query_runner.ai import AI
 from redash.utils import json_loads
 
 logger = logging.getLogger(__name__)
@@ -128,6 +129,14 @@ class AxibaseTSD(BaseQueryRunner):
             "secret": ["password"],
         }
 
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     def __init__(self, configuration):
         super(AxibaseTSD, self).__init__(configuration)
         self.url = "{0}://{1}:{2}".format(
@@ -135,6 +144,7 @@ class AxibaseTSD(BaseQueryRunner):
             self.configuration.get("hostname", "localhost"),
             self.configuration.get("port", 8088),
         )
+        self.ai = AI(self)
 
     def run_query(self, query, user):
         connection = atsd_client.connect_url(

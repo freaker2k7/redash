@@ -79,6 +79,10 @@ class Impala(BaseSQLQueryRunner):
     def supports_ai_query(self):
         return True
 
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
+
     @classmethod
     def type(cls):
         return "impala"
