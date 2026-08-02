@@ -50,6 +50,13 @@ SEND_EMAIL_ON_FAILED_SCHEDULED_QUERIES = parse_boolean(
 HIDE_PLOTLY_MODE_BAR = parse_boolean(os.environ.get("HIDE_PLOTLY_MODE_BAR", "false"))
 DISABLE_PUBLIC_URLS = parse_boolean(os.environ.get("REDASH_DISABLE_PUBLIC_URLS", "false"))
 
+AI_ENABLED = parse_boolean(os.environ.get("REDASH_AI_ENABLED", "false"))
+AI_TYPE = os.environ.get("REDASH_AI_TYPE", "huggingface-local")
+AI_TOKEN = os.environ.get("REDASH_AI_TOKEN", "")
+AI_HOST = os.environ.get("REDASH_AI_HOST", "")
+
+LOGO_URL = os.environ.get("REDASH_LOGO_URL", "")
+
 settings = {
     "beacon_consent": None,
     "auth_password_login_enabled": PASSWORD_LOGIN_ENABLED,
@@ -80,4 +87,9 @@ settings = {
     "send_email_on_failed_scheduled_queries": SEND_EMAIL_ON_FAILED_SCHEDULED_QUERIES,
     "hide_plotly_mode_bar": HIDE_PLOTLY_MODE_BAR,
     "disable_public_urls": DISABLE_PUBLIC_URLS,
+    "logo_url": LOGO_URL,
+    "ai_enabled": AI_ENABLED,
+    "ai_type": AI_TYPE,
+    "ai_token": AI_TOKEN,
+    "ai_host": AI_HOST,
 }

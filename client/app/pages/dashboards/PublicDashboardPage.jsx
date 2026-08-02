@@ -1,14 +1,15 @@
 import { isEmpty } from "lodash";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 import routeWithApiKeySession from "@/components/ApplicationArea/routeWithApiKeySession";
-import Link from "@/components/Link";
 import BigMessage from "@/components/BigMessage";
-import PageHeader from "@/components/PageHeader";
-import Parameters from "@/components/Parameters";
 import DashboardGrid from "@/components/dashboards/DashboardGrid";
 import Filters from "@/components/Filters";
+import Link from "@/components/Link";
+import PageHeader from "@/components/PageHeader";
+import Parameters from "@/components/Parameters";
+import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 
 import { Dashboard } from "@/services/dashboard";
 import routes from "@/services/routes";
@@ -78,6 +79,8 @@ class PublicDashboardPage extends React.Component {
 
   render() {
     const { loading, dashboard } = this.state;
+    const { settings } = useOrganizationSettings({ onError: () => {} });
+
     return (
       <div className="public-dashboard-page">
         {loading ? (
@@ -90,7 +93,7 @@ class PublicDashboardPage extends React.Component {
         <div id="footer">
           <div className="text-center">
             <Link href="https://redash.io">
-              <img alt="Redash Logo" src={logoUrl} width="38" />
+              <img alt="Redash Logo" src={settings.logo_url || logoUrl} width="38" />
             </Link>
           </div>
           Powered by <Link href="https://redash.io/?ref=public-dashboard">Redash</Link>

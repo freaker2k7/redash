@@ -13,7 +13,7 @@ class AI(AIBase):
         "huggingface-local": AIHuggingFaceLocal,
         # "huggingface-remote": AIHuggingFaceRemote,
         # "ollama-remote": AIOllamaRemote,
-        # "kimi-remote": AIKimiK3Remote,
+        # "kimi-k3-remote": AIKimiK3Remote,
         # "openai-remote": AIOpenAIRemote,
         # "claude-remote": AIClaudeRemote,
         # "grok-remote": AIGrokRemote,

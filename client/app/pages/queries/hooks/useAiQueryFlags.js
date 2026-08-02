@@ -1,3 +1,4 @@
+import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 import { extend, get } from "lodash";
 import { useCallback, useState } from "react";
 
@@ -6,8 +7,9 @@ function isAiQueryAvailable(dataSource) {
 }
 
 export default function useAiQueryFlags(dataSource, query, setQuery) {
-  const isAvailable = isAiQueryAvailable(dataSource);
-  const [isChecked, setIsChecked] = useState(query.options.apply_ai_query);
+  const { settings } = useOrganizationSettings({ onError: () => {} });
+  const isAvailable = settings.ai_enabled && isAiQueryAvailable(dataSource);
+  const [isChecked, setIsChecked] = useState(isAvailable && query.options.apply_ai_query);
   query.options.apply_ai_query = isChecked;
 
   const setAiQuery = useCallback(
