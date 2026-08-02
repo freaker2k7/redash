@@ -220,7 +220,7 @@ class DataSource(BelongsToOrgMixin, db.Model):
             try:
                 out_schema = self._sort_schema(schema)
             except Exception:
-                logging.exception("Error sorting schema columns for data_source {}".format(self.id))
+                logger.exception("Error sorting schema columns for data_source {}".format(self.id))
                 out_schema = schema
             finally:
                 ttl = int(datetime.timedelta(minutes=settings.SCHEMAS_REFRESH_SCHEDULE, days=7).total_seconds())
@@ -379,7 +379,7 @@ class QueryResult(db.Model, BelongsToOrgMixin):
         )
 
         db.session.add(query_result)
-        logging.info("Inserted query (%s) data; id=%s", query_hash, query_result.id)
+        logger.info("Inserted query (%s) data; id=%s", query_hash, query_result.id)
 
         return query_result
 
@@ -641,7 +641,7 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
                     "Could not determine if query %d is outdated due to %s. The schedule for this query has been disabled."
                     % (query.id, repr(e))
                 )
-                logging.info(message)
+                logger.info(message)
                 sentry.capture_exception(type(e)(message).with_traceback(e.__traceback__))
 
         return list(outdated_queries.values())
@@ -772,7 +772,7 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             db.session.add(self)
 
     @classmethod
-    def update_latest_result(cls, query_result):
+    def update_latest_result(cls, query_result, is_ai_query=False):
         # TODO: Investigate how big an impact this select-before-update makes.
         queries = Query.query.filter(
             Query.query_hash == query_result.query_hash,
@@ -780,17 +780,36 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             Query.is_archived.is_(False),
         )
 
+        logger.info(
+            "Updating %s queries with result (%s). is_ai_query=%s ; query_result.query=%s",
+            queries.count(),
+            query_result.query_hash,
+            is_ai_query,
+            query_result.query_text
+        )
+
+        if is_ai_query:
+            query_hash = gen_query_hash(query_result.query_text)
+        else:
+            query_hash = query_result.query_hash
+
         for q in queries:
             q.latest_query_data = query_result
             # don't auto-update the updated_at timestamp
             q.skip_updated_at = True
+
+            if is_ai_query:
+                q.query = query_result.query_text
+                q.query_hash = query_hash
+                # q.search_vector = None # TODO: See how to update this, if even needed ?!
+
             db.session.add(q)
 
         query_ids = [q.id for q in queries]
-        logging.info(
+        logger.info(
             "Updated %s queries with result (%s).",
             len(query_ids),
-            query_result.query_hash,
+            query_hash,
         )
 
         return query_ids
@@ -877,9 +896,9 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             try:
                 query_text = self.parameterized.apply(parameters_dict).query
             except InvalidParameterError as e:
-                logging.info(f"Unable to update hash for query {self.id} because of invalid parameters: {str(e)}")
+                logger.info(f"Unable to update hash for query {self.id} because of invalid parameters: {str(e)}")
             except QueryDetachedFromDataSourceError as e:
-                logging.info(
+                logger.info(
                     f"Unable to update hash for query {self.id} because of dropdown query {e.query_id} is unattached from datasource"
                 )
 

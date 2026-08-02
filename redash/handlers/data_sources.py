@@ -28,6 +28,8 @@ from redash.utils import filter_none
 from redash.utils.configuration import ConfigurationContainer, ValidationError
 
 
+logger = logging.getLogger(__name__)
+
 class DataSourceTypeListResource(BaseResource):
     @require_admin
     def get(self):
@@ -116,7 +118,7 @@ class DataSourceListResource(BaseResource):
                 d["view_only"] = all(project(ds.groups, self.current_user.group_ids).values())
                 response[ds.id] = d
             except AttributeError:
-                logging.exception("Error with DataSource#to_dict (data source id: %d)", ds.id)
+                logger.exception("Error with DataSource#to_dict (data source id: %d)", ds.id)
 
         self.record_event(
             {

@@ -15,6 +15,8 @@ from redash.query_runner import (
     register,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class QueryParseError(Exception):
     pass
@@ -29,7 +31,7 @@ def parse_query(query):
         params = yaml.safe_load(query)
         return params
     except ValueError as e:
-        logging.exception(e)
+        logger.exception(e)
         error = str(e)
         raise QueryParseError(error)
 

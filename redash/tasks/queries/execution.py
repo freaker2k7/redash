@@ -31,7 +31,7 @@ def _unlock(query_hash, data_source_id):
 
 def enqueue_query(query, data_source, user_id, is_api_key=False, scheduled_query=None, metadata={}):
     query_hash = gen_query_hash(query)
-    logger.info("Inserting job for %s with metadata=%s", query_hash, metadata)
+    logger.info("Inserting job for %s with metadata=%s ; query=%s", query_hash, metadata, query)
     try_count = 0
     job = None
 
@@ -205,19 +205,12 @@ class QueryExecutor:
 
         query_runner = self.data_source.query_runner
 
-        if self.is_ai_query:
-            logger.info(">>> Applying AI query transformation for query=%s", self.query)
-            self.query = query_runner.ai.apply_ai_query(self.query)
-            logger.info("<<< Transformed query=%s", self.query)
-            # save the modified query to the scheduled query model if it exists
-            if self.query_model:
-                self.query_model.query_text = self.query
-                # models.db.session.add(self.query_model)
-                # models.db.session.commit()
-
-        annotated_query = self._annotate_query(query_runner)
-
         try:
+            if self.is_ai_query:
+                self.query = query_runner.ai.apply_ai_query(self.query)
+
+            annotated_query = self._annotate_query(query_runner)
+
             data, error = query_runner.run_query(annotated_query, self.user)
         except Exception as e:
             if isinstance(e, JobTimeoutException):
@@ -263,7 +256,7 @@ class QueryExecutor:
                 utcnow(),
             )
 
-            updated_query_ids = models.Query.update_latest_result(query_result)
+            updated_query_ids = models.Query.update_latest_result(query_result, self.is_ai_query)
 
             models.db.session.commit()  # make sure that alert sees the latest query result
             self._log_progress("checking_alerts")

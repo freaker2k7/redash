@@ -176,7 +176,7 @@ class ClickHouse(BaseSQLQueryRunner):
             return TYPE_STRING
 
     def _clickhouse_query(self, query, session_id=None, session_check=None):
-        logger.debug(f"{self.name()} is about to execute query: %s", query)
+        logger.debug("%s is about to execute query: %s", self.name(), query)
 
         query += "\nFORMAT JSON"
 
@@ -239,7 +239,7 @@ class ClickHouse(BaseSQLQueryRunner):
             error = None
         except Exception as e:
             data = None
-            logging.exception(e)
+            logger.exception(e)
             error = str(e)
         return data, error
 

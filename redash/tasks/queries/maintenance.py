@@ -106,7 +106,7 @@ def refresh_queries():
             enqueued.append(query)
         except Exception as e:
             message = "Could not enqueue query %d due to %s" % (query.id, repr(e))
-            logging.info(message)
+            logger.info(message)
             error = RefreshQueriesError(message).with_traceback(e.__traceback__)
             sentry.capture_exception(error)
 

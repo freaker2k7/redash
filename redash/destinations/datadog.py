@@ -7,6 +7,8 @@ from redash.destinations import BaseDestination, register
 from redash.utils import json_dumps
 
 
+logger = logging.getLogger(__name__)
+
 class Datadog(BaseDestination):
     @classmethod
     def configuration_schema(cls):
@@ -83,11 +85,11 @@ class Datadog(BaseDestination):
 
         try:
             resp = requests.post(url, headers=headers, data=json_dumps(body), timeout=5.0)
-            logging.warning(resp.text)
+            logger.warning(resp.text)
             if resp.status_code != 202:
-                logging.error(f"Datadog send ERROR. status_code => {resp.status_code}")
+                logger.error(f"Datadog send ERROR. status_code => {resp.status_code}")
         except Exception as e:
-            logging.exception("Datadog send ERROR: %s", e)
+            logger.exception("Datadog send ERROR: %s", e)
 
 
 register(Datadog)

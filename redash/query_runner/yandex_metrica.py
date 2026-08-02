@@ -155,7 +155,7 @@ class YandexMetrica(BaseSQLQueryRunner):
         try:
             params = yaml.safe_load(query)
         except ValueError as e:
-            logging.exception(e)
+            logger.exception(e)
             error = str(e)
             return data, error
 
@@ -170,7 +170,7 @@ class YandexMetrica(BaseSQLQueryRunner):
             data = parse_ym_response(self._send_query(**params))
             error = None
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
             error = str(e)
         return data, error
 

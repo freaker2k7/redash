@@ -1,10 +1,9 @@
-import time
+from time import sleep
 
 from redash.query_runner.ai.base import AIBase
 
 device = "cpu"
 models = {}
-
 
 class AIHuggingFaceLocal(AIBase):
     def __init__(self, query_runner, token=None):
@@ -29,7 +28,7 @@ class AIHuggingFaceLocal(AIBase):
 
                     model_instance = HuggingFaceModelsDefogSQLCoder7B2(self.query_runner, token=self.token)
 
-                    models[self.query_runner.supports_ai_query_type]["model_data"] = model_instance.load()
+                    models[self.query_runner.supports_ai_query_type] = model_instance.load()
                     models[self.query_runner.supports_ai_query_type]["model_instance"] = model_instance
                     models[self.query_runner.supports_ai_query_type]["loaded"] = True
                 elif self.query_runner.supports_ai_query_type == "nosql":
@@ -39,7 +38,7 @@ class AIHuggingFaceLocal(AIBase):
 
                     model_instance = HuggingFaceModelsQwenQwen3CoderNext(self.query_runner, token=self.token)
 
-                    models[self.query_runner.supports_ai_query_type]["model_data"] = model_instance.load()
+                    models[self.query_runner.supports_ai_query_type] = model_instance.load()
                     models[self.query_runner.supports_ai_query_type]["model_instance"] = model_instance
                     models[self.query_runner.supports_ai_query_type]["loaded"] = True
                 else:
@@ -48,7 +47,7 @@ class AIHuggingFaceLocal(AIBase):
                     )
             else:
                 while models[self.query_runner.supports_ai_query_type].get("loading"):
-                    time.sleep(1)
+                    sleep(1)
 
     def apply_ai_query(self, query_text: str) -> str:
         """
@@ -58,8 +57,6 @@ class AIHuggingFaceLocal(AIBase):
 
         self.load_model()
 
-        query = models[self.query_runner.supports_ai_query_type]["model_instance"].generate(query_text)
-
-        print(f"?? Debug: AI generated query: '{query_text}' ==> '{query}'")
+        query = models[self.query_runner.supports_ai_query_type]["model_instance"].generate(models[self.query_runner.supports_ai_query_type], query_text)
 
         return query

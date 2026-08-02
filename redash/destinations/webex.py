@@ -9,6 +9,8 @@ from redash.destinations import BaseDestination, register
 from redash.models import Alert
 
 
+logger = logging.getLogger(__name__)
+
 class Webex(BaseDestination):
     @classmethod
     def configuration_schema(cls):
@@ -220,11 +222,11 @@ class Webex(BaseDestination):
                 headers=headers,
                 timeout=5.0,
             )
-            logging.warning(resp.text)
+            logger.warning(resp.text)
             if resp.status_code != 200:
-                logging.error("Webex send ERROR. status_code => {status}".format(status=resp.status_code))
+                logger.error("Webex send ERROR. status_code => {status}".format(status=resp.status_code))
         except Exception as e:
-            logging.exception(f"Webex send ERROR: {e}")
+            logger.exception(f"Webex send ERROR: {e}")
 
 
 register(Webex)

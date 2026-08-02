@@ -69,7 +69,7 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
 
     def generate(self, model, query_text: str) -> str:
         return (
-            model.pipe(
+            model["pipe"](
                 self.template(query_text),
                 num_return_sequences=1,
                 eos_token_id=model["eos_token_id"],
