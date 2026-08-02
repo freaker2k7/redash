@@ -780,14 +780,6 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             Query.is_archived.is_(False),
         )
 
-        logger.info(
-            "Updating %s queries with result (%s). is_ai_query=%s ; query_result.query=%s",
-            queries.count(),
-            query_result.query_hash,
-            is_ai_query,
-            query_result.query_text,
-        )
-
         if is_ai_query:
             query_hash = gen_query_hash(query_result.query_text)
         else:
@@ -799,8 +791,9 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             q.skip_updated_at = True
 
             if is_ai_query:
-                q.query = query_result.query_text
+                q.query_text = query_result.query_text
                 q.query_hash = query_hash
+                q.options["apply_ai_query"] = False
                 # q.search_vector = None # TODO: See how to update this, if even needed ?!
 
             db.session.add(q)
