@@ -7,6 +7,7 @@ from redash.utils import json_dumps
 
 logger = logging.getLogger(__name__)
 
+
 class Mattermost(BaseDestination):
     @classmethod
     def configuration_schema(cls):

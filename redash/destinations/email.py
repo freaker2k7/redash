@@ -5,8 +5,8 @@ from flask_mail import Message
 from redash import mail, settings
 from redash.destinations import BaseDestination, register
 
-
 logger = logging.getLogger(__name__)
+
 
 class Email(BaseDestination):
     @classmethod

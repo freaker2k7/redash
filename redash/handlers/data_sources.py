@@ -27,8 +27,8 @@ from redash.tasks.general import get_schema, test_connection
 from redash.utils import filter_none
 from redash.utils.configuration import ConfigurationContainer, ValidationError
 
-
 logger = logging.getLogger(__name__)
+
 
 class DataSourceTypeListResource(BaseResource):
     @require_admin

@@ -8,8 +8,8 @@ import requests
 from redash.destinations import BaseDestination, register
 from redash.models import Alert
 
-
 logger = logging.getLogger(__name__)
+
 
 class Webex(BaseDestination):
     @classmethod

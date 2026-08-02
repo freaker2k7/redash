@@ -5,6 +5,7 @@ from redash.query_runner.ai.base import AIBase
 device = "cpu"
 models = {}
 
+
 class AIHuggingFaceLocal(AIBase):
     def __init__(self, query_runner, token=None):
         self.query_runner = query_runner
@@ -57,6 +58,8 @@ class AIHuggingFaceLocal(AIBase):
 
         self.load_model()
 
-        query = models[self.query_runner.supports_ai_query_type]["model_instance"].generate(models[self.query_runner.supports_ai_query_type], query_text)
+        query = models[self.query_runner.supports_ai_query_type]["model_instance"].generate(
+            models[self.query_runner.supports_ai_query_type], query_text
+        )
 
         return query

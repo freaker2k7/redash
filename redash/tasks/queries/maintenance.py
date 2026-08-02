@@ -1,4 +1,3 @@
-import logging
 import time
 
 from rq.timeouts import JobTimeoutException

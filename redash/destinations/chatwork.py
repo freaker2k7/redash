@@ -4,8 +4,8 @@ import requests
 
 from redash.destinations import BaseDestination, register
 
-
 logger = logging.getLogger(__name__)
+
 
 class ChatWork(BaseDestination):
     ALERTS_DEFAULT_MESSAGE_TEMPLATE = "{alert_name} changed state to {new_state}.\\n{alert_url}\\n{query_url}"

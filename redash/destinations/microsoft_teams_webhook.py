@@ -6,8 +6,8 @@ import requests
 from redash.destinations import BaseDestination, register
 from redash.utils import json_dumps
 
-
 logger = logging.getLogger(__name__)
+
 
 def json_string_substitute(j, substitutions):
     """

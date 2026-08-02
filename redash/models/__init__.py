@@ -785,7 +785,7 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
             queries.count(),
             query_result.query_hash,
             is_ai_query,
-            query_result.query_text
+            query_result.query_text,
         )
 
         if is_ai_query:

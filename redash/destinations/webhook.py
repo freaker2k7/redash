@@ -7,8 +7,8 @@ from redash.destinations import BaseDestination, register
 from redash.serializers import serialize_alert
 from redash.utils import json_dumps
 
-
 logger = logging.getLogger(__name__)
+
 
 class Webhook(BaseDestination):
     @classmethod
