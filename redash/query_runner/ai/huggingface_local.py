@@ -22,10 +22,9 @@ class AIHuggingFaceLocal(AIBase):
             if not models.get(self.query_runner.supports_ai_query_type):
                 models[self.query_runner.supports_ai_query_type] = {"loading": True}
 
-                if self.query_runner.supports_ai_query_type == "sql":
-                    from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import (
-                        HuggingFaceModelsDefogSQLCoder7B2,
-                    )
+                if self.query_runner.supports_ai_query_type in ["sql", "sparql"]:
+                    from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import \
+                        HuggingFaceModelsDefogSQLCoder7B2
 
                     model_instance = HuggingFaceModelsDefogSQLCoder7B2(self.query_runner, token=self.token)
 
@@ -33,9 +32,8 @@ class AIHuggingFaceLocal(AIBase):
                     models[self.query_runner.supports_ai_query_type]["model_instance"] = model_instance
                     models[self.query_runner.supports_ai_query_type]["loaded"] = True
                 elif self.query_runner.supports_ai_query_type == "nosql":
-                    from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import (
-                        HuggingFaceModelsQwenQwen3CoderNext,
-                    )
+                    from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import \
+                        HuggingFaceModelsQwenQwen3CoderNext
 
                     model_instance = HuggingFaceModelsQwenQwen3CoderNext(self.query_runner, token=self.token)
 
