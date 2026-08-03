@@ -156,12 +156,17 @@ function QuerySource(props) {
       aiQueryTextFixFlag.current = true;
     } else if (isExecutionCancelling) {
       aiQueryTextFixFlag.current = false;
-    } else if (aiQueryAvailable && aiQueryEnabled && aiQueryTextFixFlag.current) {
+    } else if (aiQueryAvailable && query.options.apply_ai_query && aiQueryTextFixFlag.current) {
       aiQueryTextFixFlag.current = false;
-      setAiQuery(false);
-      setQuery((prevQuery) => {
-        return extend(prevQuery.clone(), { query: queryResult.query_result.query });
-      });
+
+      if (queryResult?.query_result?.query) {
+        setAiQuery(false);
+        setQuery((prevQuery) => {
+          return extend(prevQuery.clone(), { query: queryResult.query_result.query });
+        });
+      }
+    } else {
+      aiQueryTextFixFlag.current = false;
     }
   }, [isExecutionCancelling, isQueryExecuting, queryResult, setAiQuery, setQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
