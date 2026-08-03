@@ -26,6 +26,7 @@ import wrapQueryPage from "./components/wrapQueryPage";
 
 import { getEditorComponents } from "@/components/queries/editor-components";
 import useQueryResultData from "@/lib/useQueryResultData";
+import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 import useAddNewParameterDialog from "./hooks/useAddNewParameterDialog";
 import useAddVisualizationDialog from "./hooks/useAddVisualizationDialog";
 import useAiQueryFlags from "./hooks/useAiQueryFlags";
@@ -53,6 +54,7 @@ function chooseDataSourceId(dataSourceIds, availableDataSources) {
 }
 
 function QuerySource(props) {
+  const { settings } = useOrganizationSettings({ onError: () => {} });
   const { query, setQuery, isDirty, saveQuery } = useQuery(props.query);
   const { dataSourcesLoaded, dataSources, dataSource } = useQueryDataSources(query);
   const [schema, setSchema] = useState([]);
@@ -81,7 +83,7 @@ function QuerySource(props) {
   const editorRef = useRef(null);
   const [autocompleteAvailable, autocompleteEnabled, toggleAutocomplete] = useAutocompleteFlags(schema);
   const [autoLimitAvailable, autoLimitChecked, setAutoLimit] = useAutoLimitFlags(dataSource, query, setQuery);
-  const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery);
+  const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery, settings);
 
   const [handleQueryEditorChange] = useDebouncedCallback((queryText) => {
     setQuery(extend(query.clone(), { query: queryText }));

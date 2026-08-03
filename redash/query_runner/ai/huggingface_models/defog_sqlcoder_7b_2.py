@@ -24,7 +24,7 @@ class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
             trust_remote_code=True,
             torch_dtype=torch.float16,
             use_cache=True,
-            token=self.token,  # TODO: Check if this is correct !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            token=self.token or None,
         ).to(device)
         self.token = None  # Prevent token from being stored in memory after initialization
 

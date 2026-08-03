@@ -22,7 +22,7 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype="auto",
-            token=self.token,  # TODO: Check if this is correct !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            token=self.token or None,
         ).to(device)
         self.token = None  # Prevent token from being stored in memory after initialization
 
