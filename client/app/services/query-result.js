@@ -144,8 +144,8 @@ class QueryResult {
       this.status = ExecutionStatus.DONE;
       this.deferred.onStatusChange(ExecutionStatus.DONE);
 
-      const { settings } = useOrganizationSettings({ onError: () => {} });
-      const [aiQueryAvailable, aiQueryEnabled] = useAiQueryFlags(dataSource, query, setQuery, settings);
+      const { settings, setQuery } = useOrganizationSettings({ onError: () => {} });
+      const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery, settings);
 
       const columnTypes = {};
 
@@ -191,11 +191,9 @@ class QueryResult {
       if (aiQueryAvailable && aiQueryEnabled) {
         const { setQuery } = useQuery(props.query);
 
+        setAiQuery(false);
         setQuery((prevQuery) => {
-          return extend(prevQuery.clone(), {
-            query: this.query_result.query,
-            options: { ...prevQuery.options, apply_ai_query: false },
-          });
+          return extend(prevQuery.clone(), { query: this.query_result.query });
         });
       }
 
