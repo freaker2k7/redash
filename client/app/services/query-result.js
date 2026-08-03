@@ -1,6 +1,3 @@
-import useAiQueryFlags from "@/pages/queries/hooks/useAiQueryFlags";
-import useQuery from "@/pages/queries/hooks/useQuery";
-import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 import { Auth } from "@/services/auth";
 import { axios } from "@/services/axios";
 import { QueryResultError } from "@/services/query";
@@ -144,9 +141,6 @@ class QueryResult {
       this.status = ExecutionStatus.DONE;
       this.deferred.onStatusChange(ExecutionStatus.DONE);
 
-      const { settings, setQuery } = useOrganizationSettings({ onError: () => {} });
-      const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery, settings);
-
       const columnTypes = {};
 
       // TODO: we should stop manipulating incoming data, and switch to relaying
@@ -187,15 +181,6 @@ class QueryResult {
           }
         }
       });
-
-      if (aiQueryAvailable && aiQueryEnabled) {
-        const { setQuery } = useQuery(props.query);
-
-        setAiQuery(false);
-        setQuery((prevQuery) => {
-          return extend(prevQuery.clone(), { query: this.query_result.query });
-        });
-      }
 
       this.deferred.resolve(this);
     } else if (this.job.status === 3 || this.job.status === 2) {

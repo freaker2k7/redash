@@ -16,10 +16,8 @@ function handleFileChange(e, onChange) {
       // Create a 64x64 thumbnail of the image and convert it to base64, also crop the image using a circle.
       const img = new Image();
       img.src = reader.result;
-
-      const size = Math.min(img.width, img.height, 64);
-
       img.onload = () => {
+        const size = Math.min(parseInt(img.width), parseInt(img.height), 64);
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         canvas.width = size;
@@ -30,9 +28,6 @@ function handleFileChange(e, onChange) {
         ctx.clip();
         ctx.drawImage(img, 0, 0, size, size);
         const thumbnail = canvas.toDataURL("image/png");
-
-        console.log("File read successfully:", thumbnail);
-
         onChange({ logo_url: thumbnail });
       };
     };
@@ -50,7 +45,7 @@ export default function LogoSettings(props) {
         {loading ? (
           <Skeleton.Input style={{ width: 300, height: 64 }} active />
         ) : (
-          <div className="logo-settings" style={{ display: "flex", alignItems: "flex-start" }}>
+          <div className="logo-settings" style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
             <Avatar
               src={values.logo_url || settings.logo_url || logoUrl}
               alt="Logo Preview"

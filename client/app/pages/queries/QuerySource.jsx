@@ -84,6 +84,7 @@ function QuerySource(props) {
   const [autocompleteAvailable, autocompleteEnabled, toggleAutocomplete] = useAutocompleteFlags(schema);
   const [autoLimitAvailable, autoLimitChecked, setAutoLimit] = useAutoLimitFlags(dataSource, query, setQuery);
   const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery, settings);
+  const aiQueryTextFixFlag = useRef(false); // to avoid infinite loop when query text is changed by AI query
 
   const [handleQueryEditorChange] = useDebouncedCallback((queryText) => {
     setQuery(extend(query.clone(), { query: queryText }));
@@ -145,6 +146,24 @@ function QuerySource(props) {
       );
     }
   }, [query.data_source_id, queryFlags.isNew, dataSourcesLoaded, dataSources, handleDataSourceChange]);
+
+  /**
+   * We want to disable AI query option and update the text with the result of the AI query after the query execution is finished.
+   * But we don't want to do it if the user is still executing the query, because it will cause an infinite loop of query execution.
+   */
+  useEffect(() => {
+    if (isQueryExecuting) {
+      aiQueryTextFixFlag.current = true;
+    } else if (isExecutionCancelling) {
+      aiQueryTextFixFlag.current = false;
+    } else if (aiQueryAvailable && aiQueryEnabled && aiQueryTextFixFlag.current) {
+      aiQueryTextFixFlag.current = false;
+      setAiQuery(false);
+      setQuery((prevQuery) => {
+        return extend(prevQuery.clone(), { query: queryResult.query_result.query });
+      });
+    }
+  }, [isExecutionCancelling, isQueryExecuting, queryResult, setAiQuery, setQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const editSchedule = useEditScheduleDialog(query, setQuery);
   const openAddNewParameterDialog = useAddNewParameterDialog(query, (newQuery, param) => {

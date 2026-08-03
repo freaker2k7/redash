@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import routeWithApiKeySession from "@/components/ApplicationArea/routeWithApiKeySession";
 import BigMessage from "@/components/BigMessage";
@@ -56,52 +56,56 @@ PublicDashboard.propTypes = {
   dashboard: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-class PublicDashboardPage extends React.Component {
-  static propTypes = {
-    token: PropTypes.string.isRequired,
-    onError: PropTypes.func,
-  };
+function PublicDashboardPage({ token, onError = () => {} }) {
+  const { settings } = useOrganizationSettings({ onError: () => {} });
+  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState(null);
 
-  static defaultProps = {
-    onError: () => {},
-  };
+  useEffect(() => {
+    let mounted = true;
 
-  state = {
-    loading: true,
-    dashboard: null,
-  };
+    Dashboard.getByToken({ token })
+      .then((d) => {
+        if (!mounted) return;
+        setDashboard(d);
+        setLoading(false);
+      })
+      .catch((error) => onError(error));
 
-  componentDidMount() {
-    Dashboard.getByToken({ token: this.props.token })
-      .then((dashboard) => this.setState({ dashboard, loading: false }))
-      .catch((error) => this.props.onError(error));
-  }
+    return () => {
+      mounted = false;
+    };
+  }, [token, onError]);
 
-  render() {
-    const { loading, dashboard } = this.state;
-    const { settings } = useOrganizationSettings({ onError: () => {} });
-
-    return (
-      <div className="public-dashboard-page">
-        {loading ? (
-          <div className="container loading-message">
-            <BigMessage className="" icon="fa-spinner fa-2x fa-pulse" message="Loading..." />
-          </div>
-        ) : (
-          <PublicDashboard dashboard={dashboard} />
-        )}
-        <div id="footer">
-          <div className="text-center">
-            <Link href="https://redash.io">
-              <img alt="Redash Logo" src={settings.logo_url || logoUrl} width="38" />
-            </Link>
-          </div>
-          Powered by <Link href="https://redash.io/?ref=public-dashboard">Redash</Link>
+  return (
+    <div className="public-dashboard-page">
+      {loading ? (
+        <div className="container loading-message">
+          <BigMessage className="" icon="fa-spinner fa-2x fa-pulse" message="Loading..." />
         </div>
+      ) : (
+        <PublicDashboard dashboard={dashboard} />
+      )}
+      <div id="footer">
+        <div className="text-center">
+          <Link href="https://redash.io">
+            <img alt="Redash Logo" src={settings.logo_url || logoUrl} width="38" />
+          </Link>
+        </div>
+        Powered by <Link href="https://redash.io/?ref=public-dashboard">Redash</Link>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+PublicDashboardPage.propTypes = {
+  token: PropTypes.string.isRequired,
+  onError: PropTypes.func,
+};
+
+PublicDashboardPage.defaultProps = {
+  onError: () => {},
+};
 
 routes.register(
   "Dashboards.ViewShared",
