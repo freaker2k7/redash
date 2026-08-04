@@ -118,7 +118,7 @@ def reencrypt(old_secret, new_secret, show_sql):
                     encrypted_options=item["encrypted_options"]
                 )
             except InvalidToken:
-                logger.error(f'Invalid Decryption Key for id {item["id"]} in table {table_for_select}')
+                logger.error(f"Invalid Decryption Key for id {item['id']} in table {table_for_select}")
             else:
                 db.session.execute(stmt)
 

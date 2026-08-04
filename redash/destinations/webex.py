@@ -66,7 +66,16 @@ class Webex(BaseDestination):
                         {
                             "type": "ColumnSet",
                             "columns": [
-                                {"type": "Column", "items": [{"type": "TextBlock", "text": str(item), "wrap": True}]}
+                                {
+                                    "type": "Column",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": str(item),
+                                            "wrap": True,
+                                        }
+                                    ],
+                                }
                                 for item in row
                             ],
                         }
@@ -188,10 +197,16 @@ class Webex(BaseDestination):
             subject = f"{alert.name} went back to normal"
 
         attachments = self.formatted_attachments_template(
-            subject=subject, description=alert.custom_body, query_link=query_link, alert_link=alert_link
+            subject=subject,
+            description=alert.custom_body,
+            query_link=query_link,
+            alert_link=alert_link,
         )
 
-        template_payload = {"markdown": subject + "\n" + alert.custom_body, "attachments": attachments}
+        template_payload = {
+            "markdown": subject + "\n" + alert.custom_body,
+            "attachments": attachments,
+        }
 
         headers = {"Authorization": f"Bearer {options['webex_bot_token']}"}
 

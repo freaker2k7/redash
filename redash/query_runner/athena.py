@@ -106,7 +106,13 @@ class Athena(BaseQueryRunner):
                 },
             },
             "required": ["region", "s3_staging_dir"],
-            "extra_options": ["glue", "catalog_ids", "cost_per_tb", "result_reuse_enable", "result_reuse_minutes"],
+            "extra_options": [
+                "glue",
+                "catalog_ids",
+                "cost_per_tb",
+                "result_reuse_enable",
+                "result_reuse_minutes",
+            ],
             "order": [
                 "region",
                 "s3_staging_dir",
@@ -242,7 +248,10 @@ class Athena(BaseQueryRunner):
     def get_schema(self, get_stats=False):
         if self.configuration.get("glue", False):
             catalog_ids = [id.strip() for id in self.configuration.get("catalog_ids", "").split(",")]
-            return sum([self.__get_schema_from_glue(catalog_id) for catalog_id in catalog_ids], [])
+            return sum(
+                [self.__get_schema_from_glue(catalog_id) for catalog_id in catalog_ids],
+                [],
+            )
 
         schema = {}
         query = """

@@ -210,7 +210,12 @@ class GoogleSpreadsheet(BaseQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"jsonKeyFile": {"type": "string", "title": "JSON Key File (ADC is used if omitted)"}},
+            "properties": {
+                "jsonKeyFile": {
+                    "type": "string",
+                    "title": "JSON Key File (ADC is used if omitted)",
+                }
+            },
             "required": [],
             "secret": ["jsonKeyFile"],
         }

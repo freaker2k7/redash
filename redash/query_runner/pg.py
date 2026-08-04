@@ -165,7 +165,11 @@ class PostgreSQL(BaseSQLQueryRunner):
                 "host": {"type": "string", "default": "127.0.0.1"},
                 "port": {"type": "number", "default": 5432},
                 "dbname": {"type": "string", "title": "Database Name"},
-                "dsn": {"type": "string", "default": "application_name=redash", "title": "Parameters"},
+                "dsn": {
+                    "type": "string",
+                    "default": "application_name=redash",
+                    "title": "Parameters",
+                },
                 "sslmode": {
                     "type": "string",
                     "title": "SSL Mode",

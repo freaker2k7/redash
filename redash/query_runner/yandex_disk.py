@@ -63,7 +63,10 @@ class YandexDisk(BaseSQLQueryRunner):
 
         while True:
             tmp_response = self._send_query(
-                "resources/public", media_type="spreadsheet,text", limit=limit, offset=offset
+                "resources/public",
+                media_type="spreadsheet,text",
+                limit=limit,
+                offset=offset,
             )
 
             tmp_items = tmp_response["items"]

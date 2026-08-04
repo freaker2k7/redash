@@ -68,7 +68,11 @@ class Mysql(BaseSQLQueryRunner):
                 "passwd": {"type": "string", "title": "Password"},
                 "db": {"type": "string", "title": "Database name"},
                 "port": {"type": "number", "default": 3306},
-                "connect_timeout": {"type": "number", "default": 60, "title": "Connection Timeout"},
+                "connect_timeout": {
+                    "type": "number",
+                    "default": 60,
+                    "title": "Connection Timeout",
+                },
                 "charset": {"type": "string", "default": "utf8mb4"},
                 "use_unicode": {"type": "boolean", "default": True},
                 "autocommit": {"type": "boolean", "default": False},
@@ -283,7 +287,12 @@ class Mysql(BaseSQLQueryRunner):
         ssl_params = {}
 
         if self.configuration.get("use_ssl"):
-            config_map = {"ssl_mode": "preferred", "ssl_cacert": "ca", "ssl_cert": "cert", "ssl_key": "key"}
+            config_map = {
+                "ssl_mode": "preferred",
+                "ssl_cacert": "ca",
+                "ssl_cert": "cert",
+                "ssl_key": "key",
+            }
             for key, cfg in config_map.items():
                 val = self.configuration.get(key)
                 if val:

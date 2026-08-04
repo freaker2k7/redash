@@ -53,7 +53,14 @@ class Pinot(BaseQueryRunner):
                 "username": {"type": "string"},
                 "password": {"type": "string"},
             },
-            "order": ["brokerScheme", "brokerHost", "brokerPort", "controllerURI", "username", "password"],
+            "order": [
+                "brokerScheme",
+                "brokerHost",
+                "brokerPort",
+                "controllerURI",
+                "username",
+                "password",
+            ],
             "required": ["brokerHost", "controllerURI"],
             "secret": ["password"],
         }
@@ -113,7 +120,10 @@ class Pinot(BaseQueryRunner):
             for table_name in self.get_table_names():
                 schema_table_name = "{}.{}".format(schema_name, table_name)
                 if table_name not in schema:
-                    schema[schema_table_name] = {"name": schema_table_name, "columns": []}
+                    schema[schema_table_name] = {
+                        "name": schema_table_name,
+                        "columns": [],
+                    }
                 table_schema = self.get_pinot_table_schema(table_name)
 
                 for column in (
@@ -139,7 +149,11 @@ class Pinot(BaseQueryRunner):
 
     def get_metadata_from_controller(self, path):
         url = self.controller_uri + path
-        r = requests.get(url, headers={"Accept": "application/json"}, auth=HTTPBasicAuth(self.username, self.password))
+        r = requests.get(
+            url,
+            headers={"Accept": "application/json"},
+            auth=HTTPBasicAuth(self.username, self.password),
+        )
         try:
             result = r.json()
             logger.debug("get_metadata_from_controller from path %s", path)

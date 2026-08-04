@@ -116,7 +116,10 @@ class BigQuery(BaseSQLQueryRunner):
             "type": "object",
             "properties": {
                 "projectId": {"type": "string", "title": "Project ID"},
-                "jsonKeyFile": {"type": "string", "title": "JSON Key File (ADC is used if omitted)"},
+                "jsonKeyFile": {
+                    "type": "string",
+                    "title": "JSON Key File (ADC is used if omitted)",
+                },
                 "totalMBytesProcessedLimit": {
                     "type": "number",
                     "title": "Scanned Data Limit (MB)",

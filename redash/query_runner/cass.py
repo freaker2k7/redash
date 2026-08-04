@@ -61,7 +61,10 @@ class Cassandra(BaseQueryRunner):
                 },
                 "timeout": {"type": "number", "title": "Timeout", "default": 10},
                 "useSsl": {"type": "boolean", "title": "Use SSL", "default": False},
-                "sslCertificateFile": {"type": "string", "title": "SSL Certificate File"},
+                "sslCertificateFile": {
+                    "type": "string",
+                    "title": "SSL Certificate File",
+                },
                 "sslProtocol": {
                     "type": "string",
                     "title": "SSL Protocol",

@@ -30,7 +30,9 @@ class AI(AIBase):
                 host = org_settings.get("ai_host")
                 model_name = org_settings.get("ai_model")
                 token = org_settings.get("ai_token")
-                self.instance = self.instance_types[self.type](query_runner, token=token, host=host, model_name=model_name)
+                self.instance = self.instance_types[self.type](
+                    query_runner, token=token, host=host, model_name=model_name
+                )
                 token = None  # Prevent token from being stored in memory after initialization
             else:
                 raise NotImplementedError(f"AI type '{self.type}' is not implemented.")
@@ -42,7 +44,13 @@ class AI(AIBase):
             return self.instance.apply_ai_query(query_text)
         return query_text
 
-    def prompt(self, validation_class: Any, prompt: str, system_message: str, examples: list[str] = None) -> str:
+    def prompt(
+        self,
+        validation_class: Any,
+        prompt: str,
+        system_message: str,
+        examples: list[str] = None,
+    ) -> str:
         if self.instance:
             return self.instance.prompt(validation_class, prompt, system_message, examples)
         raise NotImplementedError(f"AI type '{self.type}' does not support prompt generation.")

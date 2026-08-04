@@ -117,16 +117,56 @@ class InfluxDBv2(BaseQueryRunner):
                 "url": {"type": "string", "title": "URL"},
                 "org": {"type": "string", "title": "Organization"},
                 "token": {"type": "string", "title": "Token"},
-                "verify_ssl": {"type": "boolean", "title": "Verify SSL", "default": False},
-                "cert_File": {"type": "string", "title": "SSL Client Certificate", "default": None},
-                "cert_key_File": {"type": "string", "title": "SSL Client Key", "default": None},
-                "cert_key_password": {"type": "string", "title": "Password for SSL Client Key", "default": None},
-                "ssl_ca_cert_File": {"type": "string", "title": "SSL Root Certificate", "default": None},
+                "verify_ssl": {
+                    "type": "boolean",
+                    "title": "Verify SSL",
+                    "default": False,
+                },
+                "cert_File": {
+                    "type": "string",
+                    "title": "SSL Client Certificate",
+                    "default": None,
+                },
+                "cert_key_File": {
+                    "type": "string",
+                    "title": "SSL Client Key",
+                    "default": None,
+                },
+                "cert_key_password": {
+                    "type": "string",
+                    "title": "Password for SSL Client Key",
+                    "default": None,
+                },
+                "ssl_ca_cert_File": {
+                    "type": "string",
+                    "title": "SSL Root Certificate",
+                    "default": None,
+                },
             },
-            "order": ["url", "org", "token", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
+            "order": [
+                "url",
+                "org",
+                "token",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+            ],
             "required": ["url", "org", "token"],
-            "secret": ["token", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
-            "extra_options": ["verify_ssl", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
+            "secret": [
+                "token",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+            ],
+            "extra_options": [
+                "verify_ssl",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+            ],
         }
 
     @classmethod
@@ -155,8 +195,8 @@ class InfluxDBv2(BaseQueryRunner):
             ) as client:
                 healthy = client.health()
                 if healthy.status == "fail":
-                    logger.error("Connection test failed, due to: " f"{healthy.message!r}.")
-                    raise Exception("InfluxDB is not healthy. Check logs for more " "information.")
+                    logger.error(f"Connection test failed, due to: {healthy.message!r}.")
+                    raise Exception("InfluxDB is not healthy. Check logs for more information.")
         except Exception:
             raise
         finally:

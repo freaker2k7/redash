@@ -30,10 +30,12 @@ class AIOllamaRemote(AIBase):
         with actual AI logic in subclasses.
         """
 
-        query: ChatResponse = self.client.chat(model=self.model_name, messages=[
-            {
-                'role': 'system',
-                'content': f"""### Task
+        query: ChatResponse = self.client.chat(
+            model=self.model_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"""### Task
 Generate a {self.query_runner.__class__.__name__} query to answer [QUESTION]{query_text}[/QUESTION]
 
 ### Instructions
@@ -42,14 +44,15 @@ Generate a {self.query_runner.__class__.__name__} query to answer [QUESTION]{que
 
 ### Database Schema
 The query will run on a database with the following schema:
-{self.query_runner.get_schema()}"""
-            },
-            {
-                'role': 'user',
-                'content': f"""Given the database schema, here is the {self.query_runner.__class__.__name__} query that answers [QUESTION]{query_text}[/QUESTION]
-[{self.query_runner.__class__.__name__}]"""
-            },
-        ])
+{self.query_runner.get_schema()}""",
+                },
+                {
+                    "role": "user",
+                    "content": f"""Given the database schema, here is the {self.query_runner.__class__.__name__} query that answers [QUESTION]{query_text}[/QUESTION]
+[{self.query_runner.__class__.__name__}]""",
+                },
+            ],
+        )
 
         return query.message.content or "NO ANSWER"
 
@@ -64,14 +67,14 @@ The query will run on a database with the following schema:
         Generate a response from the AI model based on the provided prompt and system message.
         """
 
-        messages=[{ 'role': 'system', 'content': system_message }]
+        messages = [{"role": "system", "content": system_message}]
 
         if examples:
             for example in examples:
-                messages.append({ 'role': 'user', 'content': example['user'] })
-                messages.append({ 'role': 'assistant', 'content': example['assistant'] })
+                messages.append({"role": "user", "content": example["user"]})
+                messages.append({"role": "assistant", "content": example["assistant"]})
 
-        messages.append({ 'role': 'user', 'content': prompt })
+        messages.append({"role": "user", "content": prompt})
 
         response: ChatResponse = self.client.chat(model=self.model_name, messages=messages)
 

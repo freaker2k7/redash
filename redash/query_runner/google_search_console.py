@@ -111,7 +111,10 @@ class GoogleSearchConsole(BaseSQLQueryRunner):
             "type": "object",
             "properties": {
                 "siteURL": {"type": "string", "title": "Site URL"},
-                "jsonKeyFile": {"type": "string", "title": "JSON Key File (ADC is used if omitted)"},
+                "jsonKeyFile": {
+                    "type": "string",
+                    "title": "JSON Key File (ADC is used if omitted)",
+                },
             },
             "required": [],
             "secret": ["jsonKeyFile"],

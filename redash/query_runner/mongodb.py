@@ -195,7 +195,14 @@ class MongoDB(BaseQueryRunner):
             True if "replicaSetName" in self.configuration and self.configuration["replicaSetName"] else False
         )
 
-        self.flatten = self.configuration.get("flatten", "False").upper() in ["TRUE", "YES", "ON", "1", "Y", "T"]
+        self.flatten = self.configuration.get("flatten", "False").upper() in [
+            "TRUE",
+            "YES",
+            "ON",
+            "1",
+            "Y",
+            "T",
+        ]
         logger.debug("flatten: {}".format(self.flatten))
 
         self.ai = AI(self)

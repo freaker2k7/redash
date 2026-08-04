@@ -188,7 +188,10 @@ class JSON(BaseHTTPQueryRunner):
         if isinstance(request_options.get("auth", None), list):
             request_options["auth"] = tuple(request_options["auth"])
         elif self.configuration.get("username") or self.configuration.get("password"):
-            request_options["auth"] = (self.configuration.get("username"), self.configuration.get("password"))
+            request_options["auth"] = (
+                self.configuration.get("username"),
+                self.configuration.get("password"),
+            )
 
         if method not in ("get", "post"):
             raise QueryParseError("Only GET or POST methods are allowed.")

@@ -230,7 +230,10 @@ class DataSource(BelongsToOrgMixin, db.Model):
 
     def _sort_schema(self, schema):
         return [
-            {**i, "columns": sorted(i["columns"], key=lambda x: x["name"] if isinstance(x, dict) else x)}
+            {
+                **i,
+                "columns": sorted(i["columns"], key=lambda x: x["name"] if isinstance(x, dict) else x),
+            }
             for i in sorted(schema, key=lambda x: x["name"])
         ]
 
@@ -983,7 +986,11 @@ def next_state(op, value, threshold):
 
     if op(value, threshold):
         new_state = Alert.TRIGGERED_STATE
-    elif not value_is_number and op not in [OPERATORS.get("!="), OPERATORS.get("=="), OPERATORS.get("equals")]:
+    elif not value_is_number and op not in [
+        OPERATORS.get("!="),
+        OPERATORS.get("=="),
+        OPERATORS.get("equals"),
+    ]:
         new_state = Alert.UNKNOWN_STATE
     else:
         new_state = Alert.OK_STATE
@@ -1203,7 +1210,12 @@ class Dashboard(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model
         if base_query is None:
             base_query = cls.all(user.org, user.group_ids, user.id)
         return (
-            base_query.distinct(cls.lowercase_name, Dashboard.created_at, Dashboard.slug, Favorite.created_at)
+            base_query.distinct(
+                cls.lowercase_name,
+                Dashboard.created_at,
+                Dashboard.slug,
+                Favorite.created_at,
+            )
             .join(
                 (
                     Favorite,
@@ -1459,7 +1471,9 @@ class AlertSubscription(TimestampMixin, db.Model):
     user_id = Column(key_type("User"), db.ForeignKey("users.id"))
     user = db.relationship(User)
     destination_id = Column(
-        key_type("NotificationDestination"), db.ForeignKey("notification_destinations.id"), nullable=True
+        key_type("NotificationDestination"),
+        db.ForeignKey("notification_destinations.id"),
+        nullable=True,
     )
     destination = db.relationship(NotificationDestination)
     alert_id = Column(key_type("Alert"), db.ForeignKey("alerts.id"))

@@ -1,4 +1,3 @@
-from json import dumps
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -6,9 +5,18 @@ from pydantic import BaseModel, Field
 
 class CounterVisualization(BaseModel):
     counterLabel: str = Field(..., description="The label for the counter visualization.")
-    counterColName: str = Field(..., description="The name of the column to be used for the counter visualization.")
-    countRow: Optional[bool] = Field(None, description="Whether to count the number of rows in the data. If set to True, the counter will display the total number of rows.")
-    targetColName: Optional[str] = Field(None, description="The name of the column to be used for the target value in the counter visualization. Must be provided unless countRow is set to True.")
+    counterColName: str = Field(
+        ...,
+        description="The name of the column to be used for the counter visualization.",
+    )
+    countRow: Optional[bool] = Field(
+        None,
+        description="Whether to count the number of rows in the data. If set to True, the counter will display the total number of rows.",
+    )
+    targetColName: Optional[str] = Field(
+        None,
+        description="The name of the column to be used for the target value in the counter visualization. Must be provided unless countRow is set to True.",
+    )
 
     def dict(self):
         return {

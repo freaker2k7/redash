@@ -57,7 +57,13 @@ error_messages = {
 
 
 def run_query(
-    query, parameters, data_source, query_id, should_apply_auto_limit, should_apply_ai_query=False, max_age=0
+    query,
+    parameters,
+    data_source,
+    query_id,
+    should_apply_auto_limit,
+    should_apply_ai_query=False,
+    max_age=0,
 ):
     if not data_source:
         return error_messages["no_data_source"]

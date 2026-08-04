@@ -71,7 +71,12 @@ class D1QueryRunner(BaseQueryRunner):
         body = {"sql": sql, "params": params or []}
 
         try:
-            resp = session.post(self.configuration.get("cf_url"), headers=headers, data=json.dumps(body), timeout=30)
+            resp = session.post(
+                self.configuration.get("cf_url"),
+                headers=headers,
+                data=json.dumps(body),
+                timeout=30,
+            )
             resp.raise_for_status()
             data = resp.json()
 

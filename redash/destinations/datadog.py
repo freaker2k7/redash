@@ -17,9 +17,17 @@ class Datadog(BaseDestination):
             "properties": {
                 "api_key": {"type": "string", "title": "API Key"},
                 "tags": {"type": "string", "title": "Tags"},
-                "priority": {"type": "string", "default": "normal", "title": "Priority"},
+                "priority": {
+                    "type": "string",
+                    "default": "normal",
+                    "title": "Priority",
+                },
                 # https://docs.datadoghq.com/integrations/faq/list-of-api-source-attribute-value/
-                "source_type_name": {"type": "string", "default": "my_apps", "title": "Source Type Name"},
+                "source_type_name": {
+                    "type": "string",
+                    "default": "my_apps",
+                    "title": "Source Type Name",
+                },
             },
             "secret": ["api_key"],
             "required": ["api_key"],

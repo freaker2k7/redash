@@ -11,8 +11,7 @@ from rq.timeouts import JobTimeoutException
 
 from redash import models, redis_connection, settings
 from redash.query_runner import InterruptException
-from redash.query_runner.ai.visualizations_generator import \
-    VisualizationsGenerator
+from redash.query_runner.ai.visualizations_generator import VisualizationsGenerator
 from redash.tasks.alerts import check_alerts_for_query
 from redash.tasks.failure_report import track_failure
 from redash.tasks.worker import Job, Queue
