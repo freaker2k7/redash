@@ -17,7 +17,7 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
         else:
             device = "cpu"
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        tokenizer = AutoTokenizer.from_pretrained(self.model_name, token=self.token or None)
 
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,

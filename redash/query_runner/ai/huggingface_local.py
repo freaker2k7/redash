@@ -1,18 +1,31 @@
+import logging
 from time import sleep
+from typing import Any
+
+import outlines
 
 from redash.query_runner.ai.base import AIBase
+from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import \
+    HuggingFaceModelsDefogSQLCoder7B2
+from redash.query_runner.ai.huggingface_models.qwen_qwen3_1_7b import \
+    HuggingFaceModelsQwenQwen317B
+from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import \
+    HuggingFaceModelsQwenQwen3CoderNext
 
 device = "cpu"
 models = {}
 
+logger = logging.getLogger(__name__)
+
 
 class AIHuggingFaceLocal(AIBase):
-    def __init__(self, query_runner, token=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None):
+        """
+        NOTE: `host` parameter is not used in this class, but it's included for compatibility with other AI implementations that may require a host.
+        """
+        self.model_name = model_name
         self.query_runner = query_runner
         self.token = token
-        self.model = None
-        self.tokenizer = None
-        self.pipe = None
         token = None  # Prevent token from being stored in memory after initialization
 
     def load_model(self):
@@ -23,27 +36,21 @@ class AIHuggingFaceLocal(AIBase):
                 models[self.query_runner.supports_ai_query_type] = {"loading": True}
 
                 if self.query_runner.supports_ai_query_type in ["sql", "sparql"]:
-                    from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import \
-                        HuggingFaceModelsDefogSQLCoder7B2
-
                     model_instance = HuggingFaceModelsDefogSQLCoder7B2(self.query_runner, token=self.token)
-
-                    models[self.query_runner.supports_ai_query_type] = model_instance.load()
-                    models[self.query_runner.supports_ai_query_type]["model_instance"] = model_instance
-                    models[self.query_runner.supports_ai_query_type]["loaded"] = True
                 elif self.query_runner.supports_ai_query_type == "nosql":
-                    from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import \
-                        HuggingFaceModelsQwenQwen3CoderNext
-
                     model_instance = HuggingFaceModelsQwenQwen3CoderNext(self.query_runner, token=self.token)
-
-                    models[self.query_runner.supports_ai_query_type] = model_instance.load()
-                    models[self.query_runner.supports_ai_query_type]["model_instance"] = model_instance
-                    models[self.query_runner.supports_ai_query_type]["loaded"] = True
+                elif self.query_runner.supports_ai_query_type == "conf":
+                    model_instance = HuggingFaceModelsQwenQwen317B(self.query_runner, token=self.token)
                 else:
                     raise NotImplementedError(
                         f"AI query type '{self.query_runner.supports_ai_query_type}' is not supported for HuggingFaceLocal."
                     )
+
+                models[self.query_runner.supports_ai_query_type] = {
+                    **model_instance.load(),
+                    "model_instance": model_instance,
+                    "loaded": True,
+                }
             else:
                 while models[self.query_runner.supports_ai_query_type].get("loading"):
                     sleep(1)
@@ -61,3 +68,32 @@ class AIHuggingFaceLocal(AIBase):
         )
 
         return query
+
+    def prompt(self, validation_class: Any, prompt: str, system_message: str, examples: list[str] = None) -> str:
+        """
+        Generate a response from the AI model based on the provided prompt and system message.
+        """
+
+        self.load_model()
+
+        # Copy the model's dict data to avoid modifying the global state.
+        obj = dict(models[self.query_runner.supports_ai_query_type])
+
+        if not getattr(obj["model_instance"], "prompt"):
+            raise NotImplementedError(
+                f"Prompt method is not implemented for AI query type '{self.query_runner.supports_ai_query_type}' in {self.__class__.__name__}."
+            )
+
+        model = outlines.from_transformers(obj["model"], obj["tokenizer"])
+        obj["generator"] = outlines.Generator(model, validation_class)
+        obj["validation_class"] = validation_class
+        trials = 3
+
+        for trial in range(trials):
+            try:
+                response = obj["model_instance"].prompt(obj, prompt, system_message, examples)
+                return response
+            except Exception as e:
+                logger.error("Failed to generate response after %d trials: %s", trial + 1, e)
+                if trial == trials - 1:
+                    raise RuntimeError(f"Failed to generate response after {trial + 1} trials: {e}")

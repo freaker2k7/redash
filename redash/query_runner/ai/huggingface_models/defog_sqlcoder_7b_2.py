@@ -17,7 +17,7 @@ class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
         else:
             device = "cpu"
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        tokenizer = AutoTokenizer.from_pretrained(self.model_name, token=self.token or None)
 
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
@@ -51,7 +51,6 @@ class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
 
     def template(self, query_text):
         sql_data_source_type = self.query_runner.__class__.__name__
-        sql_type = self.query_runner.type.upper()
 
         return f"""### Task
 Generate a {sql_data_source_type} query to answer [QUESTION]{query_text}[/QUESTION]
@@ -66,7 +65,7 @@ The query will run on a database with the following schema:
 
 ### Answer
 Given the database schema, here is the {sql_data_source_type} query that answers [QUESTION]{query_text}[/QUESTION]
-[{sql_type}]"""
+[{sql_data_source_type}]"""
 
     def generate(self, model, query_text: str) -> str:
         return (

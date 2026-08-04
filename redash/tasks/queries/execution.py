@@ -11,6 +11,8 @@ from rq.timeouts import JobTimeoutException
 
 from redash import models, redis_connection, settings
 from redash.query_runner import InterruptException
+from redash.query_runner.ai.visualizations_generator import \
+    VisualizationsGenerator
 from redash.tasks.alerts import check_alerts_for_query
 from redash.tasks.failure_report import track_failure
 from redash.tasks.worker import Job, Queue
@@ -212,6 +214,13 @@ class QueryExecutor:
             annotated_query = self._annotate_query(query_runner)
 
             data, error = query_runner.run_query(annotated_query, self.user)
+
+            if self.is_ai_query:
+                logger.info("Generating visualizations for AI query result: %s", data)
+                visualizations = VisualizationsGenerator(data).get_visualizations()
+                if visualizations:
+                    for visualization in visualizations:
+                        models.db.session.add(models.Visualization(query_rel=self.query_model, **visualization))
         except Exception as e:
             if isinstance(e, JobTimeoutException):
                 error = TIMEOUT_MESSAGE
