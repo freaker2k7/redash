@@ -6,7 +6,13 @@ from redash.query_runner.ai import AI
 
 
 class EmptyQueryRunner:
-    supports_ai_query_type = "sql"
+    def __init__(self):
+        self.type = "empty"
+        self.configuration = {}
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
 
 class AITypesListResource(BaseResource):

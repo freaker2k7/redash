@@ -280,6 +280,28 @@ class DataSource(BelongsToOrgMixin, db.Model):
 
     @property
     def query_runner(self):
+        # Avoid lazy-loading `self.org` on a detached DataSource instance which
+        # would raise DetachedInstanceError. Fetch the Organization by id
+        # instead so this works even when the DataSource isn't bound to a
+        # session.
+        org = None
+        if getattr(self, "org_id", None):
+            try:
+                org = Organization.get_by_id(self.org_id)
+            except Exception:
+                org = None
+
+        if org is not None:
+            self.options["ai_enabled"] = org.get_setting("ai_enabled")
+            self.options["ai_type"] = org.get_setting("ai_type")
+            self.options["ai_model"] = org.get_setting("ai_model")
+            self.options["ai_host"] = org.get_setting("ai_host")
+            self.options["ai_token"] = org.get_setting("ai_token")
+
+        logger.info(
+            "Creating query runner for data source %s of type %s; options: %s; org=%s", self.id, self.type, self.options, org
+        )
+
         query_runner = get_query_runner(self.type, self.options)
 
         if self.uses_ssh_tunnel:

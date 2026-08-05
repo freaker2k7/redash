@@ -15,6 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 class ConfQueryRunner:
+    def __init__(self):
+        self.type = "conf"
+        self.configuration = {}
+
     @property
     def supports_ai_query_type(self):
         return "conf"

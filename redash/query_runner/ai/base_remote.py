@@ -58,7 +58,7 @@ The query will run on a database with the following schema:
             ]
         )
 
-        return query.message.content or "NO ANSWER"
+        return query or "NO ANSWER"
 
     def prompt(
         self,

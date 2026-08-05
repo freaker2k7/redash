@@ -5,7 +5,6 @@ from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.ollama_remote import AIOllamaRemote
 from redash.query_runner.ai.openai_cloud import AIOpenAICloud
-from redash.settings.organization import settings as org_settings
 
 logger = logging.getLogger(__name__)
 
@@ -27,16 +26,16 @@ class AI(AIBase):
 
     def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
         if query_runner:
-            self.type = ai_type or org_settings.get("ai_type", "huggingface-local")
+            self.type = ai_type or query_runner.configuration.get("ai_type") or "huggingface-local"
 
             logger.info(
-                f"Initializing AI instance of type '{self.type}' for query runner '{query_runner.__class__.__name__}'."
+                f"Initializing AI instance of type '{self.type}' for query runner '{query_runner.__class__.__name__}'; host='{query_runner.configuration.get('ai_host')}', token='{query_runner.configuration.get('ai_token')}'."
             )
 
             if self.instance_types.get(self.type):
-                model_name = org_settings.get("ai_model") if not ai_type else None
-                host = ai_host or org_settings.get("ai_host")
-                token = ai_token or org_settings.get("ai_token")
+                model_name = query_runner.configuration.get("ai_model") if not ai_type else None
+                host = ai_host or query_runner.configuration.get("ai_host")
+                token = ai_token or query_runner.configuration.get("ai_token")
                 self.instance = self.instance_types[self.type](
                     query_runner, token=token, host=host, model_name=model_name
                 )
