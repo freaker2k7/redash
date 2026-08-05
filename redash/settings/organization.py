@@ -54,6 +54,7 @@ AI_ENABLED = parse_boolean(os.environ.get("REDASH_AI_ENABLED", "true"))
 AI_TYPE = os.environ.get("REDASH_AI_TYPE", "huggingface-local")
 AI_TOKEN = os.environ.get("REDASH_AI_TOKEN", "")
 AI_HOST = os.environ.get("REDASH_AI_HOST", "")
+AI_MODEL = os.environ.get("REDASH_AI_MODEL", "")
 
 LOGO_URL = os.environ.get("REDASH_LOGO_URL", "")
 
@@ -92,4 +93,5 @@ settings = {
     "ai_type": AI_TYPE,
     "ai_token": AI_TOKEN,
     "ai_host": AI_HOST,
+    "ai_model": AI_MODEL,
 }
