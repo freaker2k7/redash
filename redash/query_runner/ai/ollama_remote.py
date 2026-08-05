@@ -1,4 +1,4 @@
-from ollama import ChatResponse, Client
+from ollama import Client
 
 from redash.query_runner.ai.base_remote import AIBaseRemote
 

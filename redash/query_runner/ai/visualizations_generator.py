@@ -6,10 +6,10 @@ from pydantic import BaseModel, Field
 
 from redash import models
 from redash.query_runner.ai import AI
-from redash.query_runner.ai.visualizations_validators.counter import \
-    CounterVisualization
-from redash.query_runner.ai.visualizations_validators.funnel import \
-    FunnelVisualization
+from redash.query_runner.ai.visualizations_validators.counter import (
+    CounterVisualization,
+)
+from redash.query_runner.ai.visualizations_validators.funnel import FunnelVisualization
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,7 @@ class VisualizationInstanceType(Enum):
 
 
 VisualizationType: EnumType = Enum("VisualizationType", {v.name: v.name for v in VisualizationInstanceType})
+
 
 class VisualizationChooser(BaseModel):
     visualization_types: list[VisualizationType] = Field(
@@ -60,10 +61,12 @@ class VisualizationTitles(BaseModel):
 class VisualizationsGenerator:
     def __init__(self, data):
         self.ai = AI(ConfQueryRunner())
-        self.data = str({
-            "columns": data.get("columns", []),
-            "row_count": len(data.get("rows", [])),
-        })
+        self.data = str(
+            {
+                "columns": data.get("columns", []),
+                "row_count": len(data.get("rows", [])),
+            }
+        )
         self.schemas = {v.value.__class__.__name__: v.value.model_json_schema() for v in VisualizationInstanceType}
 
     def choose_visualizations(self) -> list[str]:

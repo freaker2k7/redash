@@ -2,8 +2,7 @@ from flask import make_response
 from flask_restful import Api
 from werkzeug.wrappers import Response
 
-from redash.handlers.ai import (AITypesListResource, AIModelsListResource)
-
+from redash.handlers.ai import AIModelsListResource, AITypesListResource
 from redash.handlers.alerts import (
     AlertEvaluateResource,
     AlertListResource,

@@ -2,7 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any
 
-from ollama import ChatResponse, Client
+from ollama import ChatResponse
 
 from redash.query_runner.ai.base import AIBase
 

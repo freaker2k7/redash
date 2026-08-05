@@ -1,9 +1,12 @@
 from redash.query_runner.ai.huggingface_models import HuggingFaceModelBase
 from redash.query_runner.ai.huggingface_models.device import device
 
+
 class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
     def __init__(self, query_runner, max_new_tokens=300, token=None):
-        super(HuggingFaceModelsDefogSQLCoder7B2, self).__init__(query_runner, "defog/sqlcoder-7b-2", token, max_new_tokens)
+        super(HuggingFaceModelsDefogSQLCoder7B2, self).__init__(
+            query_runner, "defog/sqlcoder-7b-2", token, max_new_tokens
+        )
         self.model_data = None
 
     def load(self):

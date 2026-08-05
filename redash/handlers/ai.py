@@ -1,5 +1,4 @@
-from redash.handlers.base import (BaseResource, get_object_or_404,
-                                  require_fields)
+from redash.handlers.base import BaseResource
 from redash.query_runner.ai import AI
 
 # from redash.serializers import serialize_alert
