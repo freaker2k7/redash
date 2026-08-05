@@ -2,17 +2,20 @@ import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
 import AiService from "@/services/ai";
 import recordEvent from "@/services/recordEvent";
 import { get } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function useAIModelsList(currentValues) {
   const [modelsList, setModelsList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [aiCacheKey, setAiCacheKey] = useState("");
 
   const handleError = useImmutableCallback((error) => {
     console.error(error);
   });
 
   useEffect(() => {
+    console.log("useAIModelsList currentValues", currentValues, "aiCacheKey", aiCacheKey);
+
     const ai_enabled = get(currentValues, "ai_enabled", false);
 
     if (!ai_enabled) {
@@ -23,10 +26,17 @@ export default function useAIModelsList(currentValues) {
     const ai_type = get(currentValues, "ai_type");
     const ai_token = get(currentValues, "ai_token");
     const ai_host = get(currentValues, "ai_host");
+    const key = `${ai_type}_${ai_token}_${ai_host}`;
 
-    recordEvent("view", "list", `${ai_type.replace(/_/g, "-")}_models_list`);
+    if (aiCacheKey === key) {
+      return;
+    }
+
+    setAiCacheKey(key);
 
     let isCancelled = false;
+
+    recordEvent("view", "list", `${ai_type.replace(/_/g, "-")}_models_list`);
 
     setIsLoading(true);
 
@@ -49,5 +59,7 @@ export default function useAIModelsList(currentValues) {
     };
   }, [handleError, currentValues]);
 
-  return { modelsList, isLoading };
+  const memoizedModelsList = useMemo(() => modelsList, [aiCacheKey, modelsList]);
+
+  return { modelsList: memoizedModelsList, isLoading };
 }

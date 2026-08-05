@@ -50,6 +50,7 @@ export default function AIFormSettings(props) {
                 value={values.ai_token || ""}
                 onChange={(e) => onChange({ ai_token: e.target.value })}
                 placeholder="Xyz...qW1 (Optional)"
+                autocomplete="new-password"
               />
             )}
           </Form.Item>
@@ -80,7 +81,7 @@ export default function AIFormSettings(props) {
                 >
                   {Object.entries(modelsList).map(([key, model]) => (
                     <Select.Option key={key} value={key} selected={values.ai_model === key}>
-                      {model.name}
+                      {model}
                     </Select.Option>
                   ))}
                 </Select>

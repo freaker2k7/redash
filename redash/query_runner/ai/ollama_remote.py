@@ -23,6 +23,4 @@ class AIOllamaRemote(AIBaseRemote):
 
     @property
     def models(self):
-        logger.info(f"Fetching models from Ollama: {self.client.list()}")
-
-        return {model.model: model.model.title() for model in self.client.list().models if model.model}
+        return {model.model: model.model.title().replace(':', ' ') for model in self.client.list().models if model.model}

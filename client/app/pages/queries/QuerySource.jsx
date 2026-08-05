@@ -29,7 +29,7 @@ import useQueryResultData from "@/lib/useQueryResultData";
 import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 import useAddNewParameterDialog from "./hooks/useAddNewParameterDialog";
 import useAddVisualizationDialog from "./hooks/useAddVisualizationDialog";
-import useAiQueryFlags from "./hooks/useAiQueryFlags";
+import useAIQueryFlags from "./hooks/useAiQueryFlags";
 import useAutocompleteFlags from "./hooks/useAutocompleteFlags";
 import useAutoLimitFlags from "./hooks/useAutoLimitFlags";
 import useDeleteVisualization from "./hooks/useDeleteVisualization";
@@ -83,7 +83,7 @@ function QuerySource(props) {
   const editorRef = useRef(null);
   const [autocompleteAvailable, autocompleteEnabled, toggleAutocomplete] = useAutocompleteFlags(schema);
   const [autoLimitAvailable, autoLimitChecked, setAutoLimit] = useAutoLimitFlags(dataSource, query, setQuery);
-  const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAiQueryFlags(dataSource, query, setQuery, settings);
+  const [aiQueryAvailable, aiQueryEnabled, setAiQuery] = useAIQueryFlags(dataSource, query, setQuery, settings);
   const aiQueryTextFixFlag = useRef(false); // to avoid infinite loop when query text is changed by AI query
 
   const [handleQueryEditorChange] = useDebouncedCallback((queryText) => {

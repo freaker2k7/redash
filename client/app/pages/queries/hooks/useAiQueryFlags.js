@@ -5,7 +5,7 @@ function isAiQueryAvailable(dataSource, settings) {
   return settings.ai_enabled && get(dataSource, "supports_ai_query", false);
 }
 
-export default function useAiQueryFlags(dataSource, query, setQuery, settings) {
+export default function useAIQueryFlags(dataSource, query, setQuery, settings) {
   const isAvailable = isAiQueryAvailable(dataSource, settings);
   const [isChecked, setIsChecked] = useState(isAvailable && query.options.apply_ai_query);
   query.options.apply_ai_query = isChecked;

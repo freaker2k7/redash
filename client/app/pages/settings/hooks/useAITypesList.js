@@ -2,11 +2,12 @@ import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
 import AiService from "@/services/ai";
 import recordEvent from "@/services/recordEvent";
 import { get } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function useAITypesList(currentValues) {
   const [aiTypes, setAiTypes] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleError = useImmutableCallback((error) => {
     console.error(error);
@@ -17,6 +18,10 @@ export default function useAITypesList(currentValues) {
 
     if (!ai_enabled) {
       setAiTypes({});
+      return;
+    }
+
+    if (isLoaded) {
       return;
     }
 
@@ -31,6 +36,7 @@ export default function useAITypesList(currentValues) {
         if (!isCancelled) {
           setAiTypes(get(response, "types", {}));
           setIsLoading(false);
+          setIsLoaded(true);
         }
       })
       .catch((error) => {
@@ -45,5 +51,7 @@ export default function useAITypesList(currentValues) {
     };
   }, [handleError, currentValues]);
 
-  return { aiTypes, isLoading };
+  const memoizedAiTypes = useMemo(() => aiTypes, [aiTypes]);
+
+  return { aiTypes: memoizedAiTypes, isLoading };
 }
