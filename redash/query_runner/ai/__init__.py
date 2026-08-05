@@ -3,6 +3,7 @@ from typing import Any
 from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.ollama_remote import AIOllamaRemote
+from redash.query_runner.ai.openai_clound import AIOpenAICloud
 from redash.settings.organization import settings as org_settings
 
 
@@ -17,7 +18,7 @@ class AI(AIBase):
         # "huggingface-remote": AIHuggingFaceRemote,
         "ollama-remote": AIOllamaRemote,
         # "kimi-k3-remote": AIKimiK3Remote,
-        # "openai-cloud": AIOpenAICloud,
+        "openai-cloud": AIOpenAICloud,
         # "claude-cloud": AIClaudeCloud,
         # "grok-cloud": AIGrokCloud,
     }
@@ -54,3 +55,38 @@ class AI(AIBase):
         if self.instance:
             return self.instance.prompt(validation_class, prompt, system_message, examples)
         raise NotImplementedError(f"AI type '{self.type}' does not support prompt generation.")
+
+    @property
+    def models(self):
+        if self.instance:
+            return self.instance.models
+        return {}
+
+    @property
+    def supported_types(self) -> dict[str, dict[str, Any]]:
+        return {
+            "huggingface-local": {
+                "name": "HuggingFace (Local)",
+                "enabled": True,
+            },
+            "huggingface-remote": {
+                "name": "HuggingFace (Remote) [Coming Soon]",
+            },
+            "kimi-k3-remote": {
+                "name": "Kimi K3 (Remote) [Coming Soon]",
+            },
+            "ollama-remote": {
+                "name": "Ollama (Remote)",
+                "enabled": True,
+            },
+            "openai-cloud": {
+                "name": "OpenAI (Cloud)",
+                "enabled": True,
+            },
+            "claude-cloud": {
+                "name": "Claude (Cloud) [Coming Soon]",
+            },
+            "grok-cloud": {
+                "name": "Grok (Cloud) [Coming Soon]",
+            },
+        }

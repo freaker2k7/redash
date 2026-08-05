@@ -1,27 +1,19 @@
-from . import HuggingFaceModelBase
+from redash.query_runner.ai.huggingface_models import HuggingFaceModelBase
+from redash.query_runner.ai.huggingface_models.device import device
 
 
 class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
     def __init__(self, query_runner, max_new_tokens=512, token=None):
-        super().__init__(query_runner, "Qwen/Qwen3-Coder-Next", token, max_new_tokens)
+        super(HuggingFaceModelsQwenQwen3CoderNext, self).__init__(query_runner, "Qwen/Qwen3-Coder-Next", token, max_new_tokens)
         self.model_data = None
 
     def load(self):
-        import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
-
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.backends.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
 
         tokenizer = AutoTokenizer.from_pretrained(self.model_name, token=self.token or None)
 
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype="auto",
             token=self.token or None,
         ).to(device)
         self.token = None  # Prevent token from being stored in memory after initialization
@@ -66,7 +58,7 @@ Given the database schema, here is the {sql_type} query that answers [QUESTION]{
             tokenize=False,
             add_generation_prompt=True,
         )
-        model_inputs = model["tokenizer"]([text], return_tensors="pt").to(model["model"].device)
+        model_inputs = model["tokenizer"]([text], return_tensors="pt").to(device)
 
         # conduct text completion
         generated_ids = model["model"].generate(**model_inputs, max_new_tokens=self.max_new_tokens)

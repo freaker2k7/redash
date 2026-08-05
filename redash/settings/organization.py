@@ -50,7 +50,7 @@ SEND_EMAIL_ON_FAILED_SCHEDULED_QUERIES = parse_boolean(
 HIDE_PLOTLY_MODE_BAR = parse_boolean(os.environ.get("HIDE_PLOTLY_MODE_BAR", "false"))
 DISABLE_PUBLIC_URLS = parse_boolean(os.environ.get("REDASH_DISABLE_PUBLIC_URLS", "false"))
 
-AI_ENABLED = parse_boolean(os.environ.get("REDASH_AI_ENABLED", "false"))
+AI_ENABLED = parse_boolean(os.environ.get("REDASH_AI_ENABLED", "true"))
 AI_TYPE = os.environ.get("REDASH_AI_TYPE", "huggingface-local")
 AI_TOKEN = os.environ.get("REDASH_AI_TOKEN", "")
 AI_HOST = os.environ.get("REDASH_AI_HOST", "")

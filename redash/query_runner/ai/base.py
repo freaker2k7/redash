@@ -23,3 +23,11 @@ class AIBase(ABC):
         This is a placeholder method and should be implemented with actual AI logic in subclasses.
         """
         pass
+
+    @abstractmethod
+    def models(self):
+        """
+        Return a list of available models for the AI implementation.
+        This is a placeholder method and should be implemented with actual AI logic in subclasses.
+        """
+        pass

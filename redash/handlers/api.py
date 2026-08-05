@@ -2,6 +2,8 @@ from flask import make_response
 from flask_restful import Api
 from werkzeug.wrappers import Response
 
+from redash.handlers.ai import (AITypesListResource, AIModelsListResource)
+
 from redash.handlers.alerts import (
     AlertEvaluateResource,
     AlertListResource,
@@ -115,6 +117,9 @@ def json_representation(data, code, headers=None):
     resp.headers.extend(headers or {})
     return resp
 
+
+api.add_org_resource(AITypesListResource, "/api/ai/types", endpoint="ai_types_list")
+api.add_org_resource(AIModelsListResource, "/api/ai/<model>", endpoint="ai_models_list")
 
 api.add_org_resource(AlertResource, "/api/alerts/<alert_id>", endpoint="alert")
 api.add_org_resource(AlertMuteResource, "/api/alerts/<alert_id>/mute", endpoint="alert_mute")

@@ -5,17 +5,13 @@ from typing import Any
 import outlines
 
 from redash.query_runner.ai.base import AIBase
-from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import (
-    HuggingFaceModelsDefogSQLCoder7B2,
-)
-from redash.query_runner.ai.huggingface_models.qwen_qwen3_1_7b import (
-    HuggingFaceModelsQwenQwen317B,
-)
-from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import (
-    HuggingFaceModelsQwenQwen3CoderNext,
-)
+from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import \
+    HuggingFaceModelsDefogSQLCoder7B2
+from redash.query_runner.ai.huggingface_models.qwen_qwen3_1_7b import \
+    HuggingFaceModelsQwenQwen317B
+from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import \
+    HuggingFaceModelsQwenQwen3CoderNext
 
-device = "cpu"
 models = {}
 
 logger = logging.getLogger(__name__)
@@ -31,8 +27,14 @@ class AIHuggingFaceLocal(AIBase):
         self.token = token
         token = None  # Prevent token from being stored in memory after initialization
 
+    @property
+    def models(self):
+        if models.get(self.query_runner.supports_ai_query_type, {}).get("loaded"):
+            return models[self.query_runner.supports_ai_query_type]["model_instance"].models
+        return {}
+
     def load_model(self):
-        global device, models
+        global models
 
         if not models.get(self.query_runner.supports_ai_query_type, {}).get("loaded"):
             if not models.get(self.query_runner.supports_ai_query_type):
@@ -93,8 +95,7 @@ class AIHuggingFaceLocal(AIBase):
                 f"Prompt method is not implemented for AI query type '{self.query_runner.supports_ai_query_type}' in {self.__class__.__name__}."
             )
 
-        model = outlines.from_transformers(obj["model"], obj["tokenizer"])
-        obj["generator"] = outlines.Generator(model, validation_class)
+        obj["generator"] = outlines.from_transformers(obj["model"], obj["tokenizer"])
         obj["validation_class"] = validation_class
         trials = 3
 
@@ -104,5 +105,11 @@ class AIHuggingFaceLocal(AIBase):
                 return response
             except Exception as e:
                 logger.error("Failed to generate response after %d trials: %s", trial + 1, e)
+
+                import traceback
+
+                # log the full stack trace for debugging
+                logger.error("!!!! Raw error was: %s", traceback.format_exc())
+
                 if trial == trials - 1:
                     raise RuntimeError(f"Failed to generate response after {trial + 1} trials: {e}")

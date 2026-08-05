@@ -25,3 +25,7 @@ class HuggingFaceModelBase(ABC):
     @abstractmethod
     def generate(self, model, query_text: str) -> str:
         pass
+
+    @property
+    def models(self):
+        return {self.model_name: self.model_name}

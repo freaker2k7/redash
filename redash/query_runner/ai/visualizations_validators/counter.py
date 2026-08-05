@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
@@ -9,16 +7,16 @@ class CounterVisualization(BaseModel):
         ...,
         description="The name of the column to be used for the counter visualization.",
     )
-    countRow: Optional[bool] = Field(
-        None,
+    countRow: bool = Field(
+        False,
         description="Whether to count the number of rows in the data. If set to True, the counter will display the total number of rows.",
     )
-    targetColName: Optional[str] = Field(
-        None,
+    targetColName: str = Field(
+        "",
         description="The name of the column to be used for the target value in the counter visualization. Must be provided unless countRow is set to True.",
     )
 
-    def dict(self):
+    def to_dict(self):
         return {
             "counterLabel": self.counterLabel,
             "counterColName": self.counterColName,
@@ -31,7 +29,3 @@ class CounterVisualization(BaseModel):
             "stringThouSep": ",",
             "tooltipFormat": "0,0.000",
         }
-
-    @property
-    def name(self):
-        return "Counter"

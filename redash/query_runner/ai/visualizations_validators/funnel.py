@@ -27,7 +27,7 @@ class FunnelVisualization(BaseModel):
         description="The display name for the value column in the funnel visualization. Default is 'Value'.",
     )
 
-    def dict(self):
+    def to_dict(self):
         return {
             "autoSort": False,
             "itemsLimit": 100,
@@ -50,7 +50,3 @@ class FunnelVisualization(BaseModel):
                 "displayAs": self.valueColDisplayAs,
             },
         }
-
-    @property
-    def name(self):
-        return "Funnel"
