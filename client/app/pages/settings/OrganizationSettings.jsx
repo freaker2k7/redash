@@ -18,8 +18,8 @@ import useOrganizationSettings from "./hooks/useOrganizationSettings";
 
 function OrganizationSettings({ onError }) {
   const { settings, currentValues, isLoading, isSaving, handleSubmit, handleChange } = useOrganizationSettings(onError);
-  const { aiTypes } = useAITypesList(settings, currentValues);
-  const { modelsList } = useAIModelsList(settings, currentValues);
+  const { aiTypes } = useAITypesList(currentValues);
+  const { modelsList } = useAIModelsList(currentValues);
 
   return (
     <div className="row" data-test="OrganizationSettings">

@@ -3,7 +3,7 @@ from typing import Any
 from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.ollama_remote import AIOllamaRemote
-from redash.query_runner.ai.openai_clound import AIOpenAICloud
+from redash.query_runner.ai.openai_cloud import AIOpenAICloud
 from redash.settings.organization import settings as org_settings
 
 
@@ -23,18 +23,19 @@ class AI(AIBase):
         # "grok-cloud": AIGrokCloud,
     }
 
-    def __init__(self, query_runner=None):
+    def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
         if query_runner:
-            self.type = org_settings.get("ai_type", "huggingface-local")
+            self.type = ai_type or org_settings.get("ai_type", "huggingface-local")
 
             if self.instance_types.get(self.type):
-                host = org_settings.get("ai_host")
-                model_name = org_settings.get("ai_model")
-                token = org_settings.get("ai_token")
+                model_name = org_settings.get("ai_model") if not ai_type else None
+                host = ai_host or org_settings.get("ai_host")
+                token = ai_token or org_settings.get("ai_token")
                 self.instance = self.instance_types[self.type](
                     query_runner, token=token, host=host, model_name=model_name
                 )
                 token = None  # Prevent token from being stored in memory after initialization
+                ai_token = None  # Prevent token from being stored in memory after initialization
             else:
                 raise NotImplementedError(f"AI type '{self.type}' is not implemented.")
         else:

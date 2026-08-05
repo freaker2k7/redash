@@ -2,7 +2,7 @@ import { axios } from "@/services/axios";
 
 const AI = {
   types: () => axios.get(`api/ai/types`),
-  get: ({ model }) => axios.get(`api/ai/${model}`),
+  models: (data) => axios.post(`api/ai/models`, data),
 };
 
 export default AI;

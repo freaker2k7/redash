@@ -7,6 +7,7 @@ class AIOpenAICloud(AIBaseRemote):
     def __init__(self, query_runner, token=None, host=None, model_name=None):
         openai.api_key = token
         token = None  # Prevent token from being stored in memory after initialization
+
         super(AIOpenAICloud, self).__init__(
             client=openai,
             query_runner=query_runner,

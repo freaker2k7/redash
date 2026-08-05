@@ -79,7 +79,7 @@ export default function AIFormSettings(props) {
                   onChange={(value) => onChange({ ai_model: value })}
                 >
                   {Object.entries(modelsList).map(([key, model]) => (
-                    <Select.Option key={key} value={key} disabled={!model.enabled} selected={values.ai_model === key}>
+                    <Select.Option key={key} value={key} selected={values.ai_model === key}>
                       {model.name}
                     </Select.Option>
                   ))}

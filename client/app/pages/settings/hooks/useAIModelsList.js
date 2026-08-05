@@ -4,30 +4,33 @@ import recordEvent from "@/services/recordEvent";
 import { get } from "lodash";
 import { useEffect, useState } from "react";
 
-export default function useAIModelsList(settings, currentValues) {
+export default function useAIModelsList(currentValues) {
   const [modelsList, setModelsList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
-  const ai_enabled = get(currentValues, "ai_enabled", false);
-  const ai_model = get(currentValues, "ai_model", get(settings, "ai_model", "huggingface-local"));
 
   const handleError = useImmutableCallback((error) => {
     console.error(error);
   });
 
   useEffect(() => {
-    recordEvent("view", "list", `${ai_model}_models_list`);
+    const ai_enabled = get(currentValues, "ai_enabled", false);
 
     if (!ai_enabled) {
       setModelsList({});
       return;
     }
 
+    const ai_type = get(currentValues, "ai_type");
+    const ai_token = get(currentValues, "ai_token");
+    const ai_host = get(currentValues, "ai_host");
+
+    recordEvent("view", "list", `${ai_type.replace(/_/g, "-")}_models_list`);
+
     let isCancelled = false;
 
     setIsLoading(true);
 
-    AiService.get({ model: ai_model })
+    AiService.models({ type: ai_type, host: ai_host, token: ai_token })
       .then((response) => {
         if (!isCancelled) {
           setModelsList(get(response, "models", {}));
@@ -44,7 +47,7 @@ export default function useAIModelsList(settings, currentValues) {
     return () => {
       isCancelled = true;
     };
-  }, [ai_model, ai_enabled, handleError, settings, currentValues]);
+  }, [handleError, currentValues]);
 
   return { modelsList, isLoading };
 }

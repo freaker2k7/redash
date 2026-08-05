@@ -118,7 +118,7 @@ def json_representation(data, code, headers=None):
 
 
 api.add_org_resource(AITypesListResource, "/api/ai/types", endpoint="ai_types_list")
-api.add_org_resource(AIModelsListResource, "/api/ai/<model>", endpoint="ai_models_list")
+api.add_org_resource(AIModelsListResource, "/api/ai/models", endpoint="ai_models_list")
 
 api.add_org_resource(AlertResource, "/api/alerts/<alert_id>", endpoint="alert")
 api.add_org_resource(AlertMuteResource, "/api/alerts/<alert_id>/mute", endpoint="alert_mute")
