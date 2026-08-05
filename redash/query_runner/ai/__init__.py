@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from redash.query_runner.ai.base import AIBase
@@ -6,6 +7,7 @@ from redash.query_runner.ai.ollama_remote import AIOllamaRemote
 from redash.query_runner.ai.openai_cloud import AIOpenAICloud
 from redash.settings.organization import settings as org_settings
 
+logger = logging.getLogger(__name__)
 
 class AI(AIBase):
     """
@@ -26,6 +28,10 @@ class AI(AIBase):
     def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
         if query_runner:
             self.type = ai_type or org_settings.get("ai_type", "huggingface-local")
+
+            logger.info(
+                f"Initializing AI instance of type '{self.type}' for query runner '{query_runner.__class__.__name__}'."
+            )
 
             if self.instance_types.get(self.type):
                 model_name = org_settings.get("ai_model") if not ai_type else None

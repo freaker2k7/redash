@@ -449,6 +449,10 @@ class RedshiftIAM(Redshift):
     def enabled(cls):
         return IAM_ENABLED
 
+    def __init__(self, configuration):
+        super(RedshiftIAM, self).__init__(configuration)
+        self.ai = AI(self)
+
     def _login_method_selection(self):
         if self.configuration.get("rolename"):
             if not self.configuration.get("aws_access_key_id") or not self.configuration.get("aws_secret_access_key"):
@@ -569,6 +573,10 @@ class CockroachDB(PostgreSQL):
     @classmethod
     def type(cls):
         return "cockroach"
+
+    def __init__(self, configuration):
+        super(CockroachDB, self).__init__(configuration)
+        self.ai = AI(self)
 
 
 register(PostgreSQL)

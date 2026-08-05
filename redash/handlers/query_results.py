@@ -280,7 +280,7 @@ class QueryResultResource(BaseResource):
         if "apply_ai_query" in params:
             should_apply_ai_query = params.get("apply_ai_query", False)
         else:
-            should_apply_ai_query = query.options.get("apply_ai_query", False)
+            should_apply_ai_query = False
 
         if has_access(query, self.current_user, allow_executing_with_view_only_permissions):
             return run_query(

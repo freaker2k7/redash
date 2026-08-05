@@ -18,7 +18,7 @@ class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             trust_remote_code=True,
-            torch_dtype=torch.float16,
+            dtype=torch.float16,
             use_cache=True,
             token=self.token or None,
         ).to(device)
