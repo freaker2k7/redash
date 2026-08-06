@@ -1,4 +1,8 @@
+from typing import get_args, get_origin
+
 import openai
+from openai.types import AllModels
+from typing_extensions import Literal
 
 from redash.query_runner.ai.base_remote import AIBaseRemote
 
@@ -26,5 +30,9 @@ class AIOpenAICloud(AIBaseRemote):
 
     @property
     def models(self):
-        models = openai.Engine.list()
-        return {model.id: model.name for model in models.data}
+        return {
+            model: model.replace("-", " ").title()
+            for arg in get_args(AllModels)
+            if get_origin(arg) is Literal
+            for model in get_args(arg)
+        }
