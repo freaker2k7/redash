@@ -1,5 +1,5 @@
 import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
-import AiService from "@/services/ai";
+import AIService from "@/services/ai";
 import recordEvent from "@/services/recordEvent";
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
@@ -31,7 +31,7 @@ export default function useAITypesList(currentValues) {
 
     setIsLoading(true);
 
-    AiService.types()
+    AIService.types()
       .then((response) => {
         if (!isCancelled) {
           setAiTypes(get(response, "types", {}));

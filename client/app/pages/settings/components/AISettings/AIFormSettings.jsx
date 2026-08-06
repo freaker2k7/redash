@@ -4,11 +4,17 @@ import Input from "antd/lib/input";
 import Radio from "antd/lib/radio";
 import Select from "antd/lib/select";
 import Skeleton from "antd/lib/skeleton";
-import React from "react";
+import React, { useEffect } from "react";
 import { SettingsEditorDefaultProps, SettingsEditorPropTypes } from "../prop-types";
 
 export default function AIFormSettings(props) {
-  const { values, onChange, loading, modelsList, aiTypes } = props;
+  const { values, onChange, loading, modelsList, aiTypes, setModelsList } = props;
+
+  useEffect(() => {
+    if (!values.ai_model && Object.keys(modelsList).length > 0) {
+      onChange({ ai_model: Object.keys(modelsList)[0] });
+    }
+  }, [values.ai_model, modelsList, onChange]);
 
   return (
     <DynamicComponent name="OrganizationSettings.AIFormSettings" {...props}>
@@ -30,9 +36,7 @@ export default function AIFormSettings(props) {
             ) : (
               <Select
                 value={values.ai_type || "huggingface-local"}
-                onChange={(value) =>
-                  onChange({ ai_type: value, ai_token: undefined, ai_host: undefined, ai_model: undefined })
-                }
+                onChange={(value) => onChange({ ai_type: value, ai_token: "", ai_host: "", ai_model: "" })}
               >
                 {Object.entries(aiTypes).map(([key, model]) => (
                   <Select.Option key={key} value={key} disabled={!model.enabled}>
@@ -51,21 +55,23 @@ export default function AIFormSettings(props) {
                 onChange={(e) => onChange({ ai_token: e.target.value })}
                 placeholder={"Xyz...qW1 " + (values.ai_type.endsWith("-cloud") ? "[Required]" : "(Optional)")}
                 autocomplete="new-password"
+                required={values.ai_type.endsWith("-cloud")}
               />
             )}
           </Form.Item>
-          {values.ai_enabled && (values.ai_type.endsWith("-remote") || values.ai_type.endsWith("-cloud")) && (
+          {values.ai_enabled && values.ai_type.endsWith("-remote") && (
             <Form.Item label="API Host">
               {loading ? (
                 <Skeleton title={{ width: 300 }} paragraph={false} active />
               ) : (
                 <Input
                   value={values.ai_host || ""}
-                  onChange={(e) => onChange({ ai_host: (e.target.value || "").replace(/\/+$/, "") })}
-                  placeholder={
-                    "https://api.example.com " + (values.ai_type.endsWith("-cloud") ? "[Required]" : "(Optional)")
-                  }
-                  required={values.ai_type.endsWith("-cloud")}
+                  onChange={(e) => {
+                    setModelsList({});
+                    return onChange({ ai_host: (e.target.value || "").replace(/\/+$/, ""), ai_model: "" });
+                  }}
+                  placeholder="https://api.example.com [Required]"
+                  required={true}
                 />
               )}
             </Form.Item>

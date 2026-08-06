@@ -1,8 +1,8 @@
 import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
-import AiService from "@/services/ai";
+import AIService from "@/services/ai";
 import recordEvent from "@/services/recordEvent";
 import { debounce, get } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useAIModelsList(currentValues) {
   const [modelsList, setModelsList] = useState({});
@@ -31,7 +31,7 @@ export default function useAIModelsList(currentValues) {
 
       setIsLoading(true);
 
-      AiService.models({ type: ai_type, host: ai_host, token: ai_token })
+      AIService.models({ type: ai_type, host: ai_host, token: ai_token })
         .then((response) => {
           if (!isCancelled) {
             setModelsList(get(response, "models", {}));
@@ -55,7 +55,5 @@ export default function useAIModelsList(currentValues) {
     };
   }, [handleError, currentValues]);
 
-  const memoizedModelsList = useMemo(() => modelsList, [modelsList]);
-
-  return { modelsList: memoizedModelsList, isLoading };
+  return { modelsList, isLoading, setModelsList };
 }

@@ -1,6 +1,10 @@
+import logging
+
 from ollama import Client
 
 from redash.query_runner.ai.base_remote import AIBaseRemote
+
+logger = logging.getLogger(__name__)
 
 
 class AIOllamaRemote(AIBaseRemote):
@@ -11,8 +15,14 @@ class AIOllamaRemote(AIBaseRemote):
             headers["Authorization"] = f"Bearer {token}"
             token = None  # Prevent token from being stored in memory after initialization
 
+        try:
+            client = Client(host=host or "https://ollama.com", headers=headers)
+        except Exception as e:
+            logger.error(f"Failed to initialize Ollama client: {e}")
+            client = None
+
         super(AIOllamaRemote, self).__init__(
-            client=Client(host=host or "https://ollama.com", headers=headers),
+            client=client,
             query_runner=query_runner,
             model_name=model_name or "gemma3",
         )
@@ -23,6 +33,9 @@ class AIOllamaRemote(AIBaseRemote):
 
     @property
     def models(self):
+        if not self.client:
+            return {}
+
         return {
             model.model: model.model.title().replace(":", " ") for model in self.client.list().models if model.model
         }

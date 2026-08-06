@@ -19,7 +19,7 @@ import useOrganizationSettings from "./hooks/useOrganizationSettings";
 function OrganizationSettings({ onError }) {
   const { settings, currentValues, isLoading, isSaving, handleSubmit, handleChange } = useOrganizationSettings(onError);
   const { aiTypes } = useAITypesList(currentValues);
-  const { modelsList } = useAIModelsList(currentValues);
+  const { modelsList, setModelsList } = useAIModelsList(currentValues);
 
   return (
     <div className="row" data-test="OrganizationSettings">
@@ -34,6 +34,7 @@ function OrganizationSettings({ onError }) {
             onChange={handleChange}
             aiTypes={aiTypes}
             modelsList={modelsList}
+            setModelsList={setModelsList}
           />
           <Form.Item {...getHorizontalFormItemWithoutLabelProps()}>
             {isLoading ? (
