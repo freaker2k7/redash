@@ -8,6 +8,7 @@ from redash.query_runner.ai.openai_cloud import AIOpenAICloud
 
 logger = logging.getLogger(__name__)
 
+
 class AI(AIBase):
     """
     AI class that serves as a wrapper for different AI implementations.

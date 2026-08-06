@@ -299,7 +299,11 @@ class DataSource(BelongsToOrgMixin, db.Model):
             self.options["ai_token"] = org.get_setting("ai_token")
 
         logger.info(
-            "Creating query runner for data source %s of type %s; options: %s; org=%s", self.id, self.type, self.options, org
+            "Creating query runner for data source %s of type %s; options: %s; org=%s",
+            self.id,
+            self.type,
+            self.options,
+            org,
         )
 
         query_runner = get_query_runner(self.type, self.options)

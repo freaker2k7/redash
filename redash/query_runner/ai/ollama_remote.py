@@ -23,4 +23,6 @@ class AIOllamaRemote(AIBaseRemote):
 
     @property
     def models(self):
-        return {model.model: model.model.title().replace(':', ' ') for model in self.client.list().models if model.model}
+        return {
+            model.model: model.model.title().replace(":", " ") for model in self.client.list().models if model.model
+        }
