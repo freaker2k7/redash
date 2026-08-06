@@ -287,8 +287,7 @@ class DataSource(BelongsToOrgMixin, db.Model):
         try:
             org = Organization.get_by_id(self.org_id)
             for key in ["ai_enabled", "ai_type", "ai_model", "ai_host", "ai_token"]:
-                if key not in self.options:
-                    self.options[key] = org.get_setting(key)
+                self.options[key] = org.get_setting(key)
         except Exception:
             pass
 
