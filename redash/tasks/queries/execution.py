@@ -215,7 +215,6 @@ class QueryExecutor:
             data, error = query_runner.run_query(annotated_query, self.user)
 
             if self.is_ai_query:
-                logger.info("Generating visualizations for AI query result: %s", data)
                 visualizations = VisualizationsGenerator(data).get_visualizations()
                 if visualizations:
                     for visualization in visualizations:

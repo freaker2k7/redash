@@ -97,7 +97,7 @@ class VisualizationsGenerator:
             ],
         ).get("visualization_types", [])
 
-        logger.info(f"AI suggested visualizations: {choices}")
+        logger.debug(f"AI suggested visualizations: {choices}")
 
         return {choice: VisualizationInstanceType[choice].value for choice in choices}
 
@@ -119,7 +119,7 @@ class VisualizationsGenerator:
             ],
         )
 
-        logger.info(f"AI generated titles for {visualization}: {titles}")
+        logger.debug(f"AI generated titles for {visualization}: {titles}")
 
         return (
             titles.get("name", f"AI generated {visualization} [{time()}]")[:100],
@@ -164,6 +164,6 @@ class VisualizationsGenerator:
                 }
             )
 
-        logger.info(f"AI generated visualizations: {visualizations}")
+        logger.debug(f"AI generated visualizations: {visualizations}")
 
         return visualizations
