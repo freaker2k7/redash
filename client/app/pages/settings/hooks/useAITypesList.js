@@ -49,7 +49,7 @@ export default function useAITypesList(currentValues) {
     return () => {
       isCancelled = true;
     };
-  }, [handleError, currentValues]);
+  }, [handleError, currentValues]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const memoizedAiTypes = useMemo(() => aiTypes, [aiTypes]);
 
