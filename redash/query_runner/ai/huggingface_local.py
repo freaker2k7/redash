@@ -1,4 +1,5 @@
 import logging
+import traceback
 from time import sleep
 from typing import Any
 
@@ -107,12 +108,8 @@ class AIHuggingFaceLocal(AIBase):
                 response = obj["model_instance"].prompt(obj, prompt, system_message, examples)
                 return response
             except Exception as e:
-                logger.error("Failed to generate response after %d trials: %s", trial + 1, e)
-
-                import traceback
-
-                # log the full stack trace for debugging
-                logger.error("!!!! Raw error was: %s", traceback.format_exc())
+                logger.error("!! Failed to generate response after %d trials: %s", trial + 1, e)
+                logger.error("!! Raw error was: %s", traceback.format_exc())
 
                 if trial == trials - 1:
                     raise RuntimeError(f"Failed to generate response after {trial + 1} trials: {e}")
