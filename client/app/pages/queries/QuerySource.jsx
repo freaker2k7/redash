@@ -5,7 +5,6 @@ import Parameters from "@/components/Parameters";
 import Resizable from "@/components/Resizable";
 import * as queryFormat from "@/lib/queryFormat";
 import notification from "@/services/notification";
-import { Query as QueryService } from "@/services/query";
 import { ExecutionStatus } from "@/services/query-result";
 import recordEvent from "@/services/recordEvent";
 import routes from "@/services/routes";
@@ -163,7 +162,7 @@ function QuerySource(props) {
       if (queryResult?.query_result?.query) {
         if (query.id) {
           // Navigate to `?_=<timestamp>` to force the page to reload and show the updated query text in the editor and visualizations.
-          // TODO: Fix this hack !!!!!!!!
+          // TODO: Fix this hack !!!!!!!! And find out how to populate the new visualizations !!!!!
           document.location = document.location.origin + `/queries/${query.id}/source?_=${Date.now()}`;
         } else {
           setAiQuery(false);
