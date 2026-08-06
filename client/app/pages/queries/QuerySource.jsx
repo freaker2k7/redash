@@ -5,6 +5,7 @@ import Parameters from "@/components/Parameters";
 import Resizable from "@/components/Resizable";
 import * as queryFormat from "@/lib/queryFormat";
 import notification from "@/services/notification";
+import { Query as QueryService } from "@/services/query";
 import { ExecutionStatus } from "@/services/query-result";
 import recordEvent from "@/services/recordEvent";
 import routes from "@/services/routes";
@@ -29,7 +30,7 @@ import useQueryResultData from "@/lib/useQueryResultData";
 import useOrganizationSettings from "@/pages/settings/hooks/useOrganizationSettings";
 import useAddNewParameterDialog from "./hooks/useAddNewParameterDialog";
 import useAddVisualizationDialog from "./hooks/useAddVisualizationDialog";
-import useAIQueryFlags from "./hooks/useAiQueryFlags";
+import useAIQueryFlags from "./hooks/useAIQueryFlags";
 import useAutocompleteFlags from "./hooks/useAutocompleteFlags";
 import useAutoLimitFlags from "./hooks/useAutoLimitFlags";
 import useDeleteVisualization from "./hooks/useDeleteVisualization";
@@ -160,10 +161,16 @@ function QuerySource(props) {
       aiQueryTextFixFlag.current = false;
 
       if (queryResult?.query_result?.query) {
-        setAiQuery(false);
-        setQuery((prevQuery) => {
-          return extend(prevQuery.clone(), { query: queryResult.query_result.query });
-        });
+        if (query.id) {
+          // Navigate to `?_=<timestamp>` to force the page to reload and show the updated query text in the editor and visualizations.
+          // TODO: Fix this hack !!!!!!!!
+          document.location = document.location.origin + `/queries/${query.id}/source?_=${Date.now()}`;
+        } else {
+          setAiQuery(false);
+          setQuery((prevQuery) => {
+            return extend(prevQuery.clone(), { query: queryResult.query_result.query });
+          });
+        }
       }
     } else {
       aiQueryTextFixFlag.current = false;

@@ -11,6 +11,11 @@ class CountryFieldFormat(BaseModel):
     name: str = Field(..., description="The name of the country.")
     name_long: str = Field(..., description="The long name of the country.")
 
+    def value(self):
+        for field in [self.abbrev, self.iso_a2, self.iso_a3, self.iso_n3, self.name, self.name_long]:
+            if field:
+                return field
+
 class ChoroplethVisualization(BaseModel):
     keyColumn: str = Field(..., description="The name of the column to be used for the key in the choropleth visualization. This column should contain country codes or names.")
     targetField: CountryFieldFormat = Field(..., description="The target field for the choropleth visualization. This field should contain the country codes or names that correspond to the key column.")
@@ -20,7 +25,7 @@ class ChoroplethVisualization(BaseModel):
         return {
             "mapType": "countries",
             "keyColumn": self.keyColumn,
-            "targetField": self.targetField,
+            "targetField": self.targetField.value(),
             "valueColumn": self.valueColumn,
             "clusteringMode": "e",
             "steps": 5,
