@@ -6,10 +6,16 @@ from pydantic import BaseModel, Field
 
 from redash import models
 from redash.query_runner.ai import AI
+from redash.query_runner.ai.visualizations_validators.chart import ChartVisualization
+from redash.query_runner.ai.visualizations_validators.choropleth import ChoroplethVisualization
+from redash.query_runner.ai.visualizations_validators.cohort import CohortVisualization
 from redash.query_runner.ai.visualizations_validators.counter import (
     CounterVisualization,
 )
+from redash.query_runner.ai.visualizations_validators.details import DetailsVisualization
 from redash.query_runner.ai.visualizations_validators.funnel import FunnelVisualization
+from redash.query_runner.ai.visualizations_validators.map import MapVisualization
+from redash.query_runner.ai.visualizations_validators.pivot import PivotVisualization
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +31,15 @@ class ConfQueryRunner:
 
 
 class VisualizationInstanceType(Enum):
-    __order__ = "COUNTER FUNNEL"
-    # __order__ = "CHART COHORT COUNTER FUNNEL CHOROPLETH MAP PIVOT"
-    # CHART = "CHART"
-    # COHORT = "COHORT"
+    __order__ = "CHART CHOROPLETH COHORT COUNTER DETAILS FUNNEL MAP PIVOT"
+    CHART = ChartVisualization
+    CHOROPLETH = ChoroplethVisualization
+    COHORT = CohortVisualization
     COUNTER = CounterVisualization
+    DETAILS = DetailsVisualization
     FUNNEL = FunnelVisualization
-    # CHOROPLETH = "CHOROPLETH"
-    # MAP = "MAP"
-    # PIVOT = "PIVOT"
+    MAP = MapVisualization
+    PIVOT = PivotVisualization
 
 
 VisualizationType: EnumType = Enum("VisualizationType", {v.name: v.name for v in VisualizationInstanceType})
