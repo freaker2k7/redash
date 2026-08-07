@@ -3,18 +3,13 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 
-class CountryFieldFormat(BaseModel):
-    abbrev: str = Field(..., description="The abbreviation for the country.")
-    iso_a2: str = Field(..., description="The ISO 3166-1 alpha-2 code for the country.")
-    iso_a3: str = Field(..., description="The ISO 3166-1 alpha-3 code for the country.")
-    iso_n3: str = Field(..., description="The ISO 3166-1 numeric code for the country.")
-    name: str = Field(..., description="The name of the country.")
-    name_long: str = Field(..., description="The long name of the country.")
-
-    def value(self):
-        for field in [self.abbrev, self.iso_a2, self.iso_a3, self.iso_n3, self.name, self.name_long]:
-            if field:
-                return field
+class CountryFieldFormat(Enum):
+    ABBREV = "abbrev"
+    ISO_A2 = "iso_a2"
+    ISO_A3 = "iso_a3"
+    ISO_N3 = "iso_n3"
+    NAME = "name"
+    NAME_LONG = "name_long"
 
 class ChoroplethVisualization(BaseModel):
     keyColumn: str = Field(..., description="The name of the column to be used for the key in the choropleth visualization. This column should contain country codes or names.")
@@ -25,7 +20,7 @@ class ChoroplethVisualization(BaseModel):
         return {
             "mapType": "countries",
             "keyColumn": self.keyColumn,
-            "targetField": self.targetField.value(),
+            "targetField": self.targetField.value,
             "valueColumn": self.valueColumn,
             "clusteringMode": "e",
             "steps": 5,

@@ -7,12 +7,16 @@ from pydantic import BaseModel, Field
 from redash import models
 from redash.query_runner.ai import AI
 from redash.query_runner.ai.visualizations_validators.chart import ChartVisualization
-from redash.query_runner.ai.visualizations_validators.choropleth import ChoroplethVisualization
+from redash.query_runner.ai.visualizations_validators.choropleth import (
+    ChoroplethVisualization,
+)
 from redash.query_runner.ai.visualizations_validators.cohort import CohortVisualization
 from redash.query_runner.ai.visualizations_validators.counter import (
     CounterVisualization,
 )
-from redash.query_runner.ai.visualizations_validators.details import DetailsVisualization
+from redash.query_runner.ai.visualizations_validators.details import (
+    DetailsVisualization,
+)
 from redash.query_runner.ai.visualizations_validators.funnel import FunnelVisualization
 from redash.query_runner.ai.visualizations_validators.map import MapVisualization
 from redash.query_runner.ai.visualizations_validators.pivot import PivotVisualization

@@ -1,10 +1,8 @@
 import logging
-from enum import Enum, EnumType
-from time import time
+from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from redash import models
 from redash.query_runner.ai import AI
 
 logger = logging.getLogger(__name__)
