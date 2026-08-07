@@ -45,7 +45,7 @@ class DashboardGenerator:
         choices = self.ai.prompt(
             DashboardChoices,
             f"The dashboard name is: {self.dashboard.name}\n\nHere are the visualizations: {", ".join(options)}",
-            f"You are a helpful assistant that chooses appropriate widgets from the provided visualizations. Your task is to analyze the visualizations and choose the most suitable ones for the given dashboard. For the chosen ones create a long description as part of the JSON according to the structure. Return the choices as a valid JSON object with the following structure: {DashboardChoices.model_json_schema()}. Do not include any explanations or additional text.",
+            f"You are a helpful assistant that chooses appropriate widgets from the provided visualizations. Your task is to analyze the visualizations and choose the most suitable ones for the given dashboard. You must choose only the exact names from the given visualizations names list. For the chosen ones create a long description as part of the JSON according to the structure. Return the choices as a valid JSON object with the following structure: {DashboardChoices.model_json_schema()}. Do not include any explanations or additional text.",
             [
                 {
                     "user": "The dashboard name is: User Dashboard\n\nHere are the visualizations: User Counter, Query Performance Chart, User Growth Chart, User Distribution Map, Queries Table",
@@ -57,6 +57,10 @@ class DashboardGenerator:
         logger.debug(f"AI suggested widgets: {choices}")
 
         for i, choice in enumerate(choices):
+            if choice["name"] not in options:
+                logger.warning(f"AI suggested widget '{choice['name']}' is not in the available visualizations. Skipping.")
+                continue
+
             choices[i]["visualization"] = visualizations[options.index(choice["name"])]
 
         return choices
@@ -148,7 +152,7 @@ class DashboardGenerator:
         Generate a dashboard based on the data.
         """
 
-        active_queries = models.Query.query.filter(not models.Query.is_draft).all()
+        active_queries = models.Query.query.filter(models.Query.is_draft.is_(False)).all()
 
         visualizations = []
         for query in active_queries:
@@ -170,4 +174,5 @@ class DashboardGenerator:
                 )
             )
 
-        models.db.session.commit()
+        if widgets:
+            models.db.session.commit()
