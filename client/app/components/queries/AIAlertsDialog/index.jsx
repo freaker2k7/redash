@@ -1,64 +1,50 @@
 import { DialogPropType, wrap as wrapDialog } from "@/components/DialogWrapper";
 import LoadingState from "@/components/items-list/components/LoadingState";
+import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
+import useAIAlertsSuggestions from "@/pages/queries/hooks/useAIAlertsSuggestions";
 import { axios } from "@/services/axios";
 import notification from "@/services/notification";
 import Button from "antd/lib/button";
 import Modal from "antd/lib/modal";
 import PropTypes from "prop-types";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./index.less";
 
 function AIAlertsDialog({ dialog, ...props }) {
   const [query] = useState(props.query);
   const [creatingAIAlert, setCreatingAIAlert] = useState("");
-  const [gettingAIAlerts, setGettingAIAlerts] = useState(false);
-  const [aiAlerts, setAIAlerts] = useState([]);
   const [createdAIAlerts, setCreatedAIAlerts] = useState([]);
+  const { aiAlerts, isLoading, getAIAlerts } = useAIAlertsSuggestions();
+  const initialized = useRef(false);
 
-  const getAIAlerts = useCallback(() => {
-    setGettingAIAlerts(true);
-    setAIAlerts([]);
+  useEffect(() => {
+    if (!initialized.current && aiAlerts?.length === 0) {
+      getAIAlerts(query.id);
+      initialized.current = true;
+    }
+  }, [getAIAlerts, query.id, aiAlerts, initialized]);
+
+  const createNewAlert = useImmutableCallback((query_id, alert) => {
+    setCreatingAIAlert(alert.key);
 
     axios
-      .get(`api/ai/alerts/${query.id}`)
+      .post(`api/alerts`, {
+        query_id,
+        name: alert.name,
+        options: alert.options,
+        rearm: null,
+      })
       .then((data) => {
-        setGettingAIAlerts(false);
-        setAIAlerts(data.alerts);
+        setCreatingAIAlert("");
+        notification.success("AI alert created successfully");
+        setCreatedAIAlerts((prev) => [...prev, alert.key]);
       })
       .catch(() => {
-        setGettingAIAlerts(false);
-        notification.error("Failed to update AI alerts");
+        setCreatingAIAlert("");
+        notification.error("Failed to create AI alert");
       });
-  }, [query.id]);
-
-  useMemo(() => {
-    getAIAlerts();
-  }, [getAIAlerts]);
-
-  const createNewAlert = useCallback(
-    (alert) => {
-      setCreatingAIAlert(alert.key);
-
-      axios
-        .post(`api/alerts`, {
-          query_id: query.id,
-          name: alert.name,
-          options: alert.options,
-          rearm: null,
-        })
-        .then((data) => {
-          setCreatingAIAlert("");
-          notification.success("AI alert created successfully");
-          setCreatedAIAlerts((prev) => [...prev, alert.key]);
-        })
-        .catch(() => {
-          setCreatingAIAlert("");
-          notification.error("Failed to create AI alert");
-        });
-    },
-    [query.id, dialog]
-  );
+  });
 
   return (
     <Modal
@@ -66,7 +52,7 @@ function AIAlertsDialog({ dialog, ...props }) {
       width={600}
       footer={
         <div className="d-flex justify-space-between">
-          <Button className="ant-btn ant-btn-primary" onClick={getAIAlerts} disabled={gettingAIAlerts}>
+          <Button className="ant-btn ant-btn-primary" onClick={() => getAIAlerts(query.id)} disabled={isLoading}>
             Resuggest
           </Button>
           <Button onClick={() => dialog.close(query)}>Close</Button>
@@ -81,8 +67,8 @@ function AIAlertsDialog({ dialog, ...props }) {
               {aiAlerts.map((alert, index) => (
                 <Button
                   key={index}
-                  loading={gettingAIAlerts || creatingAIAlert === alert.key}
-                  onClick={() => createNewAlert(alert)}
+                  loading={isLoading || creatingAIAlert === alert.key}
+                  onClick={() => createNewAlert(query.id, alert)}
                   disabled={createdAIAlerts.includes(alert.key)}
                 >
                   {(creatingAIAlert === alert.key && <i className="zmdi zmdi-check" aria-hidden="true" />) ||
@@ -94,7 +80,7 @@ function AIAlertsDialog({ dialog, ...props }) {
                 </Button>
               ))}
             </ul>
-          ) : gettingAIAlerts ? (
+          ) : isLoading ? (
             <LoadingState className="m-t-20" />
           ) : (
             <p>No AI suggested alerts.</p>

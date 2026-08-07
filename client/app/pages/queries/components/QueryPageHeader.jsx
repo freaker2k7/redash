@@ -127,7 +127,7 @@ export default function QueryPageHeader({
         },
         {
           aiAlerts: {
-            isAvailable: settings.ai_enabled && query?.id,
+            isAvailable: settings.ai_enabled && query.id,
             title: "Suggest Alerts",
             onClick: openAIAlertsDialog,
           },
@@ -141,6 +141,7 @@ export default function QueryPageHeader({
         },
       ]),
     [
+      query.id,
       queryFlags.isNew,
       queryFlags.canFork,
       queryFlags.canEdit,
