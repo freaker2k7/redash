@@ -84,11 +84,11 @@ function AIAlertsDialog({ dialog, ...props }) {
                 >
                   {(creatingAIAlert === alert.name && <i className="zmdi zmdi-check" aria-hidden="true" />) ||
                     (createdAIAlerts.includes(alert.name) && (
-                      <i className="zmdi zmdi-check-all text-green" aria-hidden="true" />
+                      <i className="zmdi zmdi-check-all" aria-hidden="true" />
                     ))}{" "}
                   {alert.name}
                   <small>
-                    {alert.options.selector} {alert.options.column} {alert.options.op} {alert.options.value}
+                    [ {alert.options.selector} {alert.options.column} {alert.options.op} {alert.options.value} ]
                   </small>
                 </Button>
               ))}
