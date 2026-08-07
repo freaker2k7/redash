@@ -1,5 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
+from re import DOTALL, sub
 from typing import Any
 
 from ollama import ChatResponse
@@ -28,6 +29,22 @@ class AIBaseRemote(AIBase, ABC):
     @abstractmethod
     def chat(self, messages: list[dict[str, str]]) -> str:
         pass
+
+    def _clean_response(self, response: str) -> str:
+        """
+        Clean the AI response by removing any code block formatting and extra whitespace.
+        """
+
+        if response:
+            if "```" in response:
+                # Remove code block formatting (```...```)
+                cleaned_response = sub(r".*```(sql)?(.*)```.*", r"\2", response, flags=DOTALL)
+                # Strip leading/trailing whitespace
+                return cleaned_response.strip()
+
+            return response.strip()
+
+        return ""
 
     def apply_ai_query(self, query_text: str) -> str:
         """
@@ -58,7 +75,7 @@ The query will run on a database with the following schema:
             ]
         )
 
-        return query or "NO ANSWER"
+        return self._clean_response(query) or "NO ANSWER"
 
     def prompt(
         self,
@@ -85,7 +102,7 @@ The query will run on a database with the following schema:
         trials = 3
         for trial in range(trials):
             try:
-                return validation_class.model_validate_json(response).to_dict()
+                return validation_class.model_validate_json(self._clean_response(response)).to_dict()
             except Exception as e:
                 logger.error("!! Validation failed for AI response: '%s' ; error=%s", response, e)
                 if trial == trials - 1:
