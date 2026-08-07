@@ -85,8 +85,8 @@ The query will run on a database with the following schema:
         trials = 3
         for trial in range(trials):
             try:
-                return validation_class.model_validate_json(response.message.content).to_dict()
+                return validation_class.model_validate_json(response).to_dict()
             except Exception as e:
-                logger.error("Validation failed for AI response: %s", e)
+                logger.error("!! Validation failed for AI response: '%s' ; error=%s", response, e)
                 if trial == trials - 1:
-                    raise ValueError(f"Validation failed for AI response: {e}")
+                    raise ValueError(f"!! Validation failed for AI response: {e}")

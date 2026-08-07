@@ -12,22 +12,27 @@ import "./index.less";
 function AIAlertsDialog({ dialog, ...props }) {
   const [query] = useState(props.query);
   const [creatingAIAlert, setCreatingAIAlert] = useState("");
-  const [creatingAIAlerts, setCreatingAIAlerts] = useState(false);
+  const [gettingAIAlerts, setGettingAIAlerts] = useState(false);
   const [aiAlerts, setAIAlerts] = useState([]);
+  const [createdAIAlerts, setCreatedAIAlerts] = useState([]);
 
-  useMemo(() => {
-    setCreatingAIAlerts(true);
+  const getAIAlerts = useCallback(() => {
+    setGettingAIAlerts(true);
     axios
       .get(`api/ai/alerts/${query.id}`)
       .then((data) => {
-        setCreatingAIAlerts(false);
+        setGettingAIAlerts(false);
         setAIAlerts(data.alerts);
       })
       .catch(() => {
-        setCreatingAIAlerts(false);
+        setGettingAIAlerts(false);
         notification.error("Failed to update AI alerts");
       });
   }, [query.id]);
+
+  useMemo(() => {
+    getAIAlerts();
+  }, [getAIAlerts]);
 
   const createNewAlert = useCallback(
     (alert) => {
@@ -37,11 +42,12 @@ function AIAlertsDialog({ dialog, ...props }) {
           query_id: query.id,
           name: alert.name,
           options: alert.options,
+          rearm: null,
         })
         .then((data) => {
           setCreatingAIAlert("");
           notification.success("AI alert created successfully");
-          dialog.close(data);
+          setCreatedAIAlerts((prev) => [...prev, alert.name]);
         })
         .catch(() => {
           setCreatingAIAlert("");
@@ -52,7 +58,18 @@ function AIAlertsDialog({ dialog, ...props }) {
   );
 
   return (
-    <Modal {...dialog.props} width={600} footer={<Button onClick={() => dialog.close(query)}>Close</Button>}>
+    <Modal
+      {...dialog.props}
+      width={600}
+      footer={
+        <div className="d-flex justify-space-between">
+          <Button className="ant-btn ant-btn-primary" onClick={getAIAlerts} disabled={gettingAIAlerts}>
+            Resuggest
+          </Button>
+          <Button onClick={() => dialog.close(query)}>Close</Button>
+        </div>
+      }
+    >
       <div className="query-ai-alerts-dialog-wrapper">
         <h5>AI Suggested Alerts</h5>
         <div className="m-b-10">
@@ -61,14 +78,22 @@ function AIAlertsDialog({ dialog, ...props }) {
               {aiAlerts.map((alert, index) => (
                 <Button
                   key={index}
-                  loading={creatingAIAlerts || creatingAIAlert === alert.name}
+                  loading={gettingAIAlerts || creatingAIAlert === alert.name}
                   onClick={() => createNewAlert(alert)}
+                  disabled={createdAIAlerts.includes(alert.name)}
                 >
+                  {(creatingAIAlert === alert.name && <i className="zmdi zmdi-check" aria-hidden="true" />) ||
+                    (createdAIAlerts.includes(alert.name) && (
+                      <i className="zmdi zmdi-check-all text-green" aria-hidden="true" />
+                    ))}{" "}
                   {alert.name}
+                  <small>
+                    {alert.options.selector} {alert.options.column} {alert.options.op} {alert.options.value}
+                  </small>
                 </Button>
               ))}
             </ul>
-          ) : creatingAIAlerts ? (
+          ) : gettingAIAlerts ? (
             <LoadingState className="m-t-20" />
           ) : (
             <p>No AI suggested alerts.</p>

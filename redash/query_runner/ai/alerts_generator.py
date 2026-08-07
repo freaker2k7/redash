@@ -21,7 +21,7 @@ class ConfQueryRunner:
 class AlertOperators(Enum):
     GREATER_THAN = ">"
     LESS_THAN = "<"
-    EQUALS = "="
+    EQUALS = "=="
     NOT_EQUALS = "!="
     GREATER_THAN_OR_EQUAL = ">="
     LESS_THAN_OR_EQUAL = "<="
@@ -34,15 +34,13 @@ class AlertSelectors(Enum):
 
 
 class AlertConfiguration(BaseModel):
-    name: str = Field(..., description="The title of the alert.")
     column: str = Field(..., description="The name of the column to which the condition applies.")
-    op: AlertOperators = Field(..., description="The operator used for the condition (e.g., '>', '<', '=', '!=', '>=', '<=').")
-    selector: AlertSelectors = Field(..., description="The selector used for the condition (e.g., 'first', 'last', etc.).")
+    op: AlertOperators = Field(..., description="The operator used for the condition ['>', '<', '==', '!=', '>=', '<='].")
+    selector: AlertSelectors = Field(..., description="The selector used for the condition ['first', 'min', 'max'].")
     value: float = Field(..., description="The value against which the column is compared.")
 
     def to_dict(self):
         return {
-            "name": self.name,
             "column": self.column,
             "op": self.op.value,
             "selector": self.selector.value,
@@ -51,48 +49,77 @@ class AlertConfiguration(BaseModel):
         }
 
 
-class AlertConfigurations(BaseModel):
-    alerts: list[AlertConfiguration] = Field(..., description="The list of alert configurations.")
+class AlertsTiles(BaseModel):
+    alerts: list[str] = Field(..., description="The list of the suggested alert names.")
 
     def to_dict(self):
         return {
-            "alerts": [alert.to_dict() for alert in self.alerts],
+            "alerts": self.alerts,
         }
 
 
 class AlertsGenerator:
     def __init__(self, query_runner, data, query):
-        self.query_runner = query_runner
-        self.ai = AI(ConfQueryRunner())
+        if "local" in query_runner.ai.__class__.__name__.lower():
+            self.ai = AI(ConfQueryRunner())
+        else:
+            self.ai = query_runner.ai
+
         self.query = query
         self.data = str(
             {
                 "columns": data.get("columns", []),
-                "row_count": len(data.get("rows", [])),
+                "rows": data.get("rows", [])[:10],
             }
         )
 
-    def choose_alerts(self) -> dict[str, AlertConfiguration]:
+    def config_alert(self, alert_name: str) -> AlertConfiguration:
         """
-        Choose appropriate alerts based on the data. This is a placeholder method
+        Generate a configuration for the alert based on the alert name. This is a placeholder method
+        and should be implemented with actual AI logic in subclasses.
+        """
+
+        alert = self.ai.prompt(
+            AlertConfiguration,
+            f"Alert title: \"{alert_name}\"\n\nHere is the data: {self.data}\n\nHere is the query: {self.query}",
+            f"You are a helpful assistant that suggests appropriate alert configurations based on the provided data and alert title. Your task is to analyze the data, query and alert name to provide a configuration. Return the result as a valid JSON object with the following structure: {AlertConfiguration.model_json_schema()}. Do not include any explanations or additional text.",
+            [
+                {
+                    "user": "Alert title: We reached 1000 users\n\nHere is the data: {{'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 22}]}\n\nHere is the query: SELECT count(*) as count FROM users",
+                    "assistant": '{"column": "count", "op": "==", "selector": "first", "value": 1000}',
+                },
+                {
+                    "user": "Alert title: \"We reached a million users\"\n\nHere is the data: {{'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 22}]}\n\nHere is the query: SELECT count(*) as count FROM users",
+                    "assistant": '{"column": "count", "op": "==", "selector": "first", "value": 1000000}',
+                },
+            ],
+        )
+
+        logger.debug(f"AI suggested alerts: {alert}")
+
+        return alert
+
+    def suggest_alerts(self) -> list[str]:
+        """
+        Suggest appropriate alerts based on the data. This is a placeholder method
         and should be implemented with actual AI logic in subclasses.
         """
 
         choices = self.ai.prompt(
-            AlertConfigurations,
+            AlertsTiles,
             f"Here is the data: {self.data}\n\nHere is the query: {self.query}",
-            f"You are a helpful assistant that suggests appropriate alerts based on the provided data. Your task is to analyze the data and choose the most suitable alerts from the given list. Return the results as a valid JSON object with the following structure: {AlertConfigurations.model_json_schema()}. Do not include any explanations or additional text.",
+            f"You are a helpful assistant that suggests appropriate alerts based on the provided data. Your task is to analyze the data and suggest as many different meaningful alert titles as possible for the given data and query. The suggestions should be oriented on BI, things like KPI, income, revenue, data anomalies, pattern anomalies, users or customers behavior. Return the results as a valid JSON object with the following structure: {AlertsTiles.model_json_schema()}. No specific dates. Do not include any explanations or additional text.",
             [
                 {
-                    "user": "Here is the data: {'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'row_count': 1}",
-                    "assistant": '{"alerts": [{"name": "We crossed 1000 users", "column": "count", "op": ">", "selector": "first", "value": 1000}, {"name": "We reached a million users", "column": "count", "op": "==", "selector": "first", "value": 1000000}]}',
+                    "user": "Here is the data: {'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 22}]}\n\nHere is the query: SELECT count(*) as count FROM users",
+                    "assistant": '{"alerts": ["We reached 1000 users", "We reached a million users", "No users"]}',
                 },
             ],
         ).get("alerts", [])
 
         logger.debug(f"AI suggested alerts: {choices}")
 
-        return {choice["name"]: choice for choice in choices}
+        return choices
 
     def get_alerts(self) -> list:
         """
@@ -100,16 +127,25 @@ class AlertsGenerator:
         and should be implemented with actual AI logic in subclasses.
         """
 
-        alerts_to_create = self.choose_alerts()
+        alerts_to_create = self.suggest_alerts()
         alerts = []
-        for alert_name, alert_class in alerts_to_create.items():
-            del alert_class["name"]  # Remove the name from the alert_class dictionary
-            alerts.append(
-                {
-                    "name": alert_name,
-                    "options": alert_class,
-                }
-            )
+
+        for i, alert_name in enumerate(alerts_to_create):
+            if i == 10:  # Limit to 10 alerts
+                break
+
+            if [True for a in alerts if a["name"] == alert_name]:
+                continue  # Skip if an alert with the same name already exists
+
+            try:
+                alerts.append(
+                    {
+                        "name": alert_name,
+                        "options": self.config_alert(alert_name),
+                    }
+                )
+            except Exception as e:
+                logger.error(f"Failed to generate alert configuration for '{alert_name}': {e}")
 
         logger.debug(f"AI generated alerts: {alerts}")
 

@@ -7,6 +7,30 @@
 
     .ant-btn {
       text-align: left;
+      height: auto;
+
+      span {
+        white-space: normal;
+        /* allow wrapping */
+        overflow-wrap: break-word;
+        word-break: break-word;
+
+        i {
+          color: #52c41a;
+          margin-right: 0.5rem;
+        }
+
+        small {
+          display: block;
+          font-size: 0.8rem;
+          color: #888;
+        }
+      }
     }
   }
+}
+
+.justify-space-between {
+  display: flex;
+  justify-content: space-between;
 }

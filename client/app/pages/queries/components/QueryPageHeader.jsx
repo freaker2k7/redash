@@ -128,7 +128,7 @@ export default function QueryPageHeader({
         {
           aiAlerts: {
             isAvailable: settings.ai_enabled && query?.id,
-            title: "AI Alerts Suggestions",
+            title: "Suggest Alerts",
             onClick: openAIAlertsDialog,
           },
         },
