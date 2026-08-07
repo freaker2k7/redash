@@ -46,4 +46,8 @@ class AIClaudeCloud(AIBaseRemote):
             logger.error("Anthropic client is not initialized.")
             return {}
 
-        return {model.id: model.display_name for model in self.client.models.list().data}
+        try:
+            return {model.id: model.display_name for model in self.client.models.list().data}
+        except Exception as e:
+            logger.error(f"Failed to retrieve models from Anthropic client: {e}")
+            return {}
