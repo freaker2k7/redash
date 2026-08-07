@@ -1,8 +1,10 @@
 from flask import request
 from funcy import project
 
-from redash.handlers.base import BaseResource
+from redash import models
+from redash.handlers.base import BaseResource, get_object_or_404
 from redash.query_runner.ai import AI
+from redash.query_runner.ai.alerts_generator import AlertsGenerator
 
 
 class EmptyQueryRunner:
@@ -39,3 +41,18 @@ class AIModelsListResource(BaseResource):
         params["token"] = None  # Prevent token from being stored in memory after initialization
 
         return {"models": models}
+
+
+class AIAlertsSuggestionsResource(BaseResource):
+    def get(self, query_id):
+        """Logic to get AI alerts suggestions"""
+        query = get_object_or_404(models.Query.get_by_id_and_org, query_id, self.current_org)
+        query_result = get_object_or_404(
+            models.QueryResult.get_by_id_and_org,
+            query.latest_query_data_id,
+            self.current_org,
+        )
+
+        alerts = AlertsGenerator(query.data_source.query_runner, query_result.data, query.query_text).get_alerts()
+
+        return {"alerts": alerts}
