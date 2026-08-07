@@ -160,14 +160,17 @@ class VisualizationsGenerator:
         for visualization, visualization_class in visualizations_to_create.items():
             title, description = self.get_visualization_titles(visualization)
 
-            visualizations.append(
-                {
-                    "name": title,
-                    "description": description,
-                    "type": visualization,
-                    "options": self.get_visualization(visualization, visualization_class),
-                }
-            )
+            try:
+                visualizations.append(
+                    {
+                        "name": title,
+                        "description": description,
+                        "type": visualization,
+                        "options": self.get_visualization(visualization, visualization_class),
+                    }
+                )
+            except Exception as e:
+                logger.error(f"Failed to generate visualization configuration for '{visualization}': {e}")
 
         logger.debug(f"AI generated visualizations: {visualizations}")
 
