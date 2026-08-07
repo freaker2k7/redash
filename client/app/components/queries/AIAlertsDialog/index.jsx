@@ -18,6 +18,8 @@ function AIAlertsDialog({ dialog, ...props }) {
 
   const getAIAlerts = useCallback(() => {
     setGettingAIAlerts(true);
+    setAIAlerts([]);
+
     axios
       .get(`api/ai/alerts/${query.id}`)
       .then((data) => {
@@ -36,7 +38,8 @@ function AIAlertsDialog({ dialog, ...props }) {
 
   const createNewAlert = useCallback(
     (alert) => {
-      setCreatingAIAlert(alert.name);
+      setCreatingAIAlert(alert.key);
+
       axios
         .post(`api/alerts`, {
           query_id: query.id,
@@ -47,7 +50,7 @@ function AIAlertsDialog({ dialog, ...props }) {
         .then((data) => {
           setCreatingAIAlert("");
           notification.success("AI alert created successfully");
-          setCreatedAIAlerts((prev) => [...prev, alert.name]);
+          setCreatedAIAlerts((prev) => [...prev, alert.key]);
         })
         .catch(() => {
           setCreatingAIAlert("");
@@ -78,18 +81,16 @@ function AIAlertsDialog({ dialog, ...props }) {
               {aiAlerts.map((alert, index) => (
                 <Button
                   key={index}
-                  loading={gettingAIAlerts || creatingAIAlert === alert.name}
+                  loading={gettingAIAlerts || creatingAIAlert === alert.key}
                   onClick={() => createNewAlert(alert)}
-                  disabled={createdAIAlerts.includes(alert.name)}
+                  disabled={createdAIAlerts.includes(alert.key)}
                 >
-                  {(creatingAIAlert === alert.name && <i className="zmdi zmdi-check" aria-hidden="true" />) ||
-                    (createdAIAlerts.includes(alert.name) && (
+                  {(creatingAIAlert === alert.key && <i className="zmdi zmdi-check" aria-hidden="true" />) ||
+                    (createdAIAlerts.includes(alert.key) && (
                       <i className="zmdi zmdi-check-all" aria-hidden="true" />
                     ))}{" "}
                   {alert.name}
-                  <small>
-                    [ {alert.options.selector} {alert.options.column} {alert.options.op} {alert.options.value} ]
-                  </small>
+                  <small>[ {alert.key} ]</small>
                 </Button>
               ))}
             </ul>

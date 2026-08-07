@@ -156,8 +156,13 @@ class VisualizationsGenerator:
 
         visualizations_to_create = self.choose_visualizations()
         visualizations = []
+        known = set()
 
         for visualization, visualization_class in visualizations_to_create.items():
+            if visualization in known:
+                logger.warning(f"Duplicate visualization type '{visualization}' detected. Skipping.")
+                continue
+
             title, description = self.get_visualization_titles(visualization)
 
             try:
@@ -169,6 +174,8 @@ class VisualizationsGenerator:
                         "options": self.get_visualization(visualization, visualization_class),
                     }
                 )
+
+                known.add(visualization)
             except Exception as e:
                 logger.error(f"Failed to generate visualization configuration for '{visualization}': {e}")
 

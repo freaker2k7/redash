@@ -1,5 +1,6 @@
 import logging
 from enum import Enum
+from re import sub
 
 from pydantic import BaseModel, Field
 
@@ -129,23 +130,39 @@ class AlertsGenerator:
         and should be implemented with actual AI logic in subclasses.
         """
 
+        max_alerts = 10
         alerts_to_create = self.suggest_alerts()
         alerts = []
+        known_alerts = set()
+        known_alert_names = set()
 
-        for i, alert_name in enumerate(alerts_to_create):
-            if i == 10:  # Limit to 10 alerts
+        for alert_name in alerts_to_create:
+            if len(alerts) == max_alerts:
                 break
 
-            if [True for a in alerts if a["name"] == alert_name]:
+            if alert_name in known_alert_names:
+                logger.warning(f"Duplicate alert name '{alert_name}' detected. Skipping.")
                 continue  # Skip if an alert with the same name already exists
+
+            alert = self.config_alert(alert_name)
+
+            alert_key = " ".join([alert["selector"], alert["column"], alert["op"], sub(r'\.0$', '', str(alert["value"]))])
+
+            if alert_key in known_alerts:
+                logger.warning(f"Duplicate alert configuration '{alert_key}' detected. Skipping.")
+                continue  # Skip if an alert with the same configuration already exists
 
             try:
                 alerts.append(
                     {
+                        "key": alert_key,
                         "name": alert_name,
-                        "options": self.config_alert(alert_name),
+                        "options": alert,
                     }
                 )
+
+                known_alerts.add(alert_key)
+                known_alert_names.add(alert_name)
             except Exception as e:
                 logger.error(f"Failed to generate alert configuration for '{alert_name}': {e}")
 

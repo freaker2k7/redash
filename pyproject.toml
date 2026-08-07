@@ -177,11 +177,11 @@ default-groups = []
 
 [tool.ruff]
 exclude = [".git", "viz-lib", "node_modules", "migrations"]
-ignore = ["E501"]
-select = ["C9", "E", "F", "W", "I001", "UP004"]
+lint.ignore = ["E501"]
+lint.select = ["C9", "E", "F", "W", "I001", "UP004"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 15
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]

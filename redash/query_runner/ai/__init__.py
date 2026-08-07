@@ -20,6 +20,7 @@ class AI(AIBase):
         # "huggingface-remote": AIHuggingFaceRemote,
         "ollama-remote": AIOllamaRemote,
         # "kimi-k3-remote": AIKimiK3Remote,
+        # "deepseek-remote": AIDeepSeekRemote,
         "openai-cloud": AIOpenAICloud,
         # "claude-cloud": AIClaudeCloud,
         # "grok-cloud": AIGrokCloud,
@@ -85,6 +86,9 @@ class AI(AIBase):
             "ollama-remote": {
                 "name": "Ollama (Remote)",
                 "enabled": True,
+            },
+            "deepseek-remote": {
+                "name": "DeepSeek (Remote) [Coming Soon]",
             },
             "openai-cloud": {
                 "name": "OpenAI (Cloud)",
