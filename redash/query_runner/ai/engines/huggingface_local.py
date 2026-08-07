@@ -6,13 +6,13 @@ from typing import Any
 import outlines
 
 from redash.query_runner.ai.base import AIBase
-from redash.query_runner.ai.huggingface_models.defog_sqlcoder_7b_2 import (
+from redash.query_runner.ai.engines.huggingface_models.defog_sqlcoder_7b_2 import (
     HuggingFaceModelsDefogSQLCoder7B2,
 )
-from redash.query_runner.ai.huggingface_models.qwen_qwen3_1_7b import (
+from redash.query_runner.ai.engines.huggingface_models.qwen_qwen3_1_7b import (
     HuggingFaceModelsQwenQwen317B,
 )
-from redash.query_runner.ai.huggingface_models.qwen_qwen3_coder_next import (
+from redash.query_runner.ai.engines.huggingface_models.qwen_qwen3_coder_next import (
     HuggingFaceModelsQwenQwen3CoderNext,
 )
 

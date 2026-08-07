@@ -1,5 +1,5 @@
-from redash.query_runner.ai.huggingface_models import HuggingFaceModelBase
-from redash.query_runner.ai.huggingface_models.device import device
+from redash.query_runner.ai.engines.huggingface_models import HuggingFaceModelBase
+from redash.query_runner.ai.engines.huggingface_models.device import device
 
 
 class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):

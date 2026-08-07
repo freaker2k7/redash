@@ -4,7 +4,7 @@ from re import sub
 
 from pydantic import BaseModel, Field
 
-from redash.query_runner.ai import AI
+from redash.query_runner.ai.ai_conf_query_runner import get_conf_query_runner
 
 logger = logging.getLogger(__name__)
 
@@ -63,12 +63,10 @@ class AlertsTiles(BaseModel):
 
 class AlertsGenerator:
     def __init__(self, query_runner, data, query):
-        if "local" in query_runner.ai.__class__.__name__.lower():
-            self.ai = AI(ConfQueryRunner())
-        else:
-            self.ai = query_runner.ai
+        self.ai = get_conf_query_runner(query_runner)
 
         self.query = query
+
         self.data = str(
             {
                 "columns": data.get("columns", []),
@@ -78,8 +76,7 @@ class AlertsGenerator:
 
     def config_alert(self, alert_name: str) -> AlertConfiguration:
         """
-        Generate a configuration for the alert based on the alert name. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Generate a configuration for the alert based on the alert name.
         """
 
         alert = self.ai.prompt(
@@ -104,8 +101,7 @@ class AlertsGenerator:
 
     def suggest_alerts(self) -> list[str]:
         """
-        Suggest appropriate alerts based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Suggest appropriate alerts based on the data.
         """
 
         choices = self.ai.prompt(
@@ -126,8 +122,7 @@ class AlertsGenerator:
 
     def get_alerts(self) -> list:
         """
-        Generate alerts based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Generate alerts based on the data.
         """
 
         max_alerts = 10

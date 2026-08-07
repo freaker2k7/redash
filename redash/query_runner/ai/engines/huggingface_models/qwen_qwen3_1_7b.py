@@ -2,9 +2,7 @@ import logging
 
 from outlines.inputs import Chat
 
-from redash.query_runner.ai.huggingface_models import HuggingFaceModelBase
-
-# from redash.query_runner.ai.huggingface_models.device import device
+from redash.query_runner.ai.engines.huggingface_models import HuggingFaceModelBase
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +22,6 @@ class HuggingFaceModelsQwenQwen317B(HuggingFaceModelBase):
             device_map="auto",
             token=self.token or None,
         )
-        # .to(device)
         self.token = None  # Prevent token from being stored in memory after initialization
 
         return {

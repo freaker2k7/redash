@@ -2,9 +2,9 @@ import logging
 from typing import Any
 
 from redash.query_runner.ai.base import AIBase
-from redash.query_runner.ai.huggingface_local import AIHuggingFaceLocal
-from redash.query_runner.ai.ollama_remote import AIOllamaRemote
-from redash.query_runner.ai.openai_cloud import AIOpenAICloud
+from redash.query_runner.ai.engines.huggingface_local import AIHuggingFaceLocal
+from redash.query_runner.ai.engines.ollama_remote import AIOllamaRemote
+from redash.query_runner.ai.engines.openai_cloud import AIOpenAICloud
 
 logger = logging.getLogger(__name__)
 

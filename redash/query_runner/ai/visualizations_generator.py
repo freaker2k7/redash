@@ -5,7 +5,7 @@ from time import time
 from pydantic import BaseModel, Field
 
 from redash import models
-from redash.query_runner.ai import AI
+from redash.query_runner.ai.ai_conf_query_runner import get_conf_query_runner
 from redash.query_runner.ai.visualizations_validators.chart import ChartVisualization
 from redash.query_runner.ai.visualizations_validators.choropleth import (
     ChoroplethVisualization,
@@ -74,10 +74,7 @@ class VisualizationTitles(BaseModel):
 
 class VisualizationsGenerator:
     def __init__(self, query_runner, data):
-        if "local" in query_runner.ai.__class__.__name__.lower():
-            self.ai = AI(ConfQueryRunner())
-        else:
-            self.ai = query_runner.ai
+        self.ai = get_conf_query_runner(query_runner)
 
         self.data = str(
             {
@@ -85,12 +82,12 @@ class VisualizationsGenerator:
                 "rows": data.get("rows", [])[:10],
             }
         )
+
         self.schemas = {v.value.__class__.__name__: v.value.model_json_schema() for v in VisualizationInstanceType}
 
     def choose_visualizations(self) -> list[str]:
         """
-        Choose appropriate visualizations based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Choose appropriate visualizations based on the data.
         """
 
         choices = self.ai.prompt(
@@ -111,8 +108,7 @@ class VisualizationsGenerator:
 
     def get_visualization_titles(self, visualization) -> tuple[str, str]:
         """
-        Generate titles and descriptions for visualizations based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Generate titles and descriptions for visualizations based on the data.
         """
 
         titles = self.ai.prompt(
@@ -136,8 +132,7 @@ class VisualizationsGenerator:
 
     def get_visualization(self, visualization, visualization_class) -> models.Visualization:
         """
-        Generate visualizations based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Generate visualizations based on the data.
         """
 
         return self.ai.prompt(
@@ -154,8 +149,7 @@ class VisualizationsGenerator:
 
     def get_visualizations(self) -> list:
         """
-        Generate visualizations based on the data. This is a placeholder method
-        and should be implemented with actual AI logic in subclasses.
+        Generate visualizations based on the data.
         """
 
         visualizations_to_create = self.choose_visualizations()
