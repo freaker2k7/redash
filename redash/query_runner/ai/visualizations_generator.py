@@ -73,8 +73,12 @@ class VisualizationTitles(BaseModel):
 
 
 class VisualizationsGenerator:
-    def __init__(self, data):
-        self.ai = AI(ConfQueryRunner())
+    def __init__(self, query_runner, data):
+        if "local" in query_runner.ai.__class__.__name__.lower():
+            self.ai = AI(ConfQueryRunner())
+        else:
+            self.ai = query_runner.ai
+
         self.data = str(
             {
                 "columns": data.get("columns", []),
@@ -92,7 +96,7 @@ class VisualizationsGenerator:
         choices = self.ai.prompt(
             VisualizationChooser,
             f"Here is the data: {self.data}",
-            f"You are a helpful assistant that suggests appropriate visualizations based on the provided data. Your task is to analyze the data and choose the most suitable visualizations from the given list, choose appropriate visualizations from the following list: {[v.name for v in VisualizationInstanceType]}. Return the choices as a valid JSON object with the following structure: {VisualizationTitles.model_json_schema()}. Take into account the structures of the validators in order to create visualizations with the correct number of minimum fields: {self.schemas}. Do not include any explanations or additional text.",
+            f"You are a helpful assistant that suggests appropriate visualizations based on the provided data. Your task is to analyze the data and choose the most suitable visualizations from the given list, choose appropriate visualizations from the following list: {[v.name for v in VisualizationInstanceType]}. Return the choices as a valid JSON object with the following structure: {VisualizationChooser.model_json_schema()}. Take into account the structures of the validators in order to create visualizations with the correct number of minimum fields: {self.schemas}. Do not include any explanations or additional text.",
             [
                 {
                     "user": "Here is the data: {'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 1}]}",
@@ -114,7 +118,7 @@ class VisualizationsGenerator:
         titles = self.ai.prompt(
             VisualizationTitles,
             f"Given the following data: {self.data}, generate a title and description for a {visualization.lower()} visualization. ",
-            "You are a helpful assistant that generates titles and descriptions for visualizations based on the provided data. Your task is to analyze the data and generate a suitable title and description for the specified visualization type. Return the title and description as a valid JSON object with the following structure: {VisualizationTitles.model_json_schema()}. Do not include any explanations or additional text.",
+            f"You are a helpful assistant that generates titles and descriptions for visualizations based on the provided data. Your task is to analyze the data and generate a suitable title and description for the specified visualization type. Return the title and description as a valid JSON object with the following structure: {VisualizationTitles.model_json_schema()}. Do not include any explanations or additional text.",
             [
                 {
                     "user": "Given the following data: {'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 1}]}, generate a title and description for a counter visualization.",
@@ -139,7 +143,7 @@ class VisualizationsGenerator:
         return self.ai.prompt(
             visualization_class,
             f"Given the following data: {self.data}, generate a {visualization} visualization.",
-            "You are a helpful assistant that generates visualizations based on the provided data. Your task is to analyze the data and generate a visualization of the specified type. Return the visualization as a valid JSON object with the following structure: {visualization_class.model_json_schema()}. Do not include any explanations or additional text.",
+            f"You are a helpful assistant that generates visualizations based on the provided data. Your task is to analyze the data and generate a visualization of the specified type. Return the visualization as a valid JSON object with the following structure: {visualization_class.model_json_schema()}. Do not include any explanations or additional text.",
             [
                 {
                     "user": "Given the following data: {'columns': [{'name': 'count', 'friendly_name': 'count', 'type': 'integer'}], 'rows': [{'count': 1}]}, generate a counter visualization.",

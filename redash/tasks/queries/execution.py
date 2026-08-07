@@ -215,7 +215,7 @@ class QueryExecutor:
             data, error = query_runner.run_query(annotated_query, self.user)
 
             if self.is_ai_query and self.query_model and data:
-                visualizations = VisualizationsGenerator(data).get_visualizations()
+                visualizations = VisualizationsGenerator(query_runner, data).get_visualizations()
                 if visualizations:
                     for visualization in visualizations:
                         models.db.session.add(models.Visualization(query_rel=self.query_model, **visualization))
