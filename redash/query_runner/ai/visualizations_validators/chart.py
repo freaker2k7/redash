@@ -13,6 +13,7 @@ complements = {
     "scatter": {},
 }
 
+
 class ComplementaryChartType(Enum):
     area = "area"
     box = "box"
@@ -23,15 +24,24 @@ class ComplementaryChartType(Enum):
     pie = "pie"
     scatter = "scatter"
 
+
 class ChartVisualization(BaseModel):
     chartType: ComplementaryChartType = Field(
         ..., description="The type of chart to be generated. The available chart types are column and line."
     )
     xAxis: str = Field(..., description="The name of the column to be used for the x-axis in the chart visualization.")
     yAxis: str = Field(..., description="The name of the column to be used for the y-axis in the chart visualization.")
-    groupBy: str | None = Field(None, description="The name of the column to be used for grouping data points in the chart visualization, optional.")
-    errorColumn: str | None = Field(None, description="The name of the column to be used for error bars in the chart visualization, optional.")
-    bubbleSize: str | None = Field(None, description="The name of the column to be used for bubble size in the chart visualization, optional. Only if the chart type is set to bubble.")
+    groupBy: str | None = Field(
+        None,
+        description="The name of the column to be used for grouping data points in the chart visualization, optional.",
+    )
+    errorColumn: str | None = Field(
+        None, description="The name of the column to be used for error bars in the chart visualization, optional."
+    )
+    bubbleSize: str | None = Field(
+        None,
+        description="The name of the column to be used for bubble size in the chart visualization, optional. Only if the chart type is set to bubble.",
+    )
 
     def to_dict(self):
         return {

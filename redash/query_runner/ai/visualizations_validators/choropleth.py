@@ -11,10 +11,20 @@ class CountryFieldFormat(Enum):
     NAME = "name"
     NAME_LONG = "name_long"
 
+
 class ChoroplethVisualization(BaseModel):
-    keyColumn: str = Field(..., description="The name of the column to be used for the key in the choropleth visualization. This column should contain country codes or names.")
-    targetField: CountryFieldFormat = Field(..., description="The target field for the choropleth visualization. This field should contain the country codes or names that correspond to the key column.")
-    valueColumn: str = Field(..., description="The name of the column to be used for the value in the choropleth visualization. This column should contain numerical values that will be used to color the countries on the map.")
+    keyColumn: str = Field(
+        ...,
+        description="The name of the column to be used for the key in the choropleth visualization. This column should contain country codes or names.",
+    )
+    targetField: CountryFieldFormat = Field(
+        ...,
+        description="The target field for the choropleth visualization. This field should contain the country codes or names that correspond to the key column.",
+    )
+    valueColumn: str = Field(
+        ...,
+        description="The name of the column to be used for the value in the choropleth visualization. This column should contain numerical values that will be used to color the countries on the map.",
+    )
 
     def to_dict(self):
         return {

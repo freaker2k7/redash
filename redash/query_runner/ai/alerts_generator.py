@@ -35,7 +35,9 @@ class AlertSelectors(Enum):
 
 class AlertConfiguration(BaseModel):
     column: str = Field(..., description="The name of the column to which the condition applies.")
-    op: AlertOperators = Field(..., description="The operator used for the condition ['>', '<', '==', '!=', '>=', '<='].")
+    op: AlertOperators = Field(
+        ..., description="The operator used for the condition ['>', '<', '==', '!=', '>=', '<=']."
+    )
     selector: AlertSelectors = Field(..., description="The selector used for the condition ['first', 'min', 'max'].")
     value: float = Field(..., description="The value against which the column is compared.")
 
@@ -81,7 +83,7 @@ class AlertsGenerator:
 
         alert = self.ai.prompt(
             AlertConfiguration,
-            f"Alert title: \"{alert_name}\"\n\nHere is the data: {self.data}\n\nHere is the query: {self.query}",
+            f'Alert title: "{alert_name}"\n\nHere is the data: {self.data}\n\nHere is the query: {self.query}',
             f"You are a helpful assistant that suggests appropriate alert configurations based on the provided data and alert title. Your task is to analyze the data, query and alert name to provide a configuration. Return the result as a valid JSON object with the following structure: {AlertConfiguration.model_json_schema()}. Do not include any explanations or additional text.",
             [
                 {
