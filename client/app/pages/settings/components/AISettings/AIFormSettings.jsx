@@ -11,7 +11,8 @@ export default function AIFormSettings(props) {
   const { values, onChange, loading, modelsList, aiTypes, setModelsList } = props;
 
   useEffect(() => {
-    if (!values.ai_model && Object.keys(modelsList).length > 0) {
+    // If the current model is not in the list of available models, select the first available model.
+    if (Object.keys(modelsList).length > 0 && (!values.ai_model || !modelsList[values.ai_model])) {
       onChange({ ai_model: Object.keys(modelsList)[0] });
     }
   }, [values.ai_model, modelsList, onChange]);
