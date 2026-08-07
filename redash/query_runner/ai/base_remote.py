@@ -18,6 +18,7 @@ class AIBaseRemote(AIBase, ABC):
         self.model_name = model_name
         self.query_runner = query_runner
         self.client = client
+        self.max_new_tokens = 512  # Default value
 
     @property
     def engines(self):

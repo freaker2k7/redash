@@ -22,6 +22,7 @@ class AIOpenAICloud(AIBaseRemote):
         return (
             openai.Completion.create(
                 engine=self.model_name,
+                max_tokens=self.max_new_tokens,
                 prompt="\n".join([f"{m['role']}: {m['content']}" for m in messages]),
             )
             .choices[0]

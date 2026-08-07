@@ -2,6 +2,8 @@ import logging
 from typing import Any
 
 from redash.query_runner.ai.base import AIBase
+from redash.query_runner.ai.engines.claude_cloud import AIClaudeCloud
+from redash.query_runner.ai.engines.grok_cloud import AIGrokCloud
 from redash.query_runner.ai.engines.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.engines.ollama_remote import AIOllamaRemote
 from redash.query_runner.ai.engines.openai_cloud import AIOpenAICloud
@@ -22,8 +24,8 @@ class AI(AIBase):
         # "kimi-k3-remote": AIKimiK3Remote,
         # "deepseek-remote": AIDeepSeekRemote,
         "openai-cloud": AIOpenAICloud,
-        # "claude-cloud": AIClaudeCloud,
-        # "grok-cloud": AIGrokCloud,
+        "claude-cloud": AIClaudeCloud,
+        "grok-cloud": AIGrokCloud,
     }
 
     def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
@@ -95,9 +97,11 @@ class AI(AIBase):
                 "enabled": True,
             },
             "claude-cloud": {
-                "name": "Claude (Cloud) [Coming Soon]",
+                "name": "Claude (Cloud)",
+                "enabled": True,
             },
             "grok-cloud": {
-                "name": "Grok (Cloud) [Coming Soon]",
+                "name": "Grok (Cloud)",
+                "enabled": True,
             },
         }

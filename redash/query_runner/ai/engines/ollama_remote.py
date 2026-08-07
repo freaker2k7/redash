@@ -29,7 +29,9 @@ class AIOllamaRemote(AIBaseRemote):
         headers = None  # Prevent token from being stored in memory after initialization
 
     def chat(self, messages: list[dict[str, str]]) -> str:
-        return self.client.chat(model=self.model_name, messages=messages).message.content
+        return self.client.chat(
+            model=self.model_name, messages=messages, options={"num_ctx": self.max_new_tokens}
+        ).message.content
 
     @property
     def models(self):
