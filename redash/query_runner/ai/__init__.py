@@ -26,6 +26,7 @@ class AI(AIBase):
         "openai-cloud": AIOpenAICloud,
         "claude-cloud": AIClaudeCloud,
         "grok-cloud": AIGrokCloud,
+        # "openrouter-cloud": AIOpenRouterCloud,
     }
 
     def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
@@ -103,5 +104,8 @@ class AI(AIBase):
             "grok-cloud": {
                 "name": "Grok (Cloud)",
                 "enabled": True,
+            },
+            "openrouter-cloud": {
+                "name": "OpenRouter (Cloud) [Coming Soon]",
             },
         }
