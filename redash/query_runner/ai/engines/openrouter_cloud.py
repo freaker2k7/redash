@@ -1,6 +1,6 @@
 import logging
 
-from groq import Groq
+from openrouter import OpenRouter
 
 from redash.query_runner.ai.base_remote import AIBaseRemote
 
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class AIOpenRouterCloud(AIBaseRemote):
     def __init__(self, query_runner, token=None, host=None, model_name=None):
         try:
-            client = Groq(api_key=token)
+            client = OpenRouter(api_key=token)
         except Exception as e:
             logger.error(f"Failed to initialize OpenRouter client: {e}")
             client = None
