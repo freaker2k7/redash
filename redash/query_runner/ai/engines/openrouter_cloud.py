@@ -1,0 +1,62 @@
+import logging
+
+from groq import Groq
+
+from redash.query_runner.ai.base_remote import AIBaseRemote
+
+logger = logging.getLogger(__name__)
+
+
+class AIOpenRouterCloud(AIBaseRemote):
+    def __init__(self, query_runner, token=None, host=None, model_name=None):
+        try:
+            client = Groq(api_key=token)
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenRouter client: {e}")
+            client = None
+        finally:
+            token = None  # Prevent token from being stored in memory after initialization
+
+        super(AIOpenRouterCloud, self).__init__(
+            client=client,
+            query_runner=query_runner,
+            model_name=model_name,
+        )
+
+    def chat(self, messages: list[dict[str, str]]) -> str:
+        if not self.client:
+            logger.error("OpenRouter client is not initialized.")
+            return ""
+
+        return (
+            self.client.chat.send(
+                model=self.model_name, max_tokens=self.max_new_tokens, messages=messages, stream=False
+            )
+            .choices[0]
+            .message.content
+        )
+
+    @property
+    def models(self):
+        if not self.client:
+            logger.error("OpenRouter client is not initialized.")
+            return {}
+
+        models = {}
+
+        if self.token:
+            res = open_router.models.list_for_user(
+                security=operations.ListModelsUserSecurity(bearer=self.token),
+                offset=0,
+                limit=500,
+            )
+        else:
+            res = open_router.models.list(offset=0, limit=500)
+
+        while res is not None:
+            res = res.next()
+
+            for model in res.data:
+                models[model.canonical_slug] = model.name
+
+        return models

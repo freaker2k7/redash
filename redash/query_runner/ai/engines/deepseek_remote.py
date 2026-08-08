@@ -1,35 +1,35 @@
 import logging
 
-from groq import Groq
+from deepseek import DeepSeekAPI
 
 from redash.query_runner.ai.base_remote import AIBaseRemote
 
 logger = logging.getLogger(__name__)
 
 
-class AIGrokCloud(AIBaseRemote):
+class AIDeepSeekRemote(AIBaseRemote):
     def __init__(self, query_runner, token=None, host=None, model_name=None):
         try:
-            client = Groq(api_key=token)
+            client = DeepSeekAPI(token)
         except Exception as e:
-            logger.error(f"Failed to initialize Grok client: {e}")
+            logger.error(f"Failed to initialize DeepSeek client: {e}")
             client = None
         finally:
             token = None  # Prevent token from being stored in memory after initialization
 
-        super(AIGrokCloud, self).__init__(
+        super(AIDeepSeekRemote, self).__init__(
             client=client,
             query_runner=query_runner,
-            model_name=model_name or "openai/gpt-oss-20b",
+            model_name=model_name or "deepseek-v4-flash",
         )
 
     def chat(self, messages: list[dict[str, str]]) -> str:
         if not self.client:
-            logger.error("Grok client is not initialized.")
+            logger.error("DeepSeek client is not initialized.")
             return ""
 
         return (
-            self.client.chat.completions.create(
+            self.client.chat_completion(
                 model=self.model_name,
                 max_tokens=self.max_new_tokens,
                 messages=messages,
@@ -41,7 +41,7 @@ class AIGrokCloud(AIBaseRemote):
     @property
     def models(self):
         if not self.client:
-            logger.error("Grok client is not initialized.")
+            logger.error("DeepSeek client is not initialized.")
             return {}
 
-        return {model.id: model.display_name for model in self.client.models.list().data}
+        return {model.id: model.id.replace("-", " ").title() for model in self.client.get_models()}

@@ -3,10 +3,12 @@ from typing import Any
 
 from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.engines.claude_cloud import AIClaudeCloud
+from redash.query_runner.ai.engines.deepseek_remote import AIDeepSeekRemote
 from redash.query_runner.ai.engines.grok_cloud import AIGrokCloud
 from redash.query_runner.ai.engines.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.engines.ollama_remote import AIOllamaRemote
 from redash.query_runner.ai.engines.openai_cloud import AIOpenAICloud
+from redash.query_runner.ai.engines.openrouter_cloud import AIOpenRouterCloud
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +24,11 @@ class AI(AIBase):
         # "huggingface-remote": AIHuggingFaceRemote,
         "ollama-remote": AIOllamaRemote,
         # "kimi-k3-remote": AIKimiK3Remote,
-        # "deepseek-remote": AIDeepSeekRemote,
+        "deepseek-remote": AIDeepSeekRemote,
         "openai-cloud": AIOpenAICloud,
         "claude-cloud": AIClaudeCloud,
         "grok-cloud": AIGrokCloud,
-        # "openrouter-cloud": AIOpenRouterCloud,
+        "openrouter-cloud": AIOpenRouterCloud,
     }
 
     def __init__(self, query_runner=None, ai_type=None, ai_host=None, ai_token=None):
@@ -91,7 +93,8 @@ class AI(AIBase):
                 "enabled": True,
             },
             "deepseek-remote": {
-                "name": "DeepSeek (Remote) [Coming Soon]",
+                "name": "DeepSeek (Remote)",
+                "enabled": True,
             },
             "openai-cloud": {
                 "name": "OpenAI (Cloud)",
@@ -106,6 +109,7 @@ class AI(AIBase):
                 "enabled": True,
             },
             "openrouter-cloud": {
-                "name": "OpenRouter (Cloud) [Coming Soon]",
+                "name": "OpenRouter (Cloud)",
+                "enabled": True,
             },
         }

@@ -10,15 +10,15 @@ logger = logging.getLogger(__name__)
 class AIClaudeCloud(AIBaseRemote):
     def __init__(self, query_runner, token=None, host=None, model_name=None):
         try:
-            anthropic = Anthropic(api_key=token)
+            client = Anthropic(api_key=token)
         except Exception as e:
             logger.error(f"Failed to initialize Anthropic client: {e}")
-            anthropic = None
+            client = None
         finally:
             token = None  # Prevent token from being stored in memory after initialization
 
         super(AIClaudeCloud, self).__init__(
-            client=anthropic,
+            client=client,
             query_runner=query_runner,
             model_name=model_name or "claude-opus-5",
         )

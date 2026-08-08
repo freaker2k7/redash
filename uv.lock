@@ -644,6 +644,17 @@ wheels = [
 ]
 
 [[package]]
+name = "deepseek"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/7b/bede06edf1a25a6ab06553b15f6abf8e912848dfa5f68514720d3e388550/deepseek-1.0.0-py3-none-any.whl", hash = "sha256:ee4175bfcb7ac1154369dbd86a4d8bc1809f6fa20e3e7baa362544567197cb3f", size = 4542, upload-time = "2025-01-03T08:06:23.887Z" },
+]
+
+[[package]]
 name = "defusedxml"
 version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1485,6 +1496,15 @@ wheels = [
 ]
 
 [[package]]
+name = "jsonpath-python"
+version = "1.1.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/98/18/4ca8742534a5993ff383f7602e325ce2d5d7cc93d72ac5e1cdedbea8a458/jsonpath_python-1.1.6.tar.gz", hash = "sha256:dded9932b4ec41fb8726e09c83afa4e6be618f938c2db287cc2a81723c639671", size = 88178, upload-time = "2026-05-07T01:26:34.482Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/55/8a/1270a6803bd821cbfcdda387eaa13cb41a7b1f7b9bd145979b3bfb9d6cb7/jsonpath_python-1.1.6-py3-none-any.whl", hash = "sha256:a1c50afd8d3fbbaf47a4873bc890dcb3c15da96f5c020327977d844d8731a2d4", size = 14453, upload-time = "2026-05-07T01:26:33.306Z" },
+]
+
+[[package]]
 name = "jsonschema"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2049,6 +2069,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/3d/f9/88d94a75de065ea32619465d2f77b29a0469500e99012523b91cc4141cd1/openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050", size = 186464, upload-time = "2024-06-28T14:03:44.161Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2", size = 250910, upload-time = "2024-06-28T14:03:41.161Z" },
+]
+
+[[package]]
+name = "openrouter"
+version = "0.10.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpcore" },
+    { name = "httpx" },
+    { name = "jsonpath-python" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/4c/1fed3f4cbcf0962d8117b54f1740696c98d0dc2e3d5c34459d46effe8a3b/openrouter-0.10.8.tar.gz", hash = "sha256:ac7f4cea1ec1c2a063b0ad9792a8f64dde68ed053279b6c42bee849a50afc47c", size = 340259, upload-time = "2026-06-28T15:33:38.067Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/ae/76fc8ad57f6717e9231fbd7313e5623733d86f1a2149baa458772164f456/openrouter-0.10.8-py3-none-any.whl", hash = "sha256:ff9b3cd2f55a3f905d21f56517344da9f9556ffbd2cb9d31ddc388c4b930aab6", size = 748497, upload-time = "2026-06-28T15:33:36.627Z" },
 ]
 
 [[package]]
@@ -2902,6 +2937,7 @@ dependencies = [
     { name = "click" },
     { name = "cryptography" },
     { name = "debugpy" },
+    { name = "deepseek" },
     { name = "disposable-email-domains" },
     { name = "flask" },
     { name = "flask-limiter" },
@@ -2926,6 +2962,7 @@ dependencies = [
     { name = "maxminddb-geolite2" },
     { name = "ollama" },
     { name = "openai" },
+    { name = "openrouter" },
     { name = "oracledb" },
     { name = "outlines" },
     { name = "paramiko" },
@@ -3056,6 +3093,7 @@ requires-dist = [
     { name = "click", specifier = "==8.1.3" },
     { name = "cryptography", specifier = "==48.0.0" },
     { name = "debugpy", specifier = ">=1.8.9,<2.0.0" },
+    { name = "deepseek", specifier = "==1.0.0" },
     { name = "disposable-email-domains", specifier = ">=0.0.52" },
     { name = "flask", specifier = "==2.3.2" },
     { name = "flask-limiter", specifier = "==3.3.1" },
@@ -3080,6 +3118,7 @@ requires-dist = [
     { name = "maxminddb-geolite2", specifier = "==2018.703" },
     { name = "ollama", specifier = "==0.6.2" },
     { name = "openai", specifier = "==2.53.0" },
+    { name = "openrouter", specifier = "==0.10.8" },
     { name = "oracledb", specifier = "==2.5.1" },
     { name = "outlines", specifier = "==1.3.2" },
     { name = "paramiko", specifier = "==3.4.1" },
