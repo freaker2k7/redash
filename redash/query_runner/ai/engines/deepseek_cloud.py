@@ -7,7 +7,7 @@ from redash.query_runner.ai.base_remote import AIBaseRemote
 logger = logging.getLogger(__name__)
 
 
-class AIDeepSeekRemote(AIBaseRemote):
+class AIDeepSeekCloud(AIBaseRemote):
     def __init__(self, query_runner, token=None, host=None, model_name=None):
         try:
             client = DeepSeekAPI(token)
@@ -17,7 +17,7 @@ class AIDeepSeekRemote(AIBaseRemote):
         finally:
             token = None  # Prevent token from being stored in memory after initialization
 
-        super(AIDeepSeekRemote, self).__init__(
+        super(AIDeepSeekCloud, self).__init__(
             client=client,
             query_runner=query_runner,
             model_name=model_name or "deepseek-v4-flash",
@@ -44,4 +44,8 @@ class AIDeepSeekRemote(AIBaseRemote):
             logger.error("DeepSeek client is not initialized.")
             return {}
 
-        return {model.id: model.id.replace("-", " ").title() for model in self.client.get_models()}
+        try:
+            return {model.id: model.id.replace("-", " ").title() for model in self.client.get_models()}
+        except Exception as e:
+            logger.error(f"Failed to fetch models from DeepSeek: {e}")
+            return {}

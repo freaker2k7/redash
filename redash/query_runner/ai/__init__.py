@@ -3,7 +3,7 @@ from typing import Any
 
 from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.engines.claude_cloud import AIClaudeCloud
-from redash.query_runner.ai.engines.deepseek_remote import AIDeepSeekRemote
+from redash.query_runner.ai.engines.deepseek_cloud import AIDeepSeekCloud
 from redash.query_runner.ai.engines.grok_cloud import AIGrokCloud
 from redash.query_runner.ai.engines.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.engines.ollama_remote import AIOllamaRemote
@@ -24,7 +24,7 @@ class AI(AIBase):
         # "huggingface-remote": AIHuggingFaceRemote,
         "ollama-remote": AIOllamaRemote,
         # "kimi-k3-remote": AIKimiK3Remote,
-        "deepseek-remote": AIDeepSeekRemote,
+        "deepseek-cloud": AIDeepSeekCloud,
         "openai-cloud": AIOpenAICloud,
         "claude-cloud": AIClaudeCloud,
         "grok-cloud": AIGrokCloud,
@@ -92,8 +92,8 @@ class AI(AIBase):
                 "name": "Ollama (Remote)",
                 "enabled": True,
             },
-            "deepseek-remote": {
-                "name": "DeepSeek (Remote)",
+            "deepseek-cloud": {
+                "name": "DeepSeek (Cloud)",
                 "enabled": True,
             },
             "openai-cloud": {

@@ -44,4 +44,8 @@ class AIGrokCloud(AIBaseRemote):
             logger.error("Grok client is not initialized.")
             return {}
 
-        return {model.id: model.display_name for model in self.client.models.list().data}
+        try:
+            return {model.id: model.display_name for model in self.client.models.list().data}
+        except Exception as e:
+            logger.error(f"Failed to fetch models from Grok: {e}")
+            return {}

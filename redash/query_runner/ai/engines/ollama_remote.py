@@ -38,6 +38,10 @@ class AIOllamaRemote(AIBaseRemote):
         if not self.client:
             return {}
 
-        return {
-            model.model: model.model.title().replace(":", " ") for model in self.client.list().models if model.model
-        }
+        try:
+            return {
+                model.model: model.model.title().replace(":", " ") for model in self.client.list().models if model.model
+            }
+        except Exception as e:
+            logger.error(f"Failed to fetch models from Ollama: {e}")
+            return {}

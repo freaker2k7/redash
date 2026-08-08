@@ -44,16 +44,20 @@ class AIOpenRouterCloud(AIBaseRemote):
 
         models = {}
 
-        res = open_router.models.list_for_user(
-            security=operations.ListModelsUserSecurity(bearer=self.token),
-            offset=0,
-            limit=500,
-        )
+        try:
+            res = self.client.models.list_for_user(
+                # security=operations.ListModelsUserSecurity(bearer=self.token),
+                offset=0,
+                limit=500,
+            )
 
-        while res is not None:
-            res = res.next()
+            while res is not None:
+                res = res.next()
 
-            for model in res.data:
-                models[model.canonical_slug] = model.name
+                for model in res.data:
+                    models[model.canonical_slug] = model.name
 
-        return models
+            return models
+        except Exception as e:
+            logger.error(f"Failed to fetch models from OpenRouter: {e}")
+            return {}
