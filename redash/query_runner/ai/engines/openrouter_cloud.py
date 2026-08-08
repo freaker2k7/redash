@@ -44,14 +44,11 @@ class AIOpenRouterCloud(AIBaseRemote):
 
         models = {}
 
-        if self.token:
-            res = open_router.models.list_for_user(
-                security=operations.ListModelsUserSecurity(bearer=self.token),
-                offset=0,
-                limit=500,
-            )
-        else:
-            res = open_router.models.list(offset=0, limit=500)
+        res = open_router.models.list_for_user(
+            security=operations.ListModelsUserSecurity(bearer=self.token),
+            offset=0,
+            limit=500,
+        )
 
         while res is not None:
             res = res.next()
