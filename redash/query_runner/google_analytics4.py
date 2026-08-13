@@ -128,9 +128,11 @@ class GoogleAnalytics4(BaseQueryRunner):
                     "type": "string",
                     "title": "JSON Key File (ADC is used if omitted)",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["propertyId"],
             "secret": ["jsonKeyFile"],
+            "extra_options": ["ai_prompt"],
         }
 
     def _get_access_token(self):

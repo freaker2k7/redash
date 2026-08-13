@@ -54,10 +54,12 @@ class Arango(BaseQueryRunner):
                     "default": 0.0,
                     "title": "AQL Timeout in seconds (0 = no timeout)",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "port", "user", "password", "dbname"],
             "required": ["host", "user", "password", "dbname"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

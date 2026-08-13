@@ -93,6 +93,7 @@ class AzureKusto(BaseQueryRunner):
                     "type": "string",
                     "title": "User-assigned managed identity client ID",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": [
                 "cluster",
@@ -106,6 +107,7 @@ class AzureKusto(BaseQueryRunner):
                 "database",
             ],
             "secret": ["azure_ad_client_secret"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

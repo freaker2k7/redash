@@ -98,6 +98,7 @@ class Trino(BaseQueryRunner):
                         {"value": "name", "name": "Name"},
                     ],
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "protocol",
@@ -117,6 +118,7 @@ class Trino(BaseQueryRunner):
                 "client_tags",
                 "impersonation",
                 "impersonationField",
+                "ai_prompt",
             ],
         }
 

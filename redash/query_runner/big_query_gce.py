@@ -61,7 +61,9 @@ class BigQueryGCE(BigQuery):
                     "default": "US",
                 },
                 "loadSchema": {"type": "boolean", "title": "Load Schema"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
+            "extra_options": ["ai_prompt"],
         }
 
     def _get_project_id(self):

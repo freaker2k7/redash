@@ -81,10 +81,12 @@ class Rockset(BaseSQLQueryRunner):
                 },
                 "api_key": {"title": "API Key", "type": "string"},
                 "vi_id": {"title": "Virtual Instance ID", "type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["api_key", "api_server", "vi_id"],
             "required": ["api_server", "api_key"],
             "secret": ["api_key"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

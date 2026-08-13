@@ -85,10 +85,12 @@ class Netezza(BaseSQLQueryRunner):
                     "title": "Database Name",
                     "default": "system",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "port", "user", "password", "database"],
             "required": ["user", "password", "database"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

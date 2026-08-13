@@ -59,6 +59,7 @@ class Presto(BaseQueryRunner):
                 "catalog": {"type": "string"},
                 "username": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "host",
@@ -70,6 +71,8 @@ class Presto(BaseQueryRunner):
                 "catalog",
             ],
             "required": ["host"],
+            "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

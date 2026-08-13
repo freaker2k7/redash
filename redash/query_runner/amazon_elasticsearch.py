@@ -38,6 +38,7 @@ class AmazonElasticsearchService(ElasticSearch2):
                     "type": "boolean",
                     "title": "Use AWS IAM Profile",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["secret_key"],
             "order": [
@@ -48,6 +49,7 @@ class AmazonElasticsearchService(ElasticSearch2):
                 "use_aws_iam_profile",
             ],
             "required": ["server", "region"],
+            "extra_options": ["ai_prompt"],
         }
 
     @property

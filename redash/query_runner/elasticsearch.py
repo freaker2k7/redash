@@ -66,10 +66,12 @@ class BaseElasticSearch(BaseQueryRunner):
                     "type": "string",
                     "title": "Basic Auth Password",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["server", "basic_auth_user", "basic_auth_password"],
             "secret": ["basic_auth_password"],
             "required": ["server"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

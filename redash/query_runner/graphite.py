@@ -50,9 +50,11 @@ class Graphite(BaseQueryRunner):
                 "username": {"type": "string"},
                 "password": {"type": "string"},
                 "verify": {"type": "boolean", "title": "Verify SSL certificate"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["url"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @property

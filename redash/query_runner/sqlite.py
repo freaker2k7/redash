@@ -18,8 +18,12 @@ class Sqlite(BaseSQLQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"dbpath": {"type": "string", "title": "Database Path"}},
+            "properties": {
+                "dbpath": {"type": "string", "title": "Database Path"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
             "required": ["dbpath"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

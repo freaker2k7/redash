@@ -144,9 +144,11 @@ class JSON(BaseHTTPQueryRunner):
                 "base_url": {"type": "string", "title": cls.base_url_title},
                 "username": {"type": "string", "title": cls.username_title},
                 "password": {"type": "string", "title": cls.password_title},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "order": ["base_url", "username", "password"],
+            "extra_options": ["ai_prompt"],
         }
 
     def __init__(self, configuration):

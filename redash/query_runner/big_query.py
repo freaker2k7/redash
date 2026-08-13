@@ -144,6 +144,7 @@ class BigQuery(BaseSQLQueryRunner):
                     "title": "Use Query Annotation",
                     "default": False,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["projectId"],
             "order": [
@@ -158,6 +159,7 @@ class BigQuery(BaseSQLQueryRunner):
                 "useQueryAnnotation",
             ],
             "secret": ["jsonKeyFile"],
+            "extra_options": ["ai_prompt"],
         }
 
     @property

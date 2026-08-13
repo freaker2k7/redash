@@ -176,10 +176,11 @@ class SPARQLEndpointQueryRunner(BaseQueryRunner):
                     "title": "Verify SSL certificates for API requests",
                     "default": True,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["SPARQL_BASE_URI"],
             "secret": [],
-            "extra_options": ["SSL_VERIFY"],
+            "extra_options": ["SSL_VERIFY", "ai_prompt"],
         }
 
     def get_schema(self, get_stats=False):

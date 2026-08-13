@@ -175,9 +175,11 @@ class MongoDB(BaseQueryRunner):
                     ],
                     "title": "Flatten Results",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "required": ["connectionString", "dbName"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

@@ -9,16 +9,6 @@ from redash.query_runner.ai.ai_conf_query_runner import get_conf_query_runner
 logger = logging.getLogger(__name__)
 
 
-class ConfQueryRunner:
-    def __init__(self):
-        self.type = "conf"
-        self.configuration = {}
-
-    @property
-    def supports_ai_query_type(self):
-        return "conf"
-
-
 class AlertOperators(Enum):
     GREATER_THAN = ">"
     LESS_THAN = "<"

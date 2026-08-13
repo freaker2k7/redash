@@ -76,6 +76,7 @@ class Mysql(BaseSQLQueryRunner):
                 "charset": {"type": "string", "default": "utf8mb4"},
                 "use_unicode": {"type": "boolean", "default": True},
                 "autocommit": {"type": "boolean", "default": False},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "host",
@@ -90,6 +91,7 @@ class Mysql(BaseSQLQueryRunner):
             ],
             "required": ["db"],
             "secret": ["passwd"],
+            "extra_options": ["ai_prompt"],
         }
 
         if show_ssl_settings:

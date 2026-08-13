@@ -77,9 +77,10 @@ class Oracle(BaseSQLQueryRunner):
                 "port": {"type": "number"},
                 "servicename": {"type": "string", "title": "DSN Service Name"},
                 "encoding": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["servicename", "user", "password", "host", "port"],
-            "extra_options": ["encoding"],
+            "extra_options": ["encoding", "ai_prompt"],
             "secret": ["password"],
         }
 

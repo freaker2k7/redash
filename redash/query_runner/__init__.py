@@ -358,9 +358,11 @@ class BaseHTTPQueryRunner(BaseQueryRunner):
                 "url": {"type": "string", "title": cls.url_title},
                 "username": {"type": "string", "title": cls.username_title},
                 "password": {"type": "string", "title": cls.password_title},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "order": ["url", "username", "password"],
+            "extra_options": ["ai_prompt"],
         }
 
         if cls.requires_url or cls.requires_authentication:

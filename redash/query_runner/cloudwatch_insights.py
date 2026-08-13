@@ -82,10 +82,12 @@ class CloudWatchInsights(BaseQueryRunner):
                 "region": {"type": "string", "title": "AWS Region"},
                 "aws_access_key": {"type": "string", "title": "AWS Access Key"},
                 "aws_secret_key": {"type": "string", "title": "AWS Secret Key"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["region", "aws_access_key", "aws_secret_key"],
             "order": ["region", "aws_access_key", "aws_secret_key"],
             "secret": ["aws_secret_key"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

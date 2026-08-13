@@ -70,9 +70,11 @@ class Impala(BaseSQLQueryRunner):
                 "ldap_user": {"type": "string"},
                 "ldap_password": {"type": "string"},
                 "timeout": {"type": "number"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host"],
             "secret": ["ldap_password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @property

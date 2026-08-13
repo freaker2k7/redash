@@ -24,16 +24,6 @@ from redash.query_runner.ai.visualizations_validators.pivot import PivotVisualiz
 logger = logging.getLogger(__name__)
 
 
-class ConfQueryRunner:
-    def __init__(self):
-        self.type = "conf"
-        self.configuration = {}
-
-    @property
-    def supports_ai_query_type(self):
-        return "conf"
-
-
 class VisualizationInstanceType(Enum):
     __order__ = "CHART CHOROPLETH COHORT COUNTER DETAILS FUNNEL MAP PIVOT"
     CHART = ChartVisualization

@@ -37,10 +37,12 @@ class Databend(BaseQueryRunner):
                 "password": {"type": "string", "default": ""},
                 "database": {"type": "string"},
                 "secure": {"type": "boolean", "default": False},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["username", "password", "host", "port", "database"],
             "required": ["username", "database"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

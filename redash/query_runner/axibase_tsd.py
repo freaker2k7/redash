@@ -124,9 +124,11 @@ class AxibaseTSD(BaseQueryRunner):
                     "type": "boolean",
                     "title": "Trust SSL Certificate",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["username", "password", "hostname", "protocol", "port"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @property

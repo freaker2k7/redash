@@ -78,9 +78,11 @@ class Cassandra(BaseQueryRunner):
                         "PROTOCOL_TLSv1_2",
                     ],
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["keyspace", "host", "useSsl"],
             "secret": ["sslCertificateFile"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

@@ -64,9 +64,11 @@ class TreasureData(BaseQueryRunner):
                     "title": "Auto Schema Retrieval",
                     "default": False,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["apikey"],
             "required": ["apikey", "db"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

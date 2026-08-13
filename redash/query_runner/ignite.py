@@ -80,9 +80,11 @@ class Ignite(BaseSQLQueryRunner):
                     "title": "Use GridGain libraries",
                     "default": gridgain_available,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["server"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

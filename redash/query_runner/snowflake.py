@@ -62,6 +62,7 @@ class Snowflake(BaseSQLQueryRunner):
                     "default": False,
                 },
                 "host": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "account",
@@ -76,9 +77,7 @@ class Snowflake(BaseSQLQueryRunner):
             ],
             "required": ["user", "account", "database", "warehouse"],
             "secret": ["password", "private_key_File", "private_key_pwd"],
-            "extra_options": [
-                "host",
-            ],
+            "extra_options": ["host", "ai_prompt"],
         }
 
     @classmethod

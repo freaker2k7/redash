@@ -52,6 +52,7 @@ class Pinot(BaseQueryRunner):
                 "controllerURI": {"type": "string", "default": ""},
                 "username": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "brokerScheme",
@@ -63,6 +64,7 @@ class Pinot(BaseQueryRunner):
             ],
             "required": ["brokerHost", "controllerURI"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

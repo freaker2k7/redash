@@ -61,8 +61,12 @@ class Phoenix(BaseQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"url": {"type": "string"}},
+            "properties": {
+                "url": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
             "required": ["url"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

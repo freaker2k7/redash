@@ -63,9 +63,11 @@ class SqlServer(BaseSQLQueryRunner):
                     "title": "Character Set",
                 },
                 "db": {"type": "string", "title": "Database Name"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["db"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

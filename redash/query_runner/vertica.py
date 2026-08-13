@@ -54,6 +54,7 @@ class Vertica(BaseSQLQueryRunner):
                 "port": {"type": "number"},
                 "read_timeout": {"type": "number", "title": "Read Timeout"},
                 "connection_timeout": {"type": "number", "title": "Connection Timeout"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["database"],
             "order": [
@@ -66,6 +67,7 @@ class Vertica(BaseSQLQueryRunner):
                 "connection_timeout",
             ],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

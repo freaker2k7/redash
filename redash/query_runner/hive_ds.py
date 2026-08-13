@@ -63,9 +63,11 @@ class Hive(BaseSQLQueryRunner):
                 "port": {"type": "number"},
                 "database": {"type": "string"},
                 "username": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "port", "database", "username"],
             "required": ["host"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

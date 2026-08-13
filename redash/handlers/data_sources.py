@@ -22,6 +22,7 @@ from redash.query_runner import (
     get_configuration_schema_for_query_runner_type,
     query_runners,
 )
+from redash.query_runner.ai.highlights_generator import HighlightsGenerator
 from redash.serializers import serialize_job
 from redash.tasks.general import get_schema, test_connection
 from redash.utils import filter_none
@@ -64,6 +65,16 @@ class DataSourceResource(BaseResource):
             data_source.options.update(filter_none(req["options"]))
         except ValidationError:
             abort(400)
+
+        if req["options"].get("ai_prompt", "").strip():
+            if req["options"]["ai_prompt"] != data_source.options.get("ai_prompt", None):
+                try:
+                    highlighter = HighlightsGenerator(data_source.query_runner)
+                    data_source.options["ai_highlights"] = highlighter.suggest_highlights(req["options"]["ai_prompt"])
+                except Exception:
+                    pass
+        else:
+            data_source.options["ai_highlights"] = []
 
         data_source.type = req["type"]
         data_source.name = req["name"]

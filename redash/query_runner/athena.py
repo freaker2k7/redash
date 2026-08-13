@@ -104,6 +104,7 @@ class Athena(BaseQueryRunner):
                     "title": "Minutes to reuse Athena query results",
                     "default": 60,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["region", "s3_staging_dir"],
             "extra_options": [
@@ -112,6 +113,7 @@ class Athena(BaseQueryRunner):
                 "cost_per_tb",
                 "result_reuse_enable",
                 "result_reuse_minutes",
+                "ai_prompt",
             ],
             "order": [
                 "region",

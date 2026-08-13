@@ -99,9 +99,13 @@ class YandexMetrica(BaseSQLQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"token": {"type": "string", "title": "OAuth Token"}},
+            "properties": {
+                "token": {"type": "string", "title": "OAuth Token"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
             "secret": ["token"],
             "required": ["token"],
+            "extra_options": ["ai_prompt"],
         }
 
     def __init__(self, configuration):

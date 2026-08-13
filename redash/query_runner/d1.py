@@ -49,9 +49,11 @@ class D1QueryRunner(BaseQueryRunner):
             "properties": {
                 "cf_url": {"type": "string", "title": "Cloudflare D1 API URL"},
                 "cf_token": {"type": "string", "title": "Cloudflare API Token"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["cf_url", "cf_token"],
             "secret": ["cf_token"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

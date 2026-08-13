@@ -32,7 +32,9 @@ class Excel(BaseQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {},
+            "properties": {
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
         }
 
     def __init__(self, configuration):

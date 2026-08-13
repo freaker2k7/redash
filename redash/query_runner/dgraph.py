@@ -51,10 +51,12 @@ class Dgraph(BaseQueryRunner):
                 "user": {"type": "string"},
                 "password": {"type": "string"},
                 "servers": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["servers", "user", "password"],
             "required": ["servers"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

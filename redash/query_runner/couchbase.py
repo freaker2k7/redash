@@ -97,10 +97,12 @@ class Couchbase(BaseQueryRunner):
                 },
                 "user": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host", "user", "password"],
             "order": ["protocol", "host", "port", "user", "password"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

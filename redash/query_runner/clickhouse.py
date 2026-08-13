@@ -50,10 +50,11 @@ class ClickHouse(BaseSQLQueryRunner):
                     "title": "Verify SSL certificate",
                     "default": True,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["url", "user", "password", "dbname"],
             "required": ["dbname"],
-            "extra_options": ["timeout", "verify"],
+            "extra_options": ["timeout", "verify", "ai_prompt"],
             "secret": ["password"],
         }
 
