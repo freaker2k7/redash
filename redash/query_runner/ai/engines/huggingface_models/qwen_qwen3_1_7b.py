@@ -8,8 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class HuggingFaceModelsQwenQwen317B(HuggingFaceModelBase):
-    def __init__(self, query_runner, max_new_tokens=128, token=None):
-        super(HuggingFaceModelsQwenQwen317B, self).__init__(query_runner, "Qwen/Qwen3-1.7B", token, max_new_tokens)
+    def __init__(self, query_runner, max_new_tokens=128, token=None, highlights=None):
+        super(HuggingFaceModelsQwenQwen317B, self).__init__(
+            query_runner, "Qwen/Qwen3-1.7B", token, max_new_tokens, highlights=highlights
+        )
         self.model_data = None
 
     def load(self):

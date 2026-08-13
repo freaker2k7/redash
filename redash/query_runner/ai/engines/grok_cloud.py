@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIGrokCloud(AIBaseRemote):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = Groq(api_key=token)
         except Exception as e:
@@ -21,6 +21,7 @@ class AIGrokCloud(AIBaseRemote):
             client=client,
             query_runner=query_runner,
             model_name=model_name or "openai/gpt-oss-20b",
+            highlights=highlights,
         )
 
     def chat(self, messages: list[dict[str, str]]) -> str:

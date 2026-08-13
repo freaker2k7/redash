@@ -8,11 +8,13 @@ class HuggingFaceModelBase(ABC):
         model_name: str,
         token: str = None,
         max_new_tokens: int = 512,
+        highlights: list = None,
     ):
         self.model_name = model_name
         self.token = token
         self.max_new_tokens = max_new_tokens
         self.query_runner = query_runner
+        self.highlights = highlights
 
     @abstractmethod
     def load(self):

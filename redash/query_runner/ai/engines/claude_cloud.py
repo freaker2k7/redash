@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIClaudeCloud(AIBaseRemote):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = Anthropic(api_key=token)
         except Exception as e:
@@ -21,6 +21,7 @@ class AIClaudeCloud(AIBaseRemote):
             client=client,
             query_runner=query_runner,
             model_name=model_name or "claude-opus-5",
+            highlights=highlights,
         )
 
     def chat(self, messages: list[dict[str, str]]) -> str:

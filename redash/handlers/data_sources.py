@@ -57,24 +57,29 @@ class DataSourceResource(BaseResource):
         data_source = models.DataSource.get_by_id_and_org(data_source_id, self.current_org)
         req = request.get_json(True)
 
+        logger.info("Current data source options: %s", data_source.options.to_dict())
+
+        if req["options"].get("ai_prompt", "").strip():
+            if req["options"]["ai_prompt"].strip().lower() != data_source.options.get("ai_prompt", "").strip().lower():
+                try:
+                    highlighter = HighlightsGenerator(data_source.query_runner)
+                    req["options"]["ai_highlights"] = highlighter.get_highlights(req["options"]["ai_prompt"])
+                except Exception:
+                    pass
+        else:
+            req["options"]["ai_highlights"] = []
+
         schema = get_configuration_schema_for_query_runner_type(req["type"])
         if schema is None:
             abort(400)
+
+        schema["properties"]["ai_highlights"] = {"type": "array", "items": {"type": "string"}}
+
         try:
             data_source.options.set_schema(schema)
             data_source.options.update(filter_none(req["options"]))
         except ValidationError:
             abort(400)
-
-        if req["options"].get("ai_prompt", "").strip():
-            if req["options"]["ai_prompt"] != data_source.options.get("ai_prompt", None):
-                try:
-                    highlighter = HighlightsGenerator(data_source.query_runner)
-                    data_source.options["ai_highlights"] = highlighter.suggest_highlights(req["options"]["ai_prompt"])
-                except Exception:
-                    pass
-        else:
-            data_source.options["ai_highlights"] = []
 
         data_source.type = req["type"]
         data_source.name = req["name"]

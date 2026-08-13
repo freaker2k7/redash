@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIBaseRemote(AIBase, ABC):
-    def __init__(self, client, query_runner, model_name):
+    def __init__(self, client, query_runner, model_name, highlights=None):
         """
         NOTE: `host` parameter is not used in this class, but it's included for compatibility with other AI implementations that may require a host.
         """
@@ -19,6 +19,7 @@ class AIBaseRemote(AIBase, ABC):
         self.query_runner = query_runner
         self.client = client
         self.max_new_tokens = 512  # Default value
+        self.highlights = highlights
 
     @property
     def engines(self):
@@ -53,6 +54,12 @@ class AIBaseRemote(AIBase, ABC):
         with actual AI logic in subclasses.
         """
 
+        highlights = [
+            f"If the whole message is already a valid {self.query_runner.__class__.__name__} query, return it as is.",
+            "If you cannot answer the question with the available database schema, return 'NO ANSWER'.",
+            *(self.highlights if self.highlights else []),
+        ]
+
         query: ChatResponse = self.chat(
             [
                 {
@@ -61,8 +68,7 @@ class AIBaseRemote(AIBase, ABC):
 Generate a {self.query_runner.__class__.__name__} query to answer [QUESTION]{query_text}[/QUESTION]
 
 ### Instructions
-- If the whole message is already a valid {self.query_runner.__class__.__name__} query, return it as is.
-- If you cannot answer the question with the available database schema, return 'NO ANSWER'.
+- {"\n- ".join(highlights)}
 
 ### Database Schema
 The query will run on a database with the following schema:

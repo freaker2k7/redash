@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIDeepSeekCloud(AIBaseRemote):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = DeepSeekAPI(token)
         except Exception as e:
@@ -21,6 +21,7 @@ class AIDeepSeekCloud(AIBaseRemote):
             client=client,
             query_runner=query_runner,
             model_name=model_name or "deepseek-v4-flash",
+            highlights=highlights,
         )
 
     def chat(self, messages: list[dict[str, str]]) -> str:

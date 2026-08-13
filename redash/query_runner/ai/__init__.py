@@ -44,7 +44,11 @@ class AI(AIBase):
                 host = ai_host or query_runner.configuration.get("ai_host")
                 token = ai_token or query_runner.configuration.get("ai_token")
                 self.instance = self.instance_types[self.type](
-                    query_runner, token=token, host=host, model_name=model_name
+                    query_runner,
+                    token=token,
+                    host=host,
+                    model_name=model_name,
+                    highlights=query_runner.configuration.get("ai_highlights"),
                 )
                 token = None  # Prevent token from being stored in memory after initialization
                 ai_token = None  # Prevent token from being stored in memory after initialization

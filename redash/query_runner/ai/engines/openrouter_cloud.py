@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIOpenRouterCloud(AIBaseRemote):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             self.token = token  # Store the token for later use in model listing
             client = OpenRouter(api_key=token)
@@ -22,6 +22,7 @@ class AIOpenRouterCloud(AIBaseRemote):
             client=client,
             query_runner=query_runner,
             model_name=model_name,
+            highlights=highlights,
         )
 
     def chat(self, messages: list[dict[str, str]]) -> str:

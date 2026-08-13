@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIOllamaRemote(AIBaseRemote):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         headers = {}
 
         if token:
@@ -25,6 +25,7 @@ class AIOllamaRemote(AIBaseRemote):
             client=client,
             query_runner=query_runner,
             model_name=model_name or "gemma3",
+            highlights=highlights,
         )
         headers = None  # Prevent token from being stored in memory after initialization
 

@@ -3,9 +3,9 @@ from redash.query_runner.ai.engines.huggingface_models.device import device
 
 
 class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
-    def __init__(self, query_runner, max_new_tokens=512, token=None):
+    def __init__(self, query_runner, max_new_tokens=512, token=None, highlights=None):
         super(HuggingFaceModelsQwenQwen3CoderNext, self).__init__(
-            query_runner, "Qwen/Qwen3-Coder-Next", token, max_new_tokens
+            query_runner, "Qwen/Qwen3-Coder-Next", token, max_new_tokens, highlights=highlights
         )
         self.model_data = None
 
@@ -30,12 +30,17 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
     def template(self, query_text):
         sql_type = self.query_runner.__class__.__name__
 
+        highlights = [
+            f"If the whole message is already a valid {sql_type} query, return it as is.",
+            "If you cannot answer the question with the available database schema, return 'NO ANSWER'.",
+            *(self.highlights if self.highlights else []),
+        ]
+
         return f"""### Task
 Generate a {sql_type} query to answer [QUESTION]{query_text}[/QUESTION]
 
 ### Instructions
-- If the whole message is already a valid {sql_type} query, return it as is.
-- If you cannot answer the question with the available database schema, return 'NO ANSWER'.
+- {"\n- ".join(highlights)}
 
 ### Database Schema
 The query will run on a database with the following schema:

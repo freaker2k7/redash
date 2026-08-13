@@ -22,13 +22,14 @@ logger = logging.getLogger(__name__)
 
 
 class AIHuggingFaceLocal(AIBase):
-    def __init__(self, query_runner, token=None, host=None, model_name=None):
+    def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         """
         NOTE: `host` parameter is not used in this class, but it's included for compatibility with other AI implementations that may require a host.
         """
         self.model_name = model_name
         self.query_runner = query_runner
         self.token = token
+        self.highlights = highlights
         token = None  # Prevent token from being stored in memory after initialization
 
     @property
@@ -45,11 +46,17 @@ class AIHuggingFaceLocal(AIBase):
                 models[self.query_runner.supports_ai_query_type] = {"loading": True}
 
                 if self.query_runner.supports_ai_query_type in ["sql", "sparql"]:
-                    model_instance = HuggingFaceModelsDefogSQLCoder7B2(self.query_runner, token=self.token)
+                    model_instance = HuggingFaceModelsDefogSQLCoder7B2(
+                        self.query_runner, token=self.token, highlights=self.highlights
+                    )
                 elif self.query_runner.supports_ai_query_type == "nosql":
-                    model_instance = HuggingFaceModelsQwenQwen3CoderNext(self.query_runner, token=self.token)
+                    model_instance = HuggingFaceModelsQwenQwen3CoderNext(
+                        self.query_runner, token=self.token, highlights=self.highlights
+                    )
                 elif self.query_runner.supports_ai_query_type == "conf":
-                    model_instance = HuggingFaceModelsQwenQwen317B(self.query_runner, token=self.token)
+                    model_instance = HuggingFaceModelsQwenQwen317B(
+                        self.query_runner, token=self.token, highlights=self.highlights
+                    )
                 else:
                     raise NotImplementedError(
                         f"AI query type '{self.query_runner.supports_ai_query_type}' is not supported for HuggingFaceLocal."
