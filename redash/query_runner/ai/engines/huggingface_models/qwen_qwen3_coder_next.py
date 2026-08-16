@@ -27,29 +27,6 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
             "eos_token_id": None,
         }
 
-    def template(self, query_text):
-        sql_type = self.query_runner.__class__.__name__
-
-        highlights = [
-            f"If the whole message is already a valid {sql_type} query, return it as is.",
-            "If you cannot answer the question with the available database schema, return 'NO ANSWER'.",
-            *(self.highlights if self.highlights else []),
-        ]
-
-        return f"""### Task
-Generate a {sql_type} query to answer [QUESTION]{query_text}[/QUESTION]
-
-### Instructions
-- {"\n- ".join(highlights)}
-
-### Database Schema
-The query will run on a database with the following schema:
-{self.query_runner.get_schema()}
-
-### Answer
-Given the database schema, here is the {sql_type} query that answers [QUESTION]{query_text}[/QUESTION]
-[{sql_type}]"""
-
     def generate_prompt(self, model, query_text: str) -> str:
         text = model["tokenizer"].apply_chat_template(
             messages=[

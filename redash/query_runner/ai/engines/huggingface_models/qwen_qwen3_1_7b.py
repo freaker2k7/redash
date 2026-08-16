@@ -33,9 +33,6 @@ class HuggingFaceModelsQwenQwen317B(HuggingFaceModelBase):
             "eos_token_id": None,
         }
 
-    def template(self, query_text):
-        pass
-
     def generate(self, model, query_text: str) -> str:
         pass
 
