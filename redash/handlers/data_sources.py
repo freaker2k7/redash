@@ -27,6 +27,7 @@ from redash.serializers import serialize_job
 from redash.tasks.general import get_schema, test_connection
 from redash.utils import filter_none
 from redash.utils.configuration import ConfigurationContainer, ValidationError
+from redash.utils.data_source import clean_ai_schema
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ class DataSourceResource(BaseResource):
         # add view_only info, required for frontend permissions
         ds["view_only"] = all(project(data_source.groups, self.current_user.group_ids).values())
         self.record_event({"action": "view", "object_id": data_source_id, "object_type": "datasource"})
-        return ds
+        return clean_ai_schema(ds)
 
     @require_admin
     def post(self, data_source_id):
@@ -132,7 +133,7 @@ class DataSourceListResource(BaseResource):
             try:
                 d = ds.to_dict()
                 d["view_only"] = all(project(ds.groups, self.current_user.group_ids).values())
-                response[ds.id] = d
+                response[ds.id] = clean_ai_schema(d)
             except AttributeError:
                 logger.exception("Error with DataSource#to_dict (data source id: %d)", ds.id)
 
