@@ -55,7 +55,7 @@ export default function AIFormSettings(props) {
                 value={values.ai_token || ""}
                 onChange={(e) => onChange({ ai_token: e.target.value })}
                 placeholder={"Xyz...qW1 " + (values.ai_type.endsWith("-cloud") ? "[Required]" : "(Optional)")}
-                autocomplete="new-password"
+                autoComplete="new-password"
                 required={values.ai_type.endsWith("-cloud")}
               />
             )}
