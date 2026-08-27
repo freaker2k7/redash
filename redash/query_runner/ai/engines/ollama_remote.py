@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIOllamaRemote(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "Ollama (Remote)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         headers = {}
 

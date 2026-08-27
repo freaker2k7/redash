@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIOpenRouterCloud(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "OpenRouter (Cloud)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             self.token = token  # Store the token for later use in model listing

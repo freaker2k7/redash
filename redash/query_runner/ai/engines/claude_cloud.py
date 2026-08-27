@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIClaudeCloud(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "Claude (Cloud)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = Anthropic(api_key=token)

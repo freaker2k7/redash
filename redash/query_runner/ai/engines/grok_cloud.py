@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIGrokCloud(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "Grok (Cloud)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = Groq(api_key=token)

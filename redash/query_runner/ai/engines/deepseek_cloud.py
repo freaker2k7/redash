@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIDeepSeekCloud(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "DeepSeek (Cloud)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         try:
             client = DeepSeekAPI(token)

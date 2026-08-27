@@ -8,6 +8,10 @@ from redash.query_runner.ai.base_remote import AIBaseRemote
 
 
 class AIOpenAICloud(AIBaseRemote):
+    @staticmethod
+    def display_name():
+        return "OpenAI (Cloud)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         openai.api_key = token
         token = None  # Prevent token from being stored in memory after initialization

@@ -22,6 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class AIHuggingFaceLocal(AIBase):
+    @staticmethod
+    def display_name():
+        return "HuggingFace (Local)"
+
     def __init__(self, query_runner, token=None, host=None, model_name=None, highlights=None):
         """
         NOTE: `host` parameter is not used in this class, but it's included for compatibility with other AI implementations that may require a host.

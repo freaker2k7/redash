@@ -4,6 +4,7 @@ from typing import Any
 from redash.query_runner.ai.base import AIBase
 from redash.query_runner.ai.engines.claude_cloud import AIClaudeCloud
 from redash.query_runner.ai.engines.deepseek_cloud import AIDeepSeekCloud
+from redash.query_runner.ai.engines.gemini_cloud import AIGeminiCloud
 from redash.query_runner.ai.engines.grok_cloud import AIGrokCloud
 from redash.query_runner.ai.engines.huggingface_local import AIHuggingFaceLocal
 from redash.query_runner.ai.engines.ollama_remote import AIOllamaRemote
@@ -21,12 +22,13 @@ class AI(AIBase):
 
     instance_types = {
         "huggingface-local": AIHuggingFaceLocal,
-        # "huggingface-remote": AIHuggingFaceRemote,
+        "huggingface-remote": None,
         "ollama-remote": AIOllamaRemote,
-        # "kimi-k3-remote": AIKimiK3Remote,
+        "kimi-k3-remote": None,
         "deepseek-cloud": AIDeepSeekCloud,
         "openai-cloud": AIOpenAICloud,
         "claude-cloud": AIClaudeCloud,
+        "claude-gemini": AIGeminiCloud,
         "grok-cloud": AIGrokCloud,
         "openrouter-cloud": AIOpenRouterCloud,
     }
@@ -82,38 +84,9 @@ class AI(AIBase):
     @property
     def supported_types(self) -> dict[str, dict[str, Any]]:
         return {
-            "huggingface-local": {
-                "name": "HuggingFace (Local)",
-                "enabled": True,
-            },
-            "huggingface-remote": {
-                "name": "HuggingFace (Remote) [Coming Soon]",
-            },
-            "kimi-k3-remote": {
-                "name": "Kimi K3 (Remote) [Coming Soon]",
-            },
-            "ollama-remote": {
-                "name": "Ollama (Remote)",
-                "enabled": True,
-            },
-            "deepseek-cloud": {
-                "name": "DeepSeek (Cloud)",
-                "enabled": True,
-            },
-            "openai-cloud": {
-                "name": "OpenAI (Cloud)",
-                "enabled": True,
-            },
-            "claude-cloud": {
-                "name": "Claude (Cloud)",
-                "enabled": True,
-            },
-            "grok-cloud": {
-                "name": "Grok (Cloud)",
-                "enabled": True,
-            },
-            "openrouter-cloud": {
-                "name": "OpenRouter (Cloud)",
-                "enabled": True,
-            },
+            model_type: {
+                "name": instance.display_name(),
+                "enabled": bool(instance),
+            }
+            for model_type, instance in self.instance_types.items()
         }
