@@ -18,8 +18,10 @@ For more information, please visit [Redash GitHub repository](https://github.com
 4. **AI Dashboards**: Use AI to generate dashboards from your data and visualizations.
 
 <center>
-  <img title="Redash AI" src='https://raw.githubusercontent.com/freaker2k7/redash-ai/main/docs/images/redash-ai.png' width="800px"/>
-  <div><small><i>Watch the demo video on YouTube to see the new AI features in action.</i></small></div>
+	<a href="https://www.youtube.com/watch?v=oV6WXlqXe54" target="_blank">
+		<img title="Redash AI" src="https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg" width="600px" style="max-width: 80%" />
+	</a>
+	<div><small><i>Watch the demo video on YouTube to see the new AI features in action.</i></small></div>
 </center>
 
 *Notice: All tests were run on a local PC.*
