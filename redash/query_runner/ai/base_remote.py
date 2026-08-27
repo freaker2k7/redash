@@ -95,6 +95,10 @@ The query will run on a database with the following schema:
         Generate a response from the AI model based on the provided prompt and system message.
         """
 
+        if not self.client:
+            logger.error("AI client is not initialized.")
+            return ""
+
         messages = [{"role": "system", "content": system_message}]
 
         if examples:

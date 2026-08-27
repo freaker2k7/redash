@@ -85,7 +85,15 @@ class AI(AIBase):
     def supported_types(self) -> dict[str, dict[str, Any]]:
         return {
             model_type: {
-                "name": instance.display_name(),
+                "name": (
+                    instance.display_name()
+                    if instance
+                    else model_type.replace("-", " ")
+                    .title()
+                    .replace("Cloud", "(Cloud)")
+                    .replace("Local", "(Local)")
+                    .replace("Remote", "(Remote)")
+                ),
                 "enabled": bool(instance),
             }
             for model_type, instance in self.instance_types.items()

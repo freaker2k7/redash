@@ -31,10 +31,23 @@ class AIGeminiCloud(AIBaseRemote):
     def chat(self, messages: list[dict[str, str]]) -> str:
         return self.client.interactions.create(
             model=self.model_name,
-            input="\n".join([f"{m['role']}: {m['content']}" for m in messages]),
+            system_instruction=messages[0]["content"],
+            input=messages[1]["content"],
             generation_config={"max_output_tokens": self.max_new_tokens},
         ).output_text
 
     @property
     def models(self):
-        return {model.base_model_id: model.display_name for model in self.client.models.list()}
+        if not self.client:
+            logger.error("Gemini client is not initialized.")
+            return {}
+
+        try:
+            models = self.client.models.list(config={"page_size": 200})
+        except Exception as e:
+            logger.error(f"Failed to fetch models from Gemini: {e}")
+            return {}
+
+        logger.info("Fetching models from Gemini client: %s", models)
+
+        return {model.base_model_id: model.display_name for model in models}
