@@ -13,9 +13,9 @@ For more information, please visit [Redash GitHub repository](https://github.com
 **New** Redash features:
 
 1. **AI Queries**: Use AI to generate SQL, NoSQL and other queries from natural language questions.
-2. **AI Visualizations**: Use AI to generate visualizations from natural language questions.
+2. **AI Visualizations**: Use AI to auto-generate visualizations for questions.
 3. **AI Alerts**: Use AI to generate alerts from your data and queries.
-4. **AI Dashboards**: Use AI to generate dashboards from your data and visualizations.
+4. **AI Dashboards**: Use AI to generate dashboards from your queries and visualizations.
 
 [![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)
 
