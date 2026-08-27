@@ -17,7 +17,7 @@ For more information, please visit [Redash GitHub repository](https://github.com
 3. **AI Alerts**: Use AI to generate alerts from your data and queries.
 4. **AI Dashboards**: Use AI to generate dashboards from your data and visualizations.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/oV6WXlqXe54?si=wyIDnwyiZGXPWUYZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="max-width: 80%"></iframe>
+[![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)
 
 ## Supported AI Providers
 
