@@ -12,28 +12,27 @@ For more information, please visit [Redash GitHub repository](https://github.com
 
 **New** Redash features:
 
-1. **AI Queries**: Use AI to generate SQL, NoSQL and other queries from natural language questions.
-2. **AI Visualizations**: Use AI to auto-generate visualizations for questions.
-3. **AI Alerts**: Use AI to generate alerts from your data and queries.
-4. **AI Dashboards**: Use AI to generate dashboards from your queries and visualizations.
+1. **Data Source Description**: Help the AI to understand your data better.
+2. **Text To Query**: Use AI to generate SQL, NoSQL and other queries from natural language questions.
+3. **Auto Visualizations**: Use AI to auto-generate visualizations for questions.
+4. **Auto Alerts**: Use AI to generate alert suggestions from your data and queries.
+5. **Name To Dashboard**: Use AI to generate dashboards from your queries and visualizations.
 
-[![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)
+[![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)<br>
+<sub>*Watch the demo video on YouTube to see the new AI features in action.*</sub>
 
-*Watch the demo video on YouTube to see the new AI features in action.*
-
-*Notice: All tests were run on a local PC.*
+*NOTICE: All tests were run on a local PC.*
 
 ## Supported AI Providers
 
 - [Anthropic](https://www.anthropic.com/) [Cloud]
-- [DeepSeek](https://www.deepseek.com/) [Cloud/Local/Remote]
+- [DeepSeek](https://www.deepseek.com/) [Cloud, Local & Remote]
 - [Gemini](https://gemini.google.com/) [Cloud]
 - [Grok](https://grok.com/) [Cloud]
 - [HuggingFace](https://huggingface.co/) [Local]
-- [OLlama](https://ollama.com/) [Cloud/Local/Remote]
+- [OLlama](https://ollama.com/) [Cloud, Local & Remote]
 - [OpenAI](https://openai.com/) [Cloud]
 - [OpenRouter](https://openrouter.ai/) [Cloud]
-
 
 ## Getting Help
 
@@ -41,7 +40,7 @@ For more information, please visit [Redash GitHub repository](https://github.com
 
 ## Security
 
-Please email [me](mailto:thenetfreaker+security@gmail.com) to report any security vulnerabilities. We will acknowledge receipt of your vulnerability and strive to send you regular updates about our progress. If you're curious about the status of your disclosure please feel free to email us again.
+Please email [me](mailto:thenetfreaker+security@gmail.com) to report any security vulnerabilities regarding the AI feature explicitly. We will acknowledge receipt of your vulnerability and strive to send you regular updates about our progress. If you're curious about the status of your disclosure please feel free to email us again. For any other issue, please issue or PR to the [Redash GitHub repository](https://github.com/getredash/redash).
 
 ## License
 

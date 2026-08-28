@@ -88,11 +88,14 @@ class AI(AIBase):
                 "name": (
                     instance.display_name()
                     if instance
-                    else model_type.replace("-", " ")
-                    .title()
-                    .replace("Cloud", "(Cloud)")
-                    .replace("Local", "(Local)")
-                    .replace("Remote", "(Remote)")
+                    else (
+                        model_type.replace("-", " ")
+                        .title()
+                        .replace("Cloud", "(Cloud)")
+                        .replace("Local", "(Local)")
+                        .replace("Remote", "(Remote)")
+                        + " [Coming soon]"
+                    )
                 ),
                 "enabled": bool(instance),
             }
