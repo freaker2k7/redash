@@ -18,10 +18,12 @@ For more information, please visit [Redash GitHub repository](https://github.com
 4. **Auto Alerts**: Use AI to generate alert suggestions from your data and queries.
 5. **Name To Dashboard**: Use AI to generate dashboards from your queries and visualizations.
 
-[![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)<br>
-<sub>*Watch the demo video on YouTube to see the new AI features in action.*</sub>
+### Demo video
 
-*NOTICE: All tests were run on a local PC.*
+Watch the demo video on YouTube to see the new AI features in action.
+
+[![Watch the demo video](https://img.youtube.com/vi/oV6WXlqXe54/hqdefault.jpg)](https://www.youtube.com/watch?v=oV6WXlqXe54)<br>
+<sub>*NOTICE: All tests were run on a local PC.*</sub>
 
 ## Supported AI Providers
 
