@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-	"ignoreDeprecations": "6.0",
     // Target latest version of ECMAScript.
     "target": "es2019",
     // Search under node_modules for non-relative imports.
