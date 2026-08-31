@@ -45,7 +45,6 @@ class HuggingFaceModelsDefogSQLCoder7B2(HuggingFaceModelBase):
             "eos_token_id": eos_token_id,
         }
 
-
     def generate(self, model, query_text: str) -> str:
         return (
             model["pipe"](

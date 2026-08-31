@@ -161,9 +161,12 @@ class Results(BaseQueryRunner):
 
     @classmethod
     def configuration_schema(cls):
-        return {"type": "object", "properties": {
-            "ai_prompt": {"type": "textarea", "title": "Data source description"},
-        }}
+        return {
+            "type": "object",
+            "properties": {
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
+        }
 
     @classmethod
     def name(cls):

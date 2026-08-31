@@ -34,7 +34,6 @@ class DashboardGenerator:
 
         self.dashboard = dashboard
 
-
     def choose_widgets(self, visualizations) -> list[str]:
         """
         Choose appropriate widgets based on the provided visualizations.
@@ -58,7 +57,9 @@ class DashboardGenerator:
 
         for i, choice in enumerate(choices):
             if choice["name"] not in options:
-                logger.warning(f"AI suggested widget '{choice['name']}' is not in the available visualizations. Skipping.")
+                logger.warning(
+                    f"AI suggested widget '{choice['name']}' is not in the available visualizations. Skipping."
+                )
                 continue
 
             choices[i]["visualization"] = visualizations[options.index(choice["name"])]
@@ -91,7 +92,7 @@ class DashboardGenerator:
             try:
                 widgets.append(
                     {
-                        "name": "", # Widjets have no text.
+                        "name": "",  # Widjets have no text.
                         "options": {
                             "isHidden": False,
                             "position": {
@@ -103,7 +104,7 @@ class DashboardGenerator:
                                 "minSizeY": 2,
                                 "maxSizeY": 1000,
                                 "col": col,
-                                "row": row
+                                "row": row,
                             },
                         },
                         "width": 1,  # widget["options"]["sizeX"],
@@ -126,7 +127,7 @@ class DashboardGenerator:
                                 "minSizeY": 2,
                                 "maxSizeY": 1000,
                                 "col": col,
-                                "row": row + row_step
+                                "row": row + row_step,
                             },
                         },
                         "width": 1,  # widget["options"]["sizeX"],

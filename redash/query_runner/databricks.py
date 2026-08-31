@@ -68,7 +68,7 @@ class Databricks(BaseSQLQueryRunner):
                 "http_path": {"type": "string", "title": "HTTP Path"},
                 # We're using `http_password` here for legacy reasons
                 "http_password": {"type": "string", "title": "Access Token"},
-                "ai_prompt": {"type": "textarea", "title": "Data source description"}
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "http_path", "http_password"],
             "secret": ["http_password"],

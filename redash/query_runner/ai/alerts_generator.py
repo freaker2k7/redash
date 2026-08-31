@@ -131,7 +131,9 @@ class AlertsGenerator:
 
             alert = self.config_alert(alert_name)
 
-            alert_key = " ".join([alert["selector"], alert["column"], alert["op"], sub(r'\.0$', '', str(alert["value"]))])
+            alert_key = " ".join(
+                [alert["selector"], alert["column"], alert["op"], sub(r"\.0$", "", str(alert["value"]))]
+            )
 
             if alert_key in known_alerts:
                 logger.warning(f"Duplicate alert configuration '{alert_key}' detected. Skipping.")
