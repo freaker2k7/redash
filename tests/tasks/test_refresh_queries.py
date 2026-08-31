@@ -36,6 +36,7 @@ class TestRefreshQuery(BaseTestCase):
                         metadata={
                             "query_id": query1.id,
                             "Username": query1.user.get_actual_user(),
+                            "apply_ai_query": False,
                         },
                     ),
                     call(
@@ -46,6 +47,7 @@ class TestRefreshQuery(BaseTestCase):
                         metadata={
                             "query_id": query2.id,
                             "Username": query2.user.get_actual_user(),
+                            "apply_ai_query": False,
                         },
                     ),
                 ],
@@ -77,6 +79,7 @@ class TestRefreshQuery(BaseTestCase):
                         metadata={
                             "query_id": query1.id,
                             "Username": query1.user.get_actual_user(),
+                            "apply_ai_query": False,
                         },
                     ),
                     call(
@@ -87,6 +90,7 @@ class TestRefreshQuery(BaseTestCase):
                         metadata={
                             "query_id": query2.id,
                             "Username": query2.user.get_actual_user(),
+                            "apply_ai_query": False,
                         },
                     ),
                 ],

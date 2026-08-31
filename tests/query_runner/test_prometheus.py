@@ -232,6 +232,7 @@ class TestPrometheus(TestCase):
                     "title": "SSL Root Certificate",
                     "default": None,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["url"],
             "secret": ["cert_File", "cert_key_File", "ca_cert_File"],
@@ -240,6 +241,7 @@ class TestPrometheus(TestCase):
                 "cert_File",
                 "cert_key_File",
                 "ca_cert_File",
+                "ai_prompt"
             ],
         }
 

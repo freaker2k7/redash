@@ -27,7 +27,7 @@ class HuggingFaceModelsQwenQwen3CoderNext(HuggingFaceModelBase):
             "eos_token_id": None,
         }
 
-    def generate_prompt(self, model, query_text: str) -> str:
+    def generate(self, model, query_text: str) -> str:
         text = model["tokenizer"].apply_chat_template(
             messages=[
                 {

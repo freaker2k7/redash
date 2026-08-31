@@ -207,6 +207,7 @@ class TestInfluxDBv2:
                     "title": "SSL Root Certificate",
                     "default": None,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "url",
@@ -231,6 +232,7 @@ class TestInfluxDBv2:
                 "cert_key_File",
                 "cert_key_password",
                 "ssl_ca_cert_File",
+                "ai_prompt",
             ],
         }
 

@@ -118,7 +118,7 @@ def new(name=None, type=None, options=None, organization="default"):
     schema = query_runner.configuration_schema()
 
     if options is None:
-        types = {"string": str, "number": int, "boolean": bool}
+        types = {"string": str, "textarea": str, "number": int, "boolean": bool}
 
         options_obj = {}
 

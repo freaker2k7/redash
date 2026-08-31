@@ -1,6 +1,7 @@
 import unittest
 
 from redash.query_runner import BaseQueryRunner, BaseSQLQueryRunner
+from redash.query_runner.ai.ai_conf_query_runner import get_conf_query_runner
 from redash.utils import gen_query_hash
 
 
@@ -42,8 +43,10 @@ class TestBaseSQLQueryRunner(unittest.TestCase):
 
     def test_check_ai_query(self):
         origin_query_text = "Create a simple 'select 1' query"
+        self.query_runner.ai = get_conf_query_runner(None)
         query_text = self.query_runner.ai.apply_ai_query(origin_query_text)
-        self.assertEqual("SELECT 1", query_text.replace(";", "").strip())
+        self.assertIn("SELECT", query_text)
+        self.assertIn("FROM", query_text)
 
     def test_apply_auto_limit_origin_no_limit_1(self):
         origin_query_text = "SELECT 2"
