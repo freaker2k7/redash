@@ -71,11 +71,21 @@ class Databricks(BaseSQLQueryRunner):
                     "title": "Use Query Annotation",
                     "default": False,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "http_path", "http_password", "useQueryAnnotation"],
             "secret": ["http_password"],
             "required": ["host", "http_path", "http_password"],
+            "extra_options": ["ai_prompt"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def annotate_query(self, query, metadata):
         # Remove "Job ID" before annotating the query so repeated runs of the

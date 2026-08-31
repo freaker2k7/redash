@@ -174,9 +174,11 @@ class MongoDB(BaseQueryRunner):
                     ],
                     "title": "Flatten Results",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "required": ["connectionString", "dbName"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -194,7 +196,14 @@ class MongoDB(BaseQueryRunner):
             True if "replicaSetName" in self.configuration and self.configuration["replicaSetName"] else False
         )
 
-        self.flatten = self.configuration.get("flatten", "False").upper() in ["TRUE", "YES", "ON", "1", "Y", "T"]
+        self.flatten = self.configuration.get("flatten", "False").upper() in [
+            "TRUE",
+            "YES",
+            "ON",
+            "1",
+            "Y",
+            "T",
+        ]
         logger.debug("flatten: {}".format(self.flatten))
 
     @classmethod
@@ -206,6 +215,14 @@ class MongoDB(BaseQueryRunner):
         elif isinstance(o, Decimal128):
             return o.to_decimal()
         return None
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def _get_db(self):
         kwargs = {}

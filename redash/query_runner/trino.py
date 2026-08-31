@@ -77,7 +77,10 @@ class Trino(BaseSQLQueryRunner):
                 "username": {"type": "string"},
                 "password": {"type": "string"},
                 "source": {"type": "string", "default": "redash"},
-                "client_tags": {"type": "string", "title": "Client tags (comma separated)"},
+                "client_tags": {
+                    "type": "string",
+                    "title": "Client tags (comma separated)",
+                },
                 "catalog": {"type": "string"},
                 "schema": {"type": "string"},
                 "impersonation": {"type": "boolean", "default": False},
@@ -85,8 +88,12 @@ class Trino(BaseSQLQueryRunner):
                     "type": "string",
                     "title": "Impersonation User Attribute",
                     "default": "email",
-                    "extendedEnum": [{"value": "email", "name": "Email"}, {"value": "name", "name": "Name"}],
+                    "extendedEnum": [
+                        {"value": "email", "name": "Email"},
+                        {"value": "name", "name": "Name"},
+                    ],
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "protocol",
@@ -106,6 +113,7 @@ class Trino(BaseSQLQueryRunner):
                 "client_tags",
                 "impersonation",
                 "impersonationField",
+                "ai_prompt",
             ],
         }
 
@@ -116,6 +124,14 @@ class Trino(BaseSQLQueryRunner):
     @classmethod
     def type(cls):
         return "trino"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def get_schema(self, get_stats=False):
         if self.configuration.get("catalog"):
@@ -136,7 +152,7 @@ class Trino(BaseSQLQueryRunner):
                 self._handle_run_query_error(error)
 
             for row in results["rows"]:
-                table_name = f'{catalog}.{row["table_schema"]}.{row["table_name"]}'
+                table_name = f"{catalog}.{row['table_schema']}.{row['table_name']}"
 
                 if table_name not in schema:
                     schema[table_name] = {"name": table_name, "columns": []}
@@ -192,7 +208,8 @@ class Trino(BaseSQLQueryRunner):
     def run_query(self, query, user):
         if self.configuration.get("password"):
             auth = trino.auth.BasicAuthentication(
-                username=self.configuration.get("username"), password=self.configuration.get("password")
+                username=self.configuration.get("username"),
+                password=self.configuration.get("password"),
             )
         else:
             auth = trino.constants.DEFAULT_AUTH

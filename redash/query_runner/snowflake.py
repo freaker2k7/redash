@@ -57,6 +57,7 @@ class Snowflake(BaseSQLQueryRunner):
                     "default": False,
                 },
                 "host": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "account",
@@ -71,9 +72,7 @@ class Snowflake(BaseSQLQueryRunner):
             ],
             "required": ["user", "account", "database", "warehouse"],
             "secret": ["password", "private_key_File", "private_key_pwd"],
-            "extra_options": [
-                "host",
-            ],
+            "extra_options": ["host", "ai_prompt"],
         }
 
     @classmethod
@@ -86,6 +85,14 @@ class Snowflake(BaseSQLQueryRunner):
         if t == TYPE_INTEGER and scale > 0:
             return TYPE_FLOAT
         return t
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_connection(self):
         region = self.configuration.get("region")

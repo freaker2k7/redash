@@ -54,6 +54,7 @@ class Presto(BaseQueryRunner):
                 "catalog": {"type": "string"},
                 "username": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "host",
@@ -65,6 +66,8 @@ class Presto(BaseQueryRunner):
                 "catalog",
             ],
             "required": ["host"],
+            "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -74,6 +77,14 @@ class Presto(BaseQueryRunner):
     @classmethod
     def type(cls):
         return "presto"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def get_schema(self, get_stats=False):
         schema = {}

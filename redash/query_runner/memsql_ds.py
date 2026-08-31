@@ -57,9 +57,11 @@ class MemSQL(BaseSQLQueryRunner):
                 "port": {"type": "number"},
                 "user": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host", "port"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -69,6 +71,14 @@ class MemSQL(BaseSQLQueryRunner):
     @classmethod
     def enabled(cls):
         return enabled
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_tables(self, schema):
         schemas_query = "show schemas"

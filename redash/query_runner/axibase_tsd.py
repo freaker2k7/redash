@@ -123,10 +123,20 @@ class AxibaseTSD(BaseQueryRunner):
                     "type": "boolean",
                     "title": "Trust SSL Certificate",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["username", "password", "hostname", "protocol", "port"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def __init__(self, configuration):
         super(AxibaseTSD, self).__init__(configuration)

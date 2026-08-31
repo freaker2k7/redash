@@ -49,6 +49,7 @@ class Vertica(BaseSQLQueryRunner):
                 "port": {"type": "number"},
                 "read_timeout": {"type": "number", "title": "Read Timeout"},
                 "connection_timeout": {"type": "number", "title": "Connection Timeout"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["database"],
             "order": [
@@ -61,6 +62,7 @@ class Vertica(BaseSQLQueryRunner):
                 "connection_timeout",
             ],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -71,6 +73,14 @@ class Vertica(BaseSQLQueryRunner):
             return False
 
         return True
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_tables(self, schema):
         query = """

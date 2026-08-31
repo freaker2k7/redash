@@ -146,6 +146,14 @@ class CorporateMemoryQueryRunner(BaseQueryRunner):
     def type(cls):
         return "corporate_memory"
 
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sparql"
+
     def run_query(self, query, user):
         """send a sparql query to corporate memory"""
         query_text = query
@@ -221,6 +229,7 @@ class CorporateMemoryQueryRunner(BaseQueryRunner):
                     "type": "string",
                     "title": "Path to the CA Bundle file (.pem)",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["CMEM_BASE_URI", "OAUTH_GRANT_TYPE", "OAUTH_CLIENT_ID"],
             "secret": ["OAUTH_CLIENT_SECRET", "OAUTH_PASSWORD"],
@@ -230,6 +239,7 @@ class CorporateMemoryQueryRunner(BaseQueryRunner):
                 "OAUTH_PASSWORD",
                 "SSL_VERIFY",
                 "REQUESTS_CA_BUNDLE",
+                "ai_prompt",
             ],
         }
 

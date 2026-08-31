@@ -130,14 +130,41 @@ class Prometheus(BaseQueryRunner):
                     "title": "Verify SSL (Ignored, if SSL Root Certificate is given)",
                     "default": True,
                 },
-                "cert_File": {"type": "string", "title": "SSL Client Certificate", "default": None},
-                "cert_key_File": {"type": "string", "title": "SSL Client Key", "default": None},
-                "ca_cert_File": {"type": "string", "title": "SSL Root Certificate", "default": None},
+                "cert_File": {
+                    "type": "string",
+                    "title": "SSL Client Certificate",
+                    "default": None,
+                },
+                "cert_key_File": {
+                    "type": "string",
+                    "title": "SSL Client Key",
+                    "default": None,
+                },
+                "ca_cert_File": {
+                    "type": "string",
+                    "title": "SSL Root Certificate",
+                    "default": None,
+                },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["url"],
             "secret": ["cert_File", "cert_key_File", "ca_cert_File"],
-            "extra_options": ["verify_ssl", "cert_File", "cert_key_File", "ca_cert_File"],
+            "extra_options": [
+                "verify_ssl",
+                "cert_File",
+                "cert_key_File",
+                "ca_cert_File",
+                "ai_prompt",
+            ],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def test_connection(self):
         result = False

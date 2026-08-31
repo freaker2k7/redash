@@ -74,11 +74,21 @@ class Exasol(BaseQueryRunner):
                 "host": {"type": "string"},
                 "port": {"type": "number", "default": 8563},
                 "encrypted": {"type": "boolean", "title": "Enable SSL Encryption"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host", "port", "user", "password"],
             "order": ["host", "port", "user", "password", "encrypted"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_connection(self):
         exahost = "%s:%s" % (

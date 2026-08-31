@@ -32,10 +32,12 @@ class Databend(BaseQueryRunner):
                 "password": {"type": "string", "default": ""},
                 "database": {"type": "string"},
                 "secure": {"type": "boolean", "default": False},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["username", "password", "host", "port", "database"],
             "required": ["username", "database"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -66,6 +68,14 @@ class Databend(BaseQueryRunner):
             return TYPE_DATE
         else:
             return TYPE_STRING
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def run_query(self, query, user):
         host = self.configuration.get("host") or "localhost"

@@ -9,6 +9,7 @@ from rq.timeouts import JobTimeoutException
 from sshtunnel import open_tunnel
 
 from redash import settings, utils
+from redash.query_runner.ai import AI
 from redash.utils.requests_session import (
     UnacceptableAddressException,
     requests_or_advocate,
@@ -120,10 +121,12 @@ class BaseQueryRunner:
     limit_query = " LIMIT 1000"
     limit_keywords = ["LIMIT", "OFFSET"]
     limit_after_select = False
+    ai = AI()
 
     def __init__(self, configuration):
         self.syntax = "sql"
         self.configuration = configuration
+        self.ai = AI(self)
 
     @classmethod
     def name(cls):
@@ -255,6 +258,14 @@ class BaseQueryRunner:
         }
 
     @property
+    def supports_ai_query(self):
+        return False
+
+    @property
+    def supports_ai_query_type(self):
+        return None
+
+    @property
     def supports_auto_limit(self):
         return False
 
@@ -347,9 +358,11 @@ class BaseHTTPQueryRunner(BaseQueryRunner):
                 "url": {"type": "string", "title": cls.url_title},
                 "username": {"type": "string", "title": cls.username_title},
                 "password": {"type": "string", "title": cls.password_title},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "order": ["url", "username", "password"],
+            "extra_options": ["ai_prompt"],
         }
 
         if cls.requires_url or cls.requires_authentication:
@@ -406,6 +419,50 @@ class BaseHTTPQueryRunner(BaseQueryRunner):
 
         # Return response and error.
         return response, error
+
+
+class BaseCacheQueryRunner(BaseQueryRunner):
+    @property
+    def supports_ai_query_type(self):
+        return "cache"
+
+    def _get_db(self):
+        raise NotImplementedError("Subclasses must implement this method.")
+
+    def run_query(self, query, user=None):
+        client = self._get_db()
+
+        cmd = [part.strip() for part in query.split() if part.strip()]
+
+        if not cmd:
+            return {
+                "cmd": "",
+                "key": "",
+                "value": None,
+                "error": "No command provided",
+            }
+
+        try:
+            op = getattr(client, cmd[0].lower())
+            value = op(*cmd[1:])
+            error = None
+        except Exception as e:
+            error = str(e)
+            value = None
+
+        return {
+            "cmd": cmd[0].upper(),
+            "key": cmd[1] if len(cmd) > 1 else "",
+            "value": value,
+            "error": error,
+        }
+
+    def get_schema(self, get_stats=False):
+        return [{"name": "default", "columns": ["key", "value"]}]
+
+    def test_connection(self):
+        if self._get_db() is None:
+            raise Exception(f"Failed to connect to {self.__class__.__name__} client")
 
 
 query_runners = {}

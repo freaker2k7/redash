@@ -43,6 +43,22 @@ class InfluxDBv2(BaseQueryRunner):
 
     should_annotate_query = False
 
+    @property
+    def supports_ai_query(self) -> bool:
+        """
+        Determines, if this query runner supports AI queries.
+        :return: True, if this query runner supports AI queries; otherwise False.
+        """
+        return True
+
+    @property
+    def supports_ai_query_type(self) -> str:
+        """
+        Determines the type of AI queries this query runner supports.
+        :return: The type of AI queries this query runner supports.
+        """
+        return "nosql"
+
     def _get_influx_kwargs(self) -> Dict:
         """
         Determines additional arguments for influxdb client connection.
@@ -96,16 +112,58 @@ class InfluxDBv2(BaseQueryRunner):
                 "url": {"type": "string", "title": "URL"},
                 "org": {"type": "string", "title": "Organization"},
                 "token": {"type": "string", "title": "Token"},
-                "verify_ssl": {"type": "boolean", "title": "Verify SSL", "default": False},
-                "cert_File": {"type": "string", "title": "SSL Client Certificate", "default": None},
-                "cert_key_File": {"type": "string", "title": "SSL Client Key", "default": None},
-                "cert_key_password": {"type": "string", "title": "Password for SSL Client Key", "default": None},
-                "ssl_ca_cert_File": {"type": "string", "title": "SSL Root Certificate", "default": None},
+                "verify_ssl": {
+                    "type": "boolean",
+                    "title": "Verify SSL",
+                    "default": False,
+                },
+                "cert_File": {
+                    "type": "string",
+                    "title": "SSL Client Certificate",
+                    "default": None,
+                },
+                "cert_key_File": {
+                    "type": "string",
+                    "title": "SSL Client Key",
+                    "default": None,
+                },
+                "cert_key_password": {
+                    "type": "string",
+                    "title": "Password for SSL Client Key",
+                    "default": None,
+                },
+                "ssl_ca_cert_File": {
+                    "type": "string",
+                    "title": "SSL Root Certificate",
+                    "default": None,
+                },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
-            "order": ["url", "org", "token", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
+            "order": [
+                "url",
+                "org",
+                "token",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+            ],
             "required": ["url", "org", "token"],
-            "secret": ["token", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
-            "extra_options": ["verify_ssl", "cert_File", "cert_key_File", "cert_key_password", "ssl_ca_cert_File"],
+            "secret": [
+                "token",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+            ],
+            "extra_options": [
+                "verify_ssl",
+                "cert_File",
+                "cert_key_File",
+                "cert_key_password",
+                "ssl_ca_cert_File",
+                "ai_prompt",
+            ],
         }
 
     @classmethod
@@ -134,8 +192,8 @@ class InfluxDBv2(BaseQueryRunner):
             ) as client:
                 healthy = client.health()
                 if healthy.status == "fail":
-                    logger.error("Connection test failed, due to: " f"{healthy.message!r}.")
-                    raise Exception("InfluxDB is not healthy. Check logs for more " "information.")
+                    logger.error(f"Connection test failed, due to: {healthy.message!r}.")
+                    raise Exception("InfluxDB is not healthy. Check logs for more information.")
         except Exception:
             raise
         finally:
