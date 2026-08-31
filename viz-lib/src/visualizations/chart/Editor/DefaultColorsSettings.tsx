@@ -77,8 +77,13 @@ export default function DefaultColorsSettings({ options, data, onOptionsChange }
           defaultValue={options.color_scheme}
           data-test="ColorScheme"
           onChange={(val: any) => onOptionsChange({ color_scheme: val })}
-          options={Object.keys(AllColorPalettes)}
-        />
+        >
+          {Object.keys(AllColorPalettes).map((option) => (
+            <option data-test={`ColorOption${option}`} key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
       </Section>
       <Table showHeader={false} dataSource={series} columns={columns} pagination={false} />
     </React.Fragment>
