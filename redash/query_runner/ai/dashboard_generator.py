@@ -43,7 +43,7 @@ class DashboardGenerator:
 
         choices = self.ai.prompt(
             DashboardChoices,
-            f"The dashboard name is: {self.dashboard.name}\n\nHere are the visualizations: {", ".join(options)}",
+            f"The dashboard name is: {self.dashboard.name}\n\nHere are the visualizations: {', '.join(options)}",
             f"You are a helpful assistant that chooses appropriate widgets from the provided visualizations. Your task is to analyze the visualizations and choose the most suitable ones for the given dashboard. You must choose only the exact names from the given visualizations names list. For the chosen ones create a long description as part of the JSON according to the structure. Return the choices as a valid JSON object with the following structure: {DashboardChoices.model_json_schema()}. Do not include any explanations or additional text.",
             [
                 {
