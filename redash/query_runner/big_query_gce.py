@@ -14,6 +14,9 @@ from .big_query import BigQuery
 
 
 class BigQueryGCE(BigQuery):
+    def __init__(self, configuration):
+        super(BigQueryGCE, self).__init__(configuration)
+
     @classmethod
     def type(cls):
         return "bigquery_gce"
@@ -55,11 +58,13 @@ class BigQueryGCE(BigQuery):
                     "default": "US",
                 },
                 "loadSchema": {"type": "boolean", "title": "Load Schema"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
+            "extra_options": ["ai_prompt"],
         }
 
     def _get_project_id(self):
-        google.auth.default()[1]
+        return google.auth.default()[1]
 
     def _get_bigquery_service(self):
         creds = google.auth.default(scopes=["https://www.googleapis.com/auth/bigquery"])[0]

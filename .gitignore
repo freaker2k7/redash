@@ -30,3 +30,7 @@ client/cypress/screenshots
 client/cypress/videos
 
 client/visual-tests/.results
+
+.pnpm-store
+__pycache__
+.python-version

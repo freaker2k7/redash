@@ -58,9 +58,11 @@ class SqlServer(BaseSQLQueryRunner):
                     "title": "Character Set",
                 },
                 "db": {"type": "string", "title": "Database Name"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["db"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -74,6 +76,14 @@ class SqlServer(BaseSQLQueryRunner):
     @classmethod
     def type(cls):
         return "mssql"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_tables(self, schema):
         query = """

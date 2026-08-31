@@ -1,16 +1,9 @@
 import logging
 
-from redash.query_runner import (
-    TYPE_BOOLEAN,
-    TYPE_DATE,
-    TYPE_DATETIME,
-    TYPE_FLOAT,
-    TYPE_INTEGER,
-    TYPE_STRING,
-    BaseSQLQueryRunner,
-    InterruptException,
-    register,
-)
+from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATE, TYPE_DATETIME,
+                                 TYPE_FLOAT, TYPE_INTEGER, TYPE_STRING,
+                                 BaseSQLQueryRunner, InterruptException,
+                                 register)
 
 logger = logging.getLogger(__name__)
 
@@ -76,9 +69,11 @@ class DuckDB(BaseSQLQueryRunner):
                     "title": "Enable External Access (filesystem & network)",
                     "default": True,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["dbpath", "extensions", "external_access"],
             "required": ["dbpath"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod

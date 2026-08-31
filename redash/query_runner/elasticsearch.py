@@ -1,7 +1,5 @@
 import logging
-import urllib.error
 import urllib.parse
-import urllib.request
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -65,15 +63,25 @@ class BaseElasticSearch(BaseQueryRunner):
                     "type": "string",
                     "title": "Basic Auth Password",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["server", "basic_auth_user", "basic_auth_password"],
             "secret": ["basic_auth_password"],
             "required": ["server"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
     def enabled(cls):
         return False
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def __init__(self, configuration):
         super(BaseElasticSearch, self).__init__(configuration)

@@ -160,7 +160,11 @@ class PostgreSQL(BaseSQLQueryRunner):
                 "host": {"type": "string", "default": "127.0.0.1"},
                 "port": {"type": "number", "default": 5432},
                 "dbname": {"type": "string", "title": "Database Name"},
-                "dsn": {"type": "string", "default": "application_name=redash", "title": "Parameters"},
+                "dsn": {
+                    "type": "string",
+                    "default": "application_name=redash",
+                    "title": "Parameters",
+                },
                 "sslmode": {
                     "type": "string",
                     "title": "SSL Mode",
@@ -177,6 +181,7 @@ class PostgreSQL(BaseSQLQueryRunner):
                 "sslrootcertFile": {"type": "string", "title": "SSL Root Certificate"},
                 "sslcertFile": {"type": "string", "title": "SSL Client Certificate"},
                 "sslkeyFile": {"type": "string", "title": "SSL Client Key"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["host", "port", "user", "password"],
             "required": ["dbname"],
@@ -186,6 +191,7 @@ class PostgreSQL(BaseSQLQueryRunner):
                 "sslrootcertFile",
                 "sslcertFile",
                 "sslkeyFile",
+                "ai_prompt",
             ],
         }
 
@@ -204,6 +210,14 @@ class PostgreSQL(BaseSQLQueryRunner):
 
             return "".join(items)
         return None
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_definitions(self, schema, query):
         results, error = self.run_query(query, None)
@@ -351,6 +365,7 @@ class Redshift(PostgreSQL):
                     "title": "Query Group for Scheduled Queries",
                     "default": "default",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "host",
@@ -363,6 +378,7 @@ class Redshift(PostgreSQL):
                 "scheduled_query_group",
             ],
             "required": ["dbname", "user", "password", "host", "port"],
+            "extra_options": ["ai_prompt"],
             "secret": ["password"],
         }
 
@@ -467,6 +483,7 @@ class RedshiftIAM(Redshift):
                     "title": "Query Group for Scheduled Queries",
                     "default": "default",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "rolename",
@@ -484,6 +501,7 @@ class RedshiftIAM(Redshift):
             ],
             "required": ["dbname", "user", "host", "port", "aws_region"],
             "secret": ["aws_secret_access_key"],
+            "extra_options": ["sslmode", "ai_prompt"],
         }
 
     def _get_connection(self):

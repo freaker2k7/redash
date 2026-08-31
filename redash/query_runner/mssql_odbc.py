@@ -50,6 +50,7 @@ class SQLServerODBC(BaseSQLQueryRunner):
                     "title": "Verify SSL certificate",
                     "default": False,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "server",
@@ -63,7 +64,7 @@ class SQLServerODBC(BaseSQLQueryRunner):
             ],
             "required": ["server", "user", "password", "db"],
             "secret": ["password"],
-            "extra_options": ["verify_ssl", "use_ssl"],
+            "extra_options": ["verify_ssl", "use_ssl", "ai_prompt"],
         }
 
     @classmethod
@@ -81,6 +82,14 @@ class SQLServerODBC(BaseSQLQueryRunner):
     @property
     def supports_auto_limit(self):
         return False
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _get_tables(self, schema):
         query = """

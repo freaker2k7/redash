@@ -19,6 +19,7 @@ from redash.permissions import (
     require_permission,
     view_only,
 )
+from redash.query_runner.ai.dashboard_generator import DashboardGenerator
 from redash.security import csp_allows_embeding
 from redash.serializers import DashboardSerializer, public_dashboard
 
@@ -104,6 +105,12 @@ class DashboardListResource(BaseResource):
         )
         models.db.session.add(dashboard)
         models.db.session.commit()
+
+        ai_generated = dashboard_properties.get("ai_generated", False)
+        if ai_generated:
+            generator = DashboardGenerator(None, dashboard)
+            generator.get_dashboard()
+
         return DashboardSerializer(dashboard).serialize()
 
 

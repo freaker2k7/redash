@@ -74,8 +74,12 @@ class InfluxDB(BaseQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"url": {"type": "string"}},
+            "properties": {
+                "url": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
+            },
             "required": ["url"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -85,6 +89,14 @@ class InfluxDB(BaseQueryRunner):
     @classmethod
     def type(cls):
         return "influxdb"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def run_query(self, query, user):
         client = InfluxDBClient.from_dsn(self.configuration["url"])

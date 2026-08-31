@@ -92,18 +92,25 @@ class Couchbase(BaseQueryRunner):
                 },
                 "user": {"type": "string"},
                 "password": {"type": "string"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host", "user", "password"],
             "order": ["protocol", "host", "port", "user", "password"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
-
-    def __init__(self, configuration):
-        super(Couchbase, self).__init__(configuration)
 
     @classmethod
     def enabled(cls):
         return True
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def test_connection(self):
         self.call_service(self.noop_query, "")

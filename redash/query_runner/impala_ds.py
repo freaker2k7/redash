@@ -65,10 +65,20 @@ class Impala(BaseSQLQueryRunner):
                 "ldap_user": {"type": "string"},
                 "ldap_password": {"type": "string"},
                 "timeout": {"type": "number"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["host"],
             "secret": ["ldap_password"],
+            "extra_options": ["ai_prompt"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     @classmethod
     def type(cls):

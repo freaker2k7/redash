@@ -15,6 +15,8 @@ from redash.query_runner import (
     register,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class QueryParseError(Exception):
     pass
@@ -29,7 +31,7 @@ def parse_query(query):
         params = yaml.safe_load(query)
         return params
     except ValueError as e:
-        logging.exception(e)
+        logger.exception(e)
         error = str(e)
         raise QueryParseError(error)
 
@@ -142,14 +144,24 @@ class JSON(BaseHTTPQueryRunner):
                 "base_url": {"type": "string", "title": cls.base_url_title},
                 "username": {"type": "string", "title": cls.username_title},
                 "password": {"type": "string", "title": cls.password_title},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "secret": ["password"],
             "order": ["base_url", "username", "password"],
+            "extra_options": ["ai_prompt"],
         }
 
     def __init__(self, configuration):
         super(JSON, self).__init__(configuration)
         self.syntax = "yaml"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "json"
 
     def test_connection(self):
         pass
@@ -186,7 +198,10 @@ class JSON(BaseHTTPQueryRunner):
         if isinstance(request_options.get("auth", None), list):
             request_options["auth"] = tuple(request_options["auth"])
         elif self.configuration.get("username") or self.configuration.get("password"):
-            request_options["auth"] = (self.configuration.get("username"), self.configuration.get("password"))
+            request_options["auth"] = (
+                self.configuration.get("username"),
+                self.configuration.get("password"),
+            )
 
         if method not in ("get", "post"):
             raise QueryParseError("Only GET or POST methods are allowed.")

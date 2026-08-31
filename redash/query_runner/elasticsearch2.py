@@ -41,6 +41,14 @@ class ElasticSearch2(BaseHTTPQueryRunner):
     def name(cls):
         return "Elasticsearch"
 
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.syntax = "json"

@@ -63,10 +63,15 @@ class Mysql(BaseSQLQueryRunner):
                 "passwd": {"type": "string", "title": "Password"},
                 "db": {"type": "string", "title": "Database name"},
                 "port": {"type": "number", "default": 3306},
-                "connect_timeout": {"type": "number", "default": 60, "title": "Connection Timeout"},
+                "connect_timeout": {
+                    "type": "number",
+                    "default": 60,
+                    "title": "Connection Timeout",
+                },
                 "charset": {"type": "string", "default": "utf8mb4"},
                 "use_unicode": {"type": "boolean", "default": True},
                 "autocommit": {"type": "boolean", "default": False},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": [
                 "host",
@@ -81,6 +86,7 @@ class Mysql(BaseSQLQueryRunner):
             ],
             "required": ["db"],
             "secret": ["passwd"],
+            "extra_options": ["ai_prompt"],
         }
 
         if show_ssl_settings:
@@ -123,6 +129,14 @@ class Mysql(BaseSQLQueryRunner):
     @classmethod
     def enabled(cls):
         return enabled
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     def _connection(self):
         params = dict(
@@ -270,7 +284,12 @@ class Mysql(BaseSQLQueryRunner):
         ssl_params = {}
 
         if self.configuration.get("use_ssl"):
-            config_map = {"ssl_mode": "preferred", "ssl_cacert": "ca", "ssl_cert": "cert", "ssl_key": "key"}
+            config_map = {
+                "ssl_mode": "preferred",
+                "ssl_cacert": "ca",
+                "ssl_cert": "cert",
+                "ssl_key": "key",
+            }
             for key, cfg in config_map.items():
                 val = self.configuration.get(key)
                 if val:
@@ -287,7 +306,7 @@ class Mysql(BaseSQLQueryRunner):
             connection = self._connection()
             cursor = connection.cursor()
             query = "KILL %d" % (thread_id)
-            logging.debug(query)
+            logger.debug(query)
             cursor.execute(query)
         except MySQLdb.Error as e:
             if cursor:

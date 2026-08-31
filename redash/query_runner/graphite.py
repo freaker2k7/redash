@@ -49,10 +49,20 @@ class Graphite(BaseQueryRunner):
                 "username": {"type": "string"},
                 "password": {"type": "string"},
                 "verify": {"type": "boolean", "title": "Verify SSL certificate"},
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": ["url"],
             "secret": ["password"],
+            "extra_options": ["ai_prompt"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def __init__(self, configuration):
         super(Graphite, self).__init__(configuration)

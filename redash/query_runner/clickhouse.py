@@ -26,6 +26,9 @@ def split_multi_query(query):
 class ClickHouse(BaseSQLQueryRunner):
     noop_query = "SELECT 1"
 
+    def __init__(self, configuration):
+        super(ClickHouse, self).__init__(configuration)
+
     @classmethod
     def configuration_schema(cls):
         return {
@@ -45,12 +48,21 @@ class ClickHouse(BaseSQLQueryRunner):
                     "title": "Verify SSL certificate",
                     "default": True,
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "order": ["url", "user", "password", "dbname"],
             "required": ["dbname"],
-            "extra_options": ["timeout", "verify"],
+            "extra_options": ["timeout", "verify", "ai_prompt"],
             "secret": ["password"],
         }
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "sql"
 
     @property
     def _url(self):
@@ -163,7 +175,7 @@ class ClickHouse(BaseSQLQueryRunner):
             return TYPE_STRING
 
     def _clickhouse_query(self, query, session_id=None, session_check=None):
-        logger.debug(f"{self.name()} is about to execute query: %s", query)
+        logger.debug("%s is about to execute query: %s", self.name(), query)
 
         query += "\nFORMAT JSON"
 
@@ -226,7 +238,7 @@ class ClickHouse(BaseSQLQueryRunner):
             error = None
         except Exception as e:
             data = None
-            logging.exception(e)
+            logger.exception(e)
             error = str(e)
         return data, error
 

@@ -91,6 +91,7 @@ class AzureKusto(BaseQueryRunner):
                     "type": "string",
                     "title": "User-assigned managed identity client ID",
                 },
+                "ai_prompt": {"type": "textarea", "title": "Data source description"},
             },
             "required": [
                 "cluster",
@@ -104,6 +105,7 @@ class AzureKusto(BaseQueryRunner):
                 "database",
             ],
             "secret": ["azure_ad_client_secret"],
+            "extra_options": ["ai_prompt"],
         }
 
     @classmethod
@@ -117,6 +119,14 @@ class AzureKusto(BaseQueryRunner):
     @classmethod
     def name(cls):
         return "Azure Data Explorer (Kusto)"
+
+    @property
+    def supports_ai_query(self):
+        return True
+
+    @property
+    def supports_ai_query_type(self):
+        return "nosql"
 
     def run_query(self, query, user):
         cluster = self.configuration["cluster"]
@@ -217,7 +227,10 @@ class AzureKusto(BaseQueryRunner):
 
             for column in table["OrderedColumns"]:
                 schema[table_name]["columns"].append(
-                    {"name": column["Name"], "type": TYPES_MAP.get(column["CslType"], None)}
+                    {
+                        "name": column["Name"],
+                        "type": TYPES_MAP.get(column["CslType"], None),
+                    }
                 )
 
         return list(schema.values())
