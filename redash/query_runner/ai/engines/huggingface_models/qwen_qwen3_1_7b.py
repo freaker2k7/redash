@@ -36,7 +36,10 @@ class HuggingFaceModelsQwenQwen317B(HuggingFaceModelBase):
     def generate(self, model, query_text: str) -> str:
         text = model["tokenizer"].apply_chat_template(
             [
-                {"role": "system", "content": "You are a helpful assistant. Do not include any explanations or additional text, only provide the clean answer to the user's question."},
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant. Do not include any explanations or additional text, only provide the clean answer to the user's question.",
+                },
                 {"role": "user", "content": query_text},
             ],
             tokenize=False,
@@ -45,10 +48,13 @@ class HuggingFaceModelsQwenQwen317B(HuggingFaceModelBase):
         )
 
         inputs = model["tokenizer"](text, return_tensors="pt")
-        response_ids = model["model"].generate(**inputs, max_new_tokens=self.max_new_tokens)[0][len(inputs.input_ids[0]):].tolist()
+        response_ids = (
+            model["model"]
+            .generate(**inputs, max_new_tokens=self.max_new_tokens)[0][len(inputs.input_ids[0]) :]
+            .tolist()
+        )
 
         return model["tokenizer"].decode(response_ids, skip_special_tokens=True)
-
 
     def prompt(self, model, prompt: str, system_message: str, examples: list[str] = None) -> str:
         chat = Chat()

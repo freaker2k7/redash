@@ -236,13 +236,7 @@ class TestPrometheus(TestCase):
             },
             "required": ["url"],
             "secret": ["cert_File", "cert_key_File", "ca_cert_File"],
-            "extra_options": [
-                "verify_ssl",
-                "cert_File",
-                "cert_key_File",
-                "ca_cert_File",
-                "ai_prompt"
-            ],
+            "extra_options": ["verify_ssl", "cert_File", "cert_key_File", "ca_cert_File", "ai_prompt"],
         }
 
     def test_enabled(self):
