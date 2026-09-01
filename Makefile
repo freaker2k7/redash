@@ -73,3 +73,12 @@ redis-cli:
 
 bash:
 	docker compose run --rm server bash
+
+pre_init:
+	pnpm install --frozen-lockfile
+	source .ven/bin/activate
+	uv sync --install
+
+local_init: pre_init build compose_build create_database
+
+local_run: up start

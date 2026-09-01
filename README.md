@@ -36,6 +36,116 @@ Watch the demo video on YouTube to see the new AI features in action.
 - [OpenAI](https://openai.com/) [Cloud]
 - [OpenRouter](https://openrouter.ai/) [Cloud]
 
+## Installation
+
+### Prerequisites
+
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+* [Node.js](https://nodejs.org/en/download/)
+* [Python](https://www.python.org/downloads/)
+* [Make](https://www.gnu.org/software/make/)
+* [Nginx](https://nginx.org/en/download.html) (Optional, for reverse proxy setup)
+
+See [Redash's Prerequisites](https://github.com/getredash/redash/wiki/Local-development-setup#set-up-the-prerequisites) for detailed instructions on how to install the prerequisites.
+
+### Installation Steps
+
+#### 1. Clone the repository:
+
+```bash
+git clone https://github.com/freaker2k7/redash
+```
+
+#### 2. Navigate to the project directory:
+
+```bash
+cd redash
+```
+
+#### 3. Install dependencies and set up the environment:
+
+```bash
+make local_init
+```
+
+#### 4. Set up the `.env` file which was created during the installation process.
+
+```
+REDASH_COOKIE_SECRET=1234....1234
+REDASH_SECRET_KEY=1234...1235
+HF_TOKEN=hf_1234...1234
+```
+
+#### 5. Start the Redash server and client:
+
+```bash
+make local_run
+```
+
+Alternatively, you can run the server and client separately:
+
+```bash
+# Run the server
+make up
+# Run the client
+make start
+```
+
+*NOTE: This is useful if you want to run the server and client in separate machines.*
+
+#### 6. Open your web browser and go to http://localhost:5000 to access Redash.
+
+#### 7. (Optional) Set up a reverse proxy to host Redash with optionally enabling HTTPS:
+
+Install Nginx if you haven't already - [Nginx Installation Guide](https://nginx.org/en/docs/install.html)
+
+Then add the following configuration as `redash.conf` to your Nginx configuration folder (usually located at `/etc/nginx/conf.d/`):
+
+```nginx
+server {
+	listen 80;
+
+	server_name yourdomain.com;
+
+	# If you want only HTTP, then remove from this comment...
+	return 301 https://$host$request_uri;
+}
+
+server {
+	listen 443 ssl;
+
+	server_name yourdomain.com;
+
+	ssl_certificate /path/to/your/certificate.crt;
+	ssl_certificate_key /path/to/your/private.key;
+	# ... up to this comment.
+
+	location / {
+		proxy_pass http://localhost:5000;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+	}
+}
+```
+
+## TL;DR
+
+Quick installation steps for those who want to get started with Redash quickly:
+
+```bash
+git clone https://github.com/freaker2k7/redash
+cd redash
+make local_init
+echo "REDASH_COOKIE_SECRET=1234qwertyuiopasdfghjkl1234
+REDASH_SECRET_KEY=123qwertyuiopasdfghjkl012
+HF_TOKEN=${HF_TOKEN}" > .env
+make local_run
+open http://localhost:5000
+```
+
 ## Getting Help
 
 * Issues: https://github.com/freaker2k7/redash/issues
