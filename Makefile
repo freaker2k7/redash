@@ -96,9 +96,9 @@ local_init: pre_init build compose_build create_database
 local_run: up start
 
 quickstart: local_init
-	echo "REDASH_COOKIE_SECRET=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM
-	REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM
-	HF_TOKEN=$$HF_TOKEN" > .env
+	echo "REDASH_COOKIE_SECRET=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" > .env
+	echo "REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" >> .env
+	echo "HF_TOKEN=$$HF_TOKEN" >> .env
 	make local_run &
 	PID=$$!
 	while [ $$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 200 ]; do; sleep 1; done
