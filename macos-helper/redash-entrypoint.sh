@@ -42,9 +42,12 @@ fi
 set +x
 "
 
-rm -f /var/run/xrdp/xrdp*.pid >/dev/null 2>&1
-service dbus restart >/dev/null 2>&1
-/usr/lib/systemd/systemd-logind >/dev/null 2>&1 &
-[ -f /usr/sbin/sshd ] && /usr/sbin/sshd
-xrdp-sesman --config /etc/xrdp/sesman.ini
-xrdp --nodaemon --config /etc/xrdp/xrdp.ini
+if [[ "$1" == "rdp" || "$2" == "rdp" ]]
+then
+	rm -f /var/run/xrdp/xrdp*.pid >/dev/null 2>&1
+	service dbus restart >/dev/null 2>&1
+	/usr/lib/systemd/systemd-logind >/dev/null 2>&1 &
+	[ -f /usr/sbin/sshd ] && /usr/sbin/sshd
+	xrdp-sesman --config /etc/xrdp/sesman.ini
+	xrdp --nodaemon --config /etc/xrdp/xrdp.ini
+fi

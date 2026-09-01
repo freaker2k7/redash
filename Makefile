@@ -78,11 +78,13 @@ pre_init:
 	CYPRESS_INSTALL_BINARY=0 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 pnpm install
 
 	if [ "$$(uname)" = "Darwin" ]; then \
+		echo "Detected macOS. Building and running Docker container for macOS installation..." ; \
 		docker build -t macos-install-helper macos-helper/. ; \
 		docker rm -f ubuntu ; \
 		docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $$(pwd):/home/redash/redash --name ubuntu macos-install-helper ; \
 		brew install pwgen ; \
 	else \
+		echo "Detected non-macOS system. Setting up Python virtual environment..." ; \
 		python3 -m venv .venv ; \
 		. .venv/bin/activate ; \
 		pip install wheel ; \
