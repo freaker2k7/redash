@@ -77,20 +77,18 @@ bash:
 pre_init:
 	CYPRESS_INSTALL_BINARY=0 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 pnpm install
 
-	if [ "$(uname)" == "Darwin" ]; then
-		docker build -t macos-install-helper macos-helper/.
-		docker rm -f ubuntu
-		docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $$(pwd):/home/redash/redash --name ubuntu macos-install-helper
-	else
-		python3 -m venv .venv
-		. .venv/bin/activate
-
-		pip install wheel
-		pip install setuptools==80.10.2
-		pip install --upgrade black ruff launchpadlib pip
-		pip install uv==0.11.6
-
-		uv sync --no-default-groups --group all_ds --group dev --link-mode=copy
+	if [ "$$(uname)" = "Darwin" ]; then \
+		docker build -t macos-install-helper macos-helper/. ; \
+		docker rm -f ubuntu ; \
+		docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $$(pwd):/home/redash/redash --name ubuntu macos-install-helper ; \
+	else \
+		python3 -m venv .venv ; \
+		. .venv/bin/activate ; \
+		pip install wheel ; \
+		pip install setuptools==80.10.2 ; \
+		pip install --upgrade black ruff launchpadlib pip ; \
+		pip install uv==0.11.6 ; \
+		uv sync --no-default-groups --group all_ds --group dev --link-mode=copy ; \
 	fi
 
 local_init: pre_init build compose_build create_database
@@ -98,11 +96,11 @@ local_init: pre_init build compose_build create_database
 local_run: up start
 
 quickstart: local_init
-	echo "REDASH_COOKIE_SECRET=$(RANDOM)$(RANDOM)$(RANDOM)$(RANDOM)$(RANDOM)
-	REDASH_SECRET_KEY=$(RANDOM)$(RANDOM)$(RANDOM)$(RANDOM)$(RANDOM)
-	HF_TOKEN=$(HF_TOKEN)" > .env
+	echo "REDASH_COOKIE_SECRET=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM
+	REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM
+	HF_TOKEN=$$HF_TOKEN" > .env
 	make local_run &
 	PID=$$!
 	while [ $$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 200 ]; do; sleep 1; done
 	open http://localhost:5001
-	wait $(PID)
+	wait $$PID
