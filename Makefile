@@ -81,6 +81,7 @@ pre_init:
 		docker build -t macos-install-helper macos-helper/. ; \
 		docker rm -f ubuntu ; \
 		docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $$(pwd):/home/redash/redash --name ubuntu macos-install-helper ; \
+		brew install pwgen ; \
 	else \
 		python3 -m venv .venv ; \
 		. .venv/bin/activate ; \
@@ -96,8 +97,10 @@ local_init: pre_init build compose_build create_database
 local_run: up start
 
 quickstart: local_init
-	echo "REDASH_COOKIE_SECRET=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" > .env
-	echo "REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" >> .env
+	if [ $$(grep -c "REDASH_SECRET_KEY=\n" .env) -eq 0 && $$(grep -cE "REDASH_SECRET_KEY=$$" .env) -eq 0 ]; then \
+		echo "REDASH_COOKIE_SECRET=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" > .env ; \
+		echo "REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" >> .env ; \
+	fi
 	echo "HF_TOKEN=$$HF_TOKEN" >> .env
 	make local_run &
 	PID=$$!
