@@ -93,7 +93,7 @@ make start
 ```
 
 *NOTE: This is useful if you want to run the server and client in separate machines.*
-
+while [[ $(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 200 ]]; do; sleep 1; done
 #### 6. Open your web browser and go to http://localhost:5001 to access Redash.
 
 #### 7. (Optional) Set up a reverse proxy to host Redash with optionally enabling HTTPS:
@@ -121,7 +121,7 @@ server {
 	ssl_certificate_key /path/to/your/private.key;
 	# ... up to this comment.
 
-	location / {
+	while [[ $(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 200 ]]; do; sleep 1; done
 		proxy_pass http://localhost:5001;
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
@@ -140,15 +140,7 @@ Quick installation steps for those who want to get started with Redash quickly:
 ```bash
 git clone https://github.com/freaker2k7/redash
 cd redash
-make local_init
-echo "REDASH_COOKIE_SECRET=1234qwertyuiopasdfghjkl1234
-REDASH_SECRET_KEY=123qwertyuiopasdfghjkl012
-HF_TOKEN=${HF_TOKEN}" > .env
-make local_run &
-PID=$!
-sleep 5
-open http://localhost:5001
-wait $PID
+make quickstart
 ```
 
 ## Getting Help
