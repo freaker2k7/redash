@@ -75,6 +75,9 @@ bash:
 	docker compose run --rm server bash
 
 pre_init:
+	pnpm install
+
+	python3 -m venv .venv
 	source .venv/bin/activate
 
 	pip install wheel
