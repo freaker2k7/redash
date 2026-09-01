@@ -75,7 +75,7 @@ bash:
 	docker compose run --rm server bash
 
 pre_init:
-	source .ven/bin/activate
+	source .venv/bin/activate
 
 	pip install wheel
 	pip install setuptools==80.10.2
