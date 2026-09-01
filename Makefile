@@ -78,7 +78,7 @@ pre_init:
 	CYPRESS_INSTALL_BINARY=0 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 pnpm install
 
 	python3 -m venv .venv
-	source .venv/bin/activate
+	. .venv/bin/activate
 
 	pip install wheel
 	pip install setuptools==80.10.2

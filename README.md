@@ -144,8 +144,11 @@ make local_init
 echo "REDASH_COOKIE_SECRET=1234qwertyuiopasdfghjkl1234
 REDASH_SECRET_KEY=123qwertyuiopasdfghjkl012
 HF_TOKEN=${HF_TOKEN}" > .env
-make local_run
+make local_run &
+PID=$!
+sleep 5
 open http://localhost:5000
+wait $PID
 ```
 
 ## Getting Help
