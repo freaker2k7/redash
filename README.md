@@ -143,6 +143,8 @@ cd redash
 make quickstart
 ```
 
+*NOTE: This will take a few good minutes to complete. Once done, you can access Redash at http://localhost:5001. Meanwhile, you can get some coffee.*
+
 ## Getting Help
 
 * Issues: https://github.com/freaker2k7/redash/issues
