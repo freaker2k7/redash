@@ -54,8 +54,6 @@ RUN echo "$USER ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers.d/$USER
 RUN echo "ulimit -n 65535" >> /etc/profile
 
 # Install Redash dependencies
-# RUN apt -y install docker.io docker-buildx docker-compose-v2 && \
-#     apt -y install build-essential curl docker-compose pwgen python3-venv xvfb && \
 RUN apt -y install build-essential curl pwgen python3-venv xvfb chromium-browser iptables nftables && \
     apt install -y --no-install-recommends default-libmysqlclient-dev freetds-dev libffi-dev libpq-dev \
         python3-dev libkrb5-dev libsasl2-dev libsasl2-modules-gssapi-mit libssl-dev unixodbc-dev xmlsec1
@@ -86,6 +84,3 @@ COPY redash-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
-
-# docker build -t macos-install-helper .
-# docker rm -f ubuntu ; docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v /Users/evgenykolyakov/MINE/html/redash-ai:/home/redash/redash --name ubuntu macos-install-helper

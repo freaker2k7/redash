@@ -17,6 +17,7 @@ For more information, please visit [Redash GitHub repository](https://github.com
 3. **Auto Visualizations**: Use AI to auto-generate visualizations for questions.
 4. **Auto Alerts**: Use AI to generate alert suggestions from your data and queries.
 5. **Name To Dashboard**: Use AI to generate dashboards from your queries and visualizations.
+6. **MacOS Support**: Now it runs on MacOS as well as on Linux.
 
 ### Demo video
 
@@ -144,6 +145,46 @@ make quickstart
 ```
 
 *NOTE: This will take a few good minutes to complete. Once done, you can access Redash at http://localhost:5001. Meanwhile, you can get some coffee.*
+
+## Stopping Redash
+
+To stop Redash, run the following command in the project directory:
+
+```bash
+make down
+```
+
+Also, you can clean up a bit by running, in the project directory:
+
+```bash
+make clean
+```
+
+## Bonus: MacOS Support
+
+Now there is a helper Ubuntu docker in `/macos-helper` which assists with installing the python dependencies.
+Moreover it has an RDP support, so one can use Microsoft Remote Desktop Manager to access the Ubuntu GUI and work on the Redash server and client from there.
+
+You can build the helper docker with the following command:
+
+```bash
+docker build -t macos-install-helper ./macos-helper
+```
+
+Then run it with the following command:
+
+```bash
+docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/home/redash/redash --name ubuntu macos-install-helper /entrypoint.sh rdp
+```
+
+Finally, you can connect to the Ubuntu GUI with the following credentials:
+
+```
+Username: redash
+Password: 1234
+Host: localhost
+Port: 3389
+```
 
 ## Getting Help
 
