@@ -131,6 +131,8 @@ server {
 }
 ```
 
+*NOTE: This step is suited only for on-premise installations. If you are using a cloud provider, think about using their load balancer or reverse proxy service instead.*
+
 ## TL;DR
 
 Quick installation steps for those who want to get started with Redash quickly:

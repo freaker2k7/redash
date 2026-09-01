@@ -75,9 +75,14 @@ bash:
 	docker compose run --rm server bash
 
 pre_init:
-	pnpm install --frozen-lockfile
 	source .ven/bin/activate
-	uv sync --install
+
+	pip install wheel
+	pip install setuptools==80.10.2
+	pip install --upgrade black ruff launchpadlib pip
+	pip install uv==0.11.6
+
+	uv sync --no-default-groups --group all_ds --group dev --link-mode=copy
 
 local_init: pre_init build compose_build create_database
 
