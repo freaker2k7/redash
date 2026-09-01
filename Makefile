@@ -85,7 +85,7 @@ pre_init:
 	pip install --upgrade black ruff launchpadlib pip
 	pip install uv==0.11.6
 
-	uv sync --no-default-groups --group all_ds --group dev --link-mode=copy
+	uv sync
 
 local_init: pre_init build compose_build create_database
 

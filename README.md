@@ -94,7 +94,7 @@ make start
 
 *NOTE: This is useful if you want to run the server and client in separate machines.*
 
-#### 6. Open your web browser and go to http://localhost:5000 to access Redash.
+#### 6. Open your web browser and go to http://localhost:5001 to access Redash.
 
 #### 7. (Optional) Set up a reverse proxy to host Redash with optionally enabling HTTPS:
 
@@ -122,7 +122,7 @@ server {
 	# ... up to this comment.
 
 	location / {
-		proxy_pass http://localhost:5000;
+		proxy_pass http://localhost:5001;
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -147,7 +147,7 @@ HF_TOKEN=${HF_TOKEN}" > .env
 make local_run &
 PID=$!
 sleep 5
-open http://localhost:5000
+open http://localhost:5001
 wait $PID
 ```
 
