@@ -104,8 +104,12 @@ quickstart: local_init
 		echo "REDASH_SECRET_KEY=$$RANDOM$$RANDOM$$RANDOM$$RANDOM$$RANDOM" >> .env ; \
 	fi
 	echo "HF_TOKEN=$$HF_TOKEN" >> .env
-	make local_run &
-	PID=$$!
-	while [ $$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 200 && $$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001) -ne 302 ]; do; sleep 1; done
-	open http://localhost:5001
+	@make local_run & \
+	PID=$$! ; \
+	while true; do \
+		STATUS=$$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5001 || echo 000) ; \
+		if [ "$$STATUS" = "200" ] || [ "$$STATUS" = "302" ]; then break; fi ; \
+		sleep 1 ; \
+	done ; \
+	open http://localhost:5001 ; \
 	wait $$PID
