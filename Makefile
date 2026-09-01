@@ -77,7 +77,7 @@ bash:
 pre_init:
 	CYPRESS_INSTALL_BINARY=0 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 pnpm install
 
-	if [[ "$(uname)" == "Darwin" ]]; then
+	if [ "$(uname)" == "Darwin" ]; then
 		docker build -t macos-install-helper macos-helper/.
 		docker rm -f ubuntu
 		docker run -d -p 3389:3389 -v /var/run/docker.sock:/var/run/docker.sock -v $$(pwd):/home/redash/redash --name ubuntu macos-install-helper
