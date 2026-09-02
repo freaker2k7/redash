@@ -197,9 +197,3 @@ Please email [me](mailto:thenetfreaker+security@gmail.com) to report any securit
 ## License
 
 BSD-2-Clause.
-
-## Listings
-
-<a href="https://launchnest.io/p/redash-ai" target="_blank">
-  <img src="https://launchnest.io/badge/redash-ai.svg?variant=listed&theme=light" alt="redash-ai on LaunchNest" width="220" height="56" />
-</a>
