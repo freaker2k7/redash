@@ -423,10 +423,6 @@ class BaseHTTPQueryRunner(BaseQueryRunner):
 
 class BaseCacheQueryRunner(BaseQueryRunner):
     @property
-    def supports_ai_query(self):
-        return True
-
-    @property
     def supports_ai_query_type(self):
         return "cache"
 
