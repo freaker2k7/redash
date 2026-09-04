@@ -112,9 +112,11 @@ SELECT * FROM table;
 -- comment 2
 ;
             """,
-            ["""
+            [
+                """
 SELECT * FROM table
-                """],
+                """
+            ],
         )
 
         # special case - if all statements were empty it should return the only empty statement
