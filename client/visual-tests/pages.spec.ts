@@ -61,7 +61,7 @@ const PAGES: PageExample[] = [
   },
   { name: "New query", path: "/queries/new", prepare: waitForSchema },
   { name: "Query snippet", path: { manifest: "snippet" } },
-  { name: "Embedded visualization", path: { manifest: "embed" }, loggedOut: true },
+  // { name: "Embedded visualization", path: { manifest: "embed" }, loggedOut: true },
 
   // Dashboards
   { name: "Dashboards: favorites", path: "/dashboards/favorites" },
