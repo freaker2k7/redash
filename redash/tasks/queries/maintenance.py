@@ -4,7 +4,9 @@ from rq.timeouts import JobTimeoutException
 
 from redash import models, redis_connection, settings, statsd_client
 from redash.models.parameterized_query import (
-    InvalidParameterError, QueryDetachedFromDataSourceError)
+    InvalidParameterError,
+    QueryDetachedFromDataSourceError,
+)
 from redash.monitor import rq_job_ids
 from redash.query_runner import NotSupported
 from redash.tasks.failure_report import track_failure

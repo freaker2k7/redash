@@ -182,7 +182,7 @@ package = false
 default-groups = []
 
 [tool.ruff]
-exclude = [".git", "viz-lib", "node_modules", "migrations"]
+exclude = [".git", "viz-lib", "node_modules", "migrations", "bin"]
 lint.ignore = ["E501"]
 lint.select = ["C9", "E", "F", "W", "I001", "UP004"]
 

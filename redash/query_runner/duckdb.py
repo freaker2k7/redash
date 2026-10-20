@@ -1,9 +1,16 @@
 import logging
 
-from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATE, TYPE_DATETIME,
-                                 TYPE_FLOAT, TYPE_INTEGER, TYPE_STRING,
-                                 BaseSQLQueryRunner, InterruptException,
-                                 register)
+from redash.query_runner import (
+    TYPE_BOOLEAN,
+    TYPE_DATE,
+    TYPE_DATETIME,
+    TYPE_FLOAT,
+    TYPE_INTEGER,
+    TYPE_STRING,
+    BaseSQLQueryRunner,
+    InterruptException,
+    register,
+)
 
 logger = logging.getLogger(__name__)
 
