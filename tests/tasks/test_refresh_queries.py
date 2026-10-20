@@ -13,7 +13,7 @@ class TestRefreshQuery(BaseTestCase):
         with patch(ENQUEUE_QUERY) as enqueue, patch.object(Query, "outdated_queries", return_value=[query]):
             refresh_queries()
         metadata = enqueue.call_args[1]["metadata"]
-        self.assertEqual(metadata, {"query_id": query.id, "user_id": query.user_id})
+        self.assertEqual(metadata, {"apply_ai_query": False, "query_id": query.id, "user_id": query.user_id})
 
     def test_enqueues_outdated_queries_for_sqlquery(self):
         """
